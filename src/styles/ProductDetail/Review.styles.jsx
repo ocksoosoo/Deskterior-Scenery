@@ -26,6 +26,10 @@ export const Header = styled.div(({ theme }) => ({
     alignItems: "flex-start",
     gap: theme.spacing.xs,
   },
+
+  [theme.media.mobile]: {
+    gap: theme.spacing.xs,
+  },
 }));
 
 export const Title = styled.h2(({ theme }) => ({
@@ -41,6 +45,11 @@ export const Title = styled.h2(({ theme }) => ({
   [theme.media.tablet]: {
     fontSize: theme.fontSize["4xl"],
   },
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize["4xl"], // 32px
+    letterSpacing: "normal",
+  },
 }));
 
 export const Subtitle = styled.p(({ theme }) => ({
@@ -51,6 +60,10 @@ export const Subtitle = styled.p(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
   color: theme.colors.secondText,
+
+  [theme.media.mobile]: {
+    lineHeight: "1.25rem", // 20px
+  },
 }));
 
 //리뷰 작성 폼
@@ -63,6 +76,10 @@ export const Form = styled.form(({ theme }) => ({
   padding: theme.spacing.lg,
   borderRadius: theme.radius.lg,
   background: theme.colors.cards,
+
+  [theme.media.mobile]: {
+    padding: theme.spacing.md,
+  },
 }));
 
 export const FormRow = styled.div(({ theme }) => ({
@@ -72,6 +89,7 @@ export const FormRow = styled.div(({ theme }) => ({
 
   [theme.media.mobile]: {
     flexDirection: "column",
+    gap: theme.spacing.md,
   },
 }));
 
@@ -89,7 +107,8 @@ export const RatingBox = styled.div(({ theme }) => ({
   background: "rgba(235, 105, 35, 0.15)",
 
   [theme.media.mobile]: {
-    width: "100%",
+    width: "auto",
+    alignSelf: "stretch",
   },
 }));
 
@@ -134,8 +153,8 @@ export const Textarea = styled.textarea(({ theme }) => ({
   "&:disabled": { cursor: "not-allowed" },
 
   [theme.media.mobile]: {
-    width: "100%",
     flex: "none",
+    alignSelf: "stretch",
   },
 }));
 
@@ -197,6 +216,13 @@ export const Summary = styled.div(({ theme }) => ({
   alignItems: "baseline",
   justifyContent: "center",
   gap: theme.spacing.xs,
+
+  [theme.media.mobile]: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: theme.spacing.md,
+    alignSelf: "stretch",
+  },
 }));
 
 export const SummaryTitle = styled.h3(({ theme }) => ({
@@ -278,6 +304,10 @@ export const Item = styled.li(({ theme, $mine }) => ({
         height: "9.375rem",
         flexShrink: 0,
       }),
+
+  [theme.media.mobile]: {
+    padding: theme.spacing.md,
+  },
 }));
 
 export const ItemHeader = styled.div(({ theme }) => ({
