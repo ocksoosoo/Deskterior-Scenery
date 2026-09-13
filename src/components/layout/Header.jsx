@@ -4,8 +4,9 @@ import { Link, useLocation } from "react-router";
 import { getCategories } from "../../api/categoriesApi";
 import staticCategories from "../../data/categories";
 import { logout } from "../../api/authApi";
-import { BasketIcon, LoginIcon, LogoutIcon } from "../icons/Icons";
+import { BasketIcon, LoginIcon, LogoutIcon, PersonIcon } from "../icons/Icons";
 import useCartStore from "../../store/cartStore";
+import useWishlistStore from "../../store/wishlistStore";
 import { showFailToast, showSuccessToast } from "../common/ShowToast";
 import { useNavigate } from "react-router";
 import {
@@ -34,6 +35,8 @@ const Header = () => {
   const clearUser = useAuthStore((state) => state.clearUser);
   // 뱃지 갯수 계산
   const cartCount = cartItems.length;
+  const likedCount = useWishlistStore((state) => state.likedIds.size);
+  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -53,10 +56,11 @@ const Header = () => {
       console.error("로그아웃 API 실패:", error);
       showFailToast("Logout Fail");
     } finally {
-      // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니)은 항상 정리한다
+      // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니·찜)은 항상 정리한다
       localStorage.removeItem("token");
       clearUser();
       clearLocalCart();
+      clearWishlist();
 
       showSuccessToast("Logout successful");
       navigate("/");
@@ -113,6 +117,13 @@ const Header = () => {
           <CartIconWrapper>
             <BasketIcon width={30} height={30} />
             {cartCount > 0 && <CartBadge>{cartCount}</CartBadge>}
+          </CartIconWrapper>
+        </IconButton>
+
+        <IconButton as={Link} to="/mypage" aria-label="마이페이지 버튼">
+          <CartIconWrapper>
+            <PersonIcon width={30} height={30} />
+            {likedCount > 0 && <CartBadge>{likedCount}</CartBadge>}
           </CartIconWrapper>
         </IconButton>
       </IconContainer>

@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useNavigate } from "react-router";
 import { useTheme } from "@emotion/react";
 import { BasketIcon, HeartIcon, StarIcon } from "../icons/Icons";
 import Badge from "../common/Badge";
+import { showSuccessToast } from "../common/ShowToast";
+import useWishlistStore from "../../store/wishlistStore";
+import useCartStore from "../../store/cartStore";
 import * as S from "../../styles/ListPageStyles/ProductCard.styles";
+
+// 바구니 아이콘 안쪽 창(구멍) 영역 - 아이콘 자체 path의 안쪽 사각형 좌표와 동일
+const BASKET_WINDOW_POINTS = "19.04,8.25 7.44,8.25 8.62,14.75 17.41,14.75";
 
 const ProductCard = ({
   product,
@@ -15,8 +21,15 @@ const ProductCard = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [liked, setLiked] = useState(!!product.liked);
+  const liked = useWishlistStore((state) => state.likedIds.has(product.id));
+  const toggleLike = useWishlistStore((state) => state.toggleLike);
   const [justAdded, setJustAdded] = useState(false);
+  const clipId = useId();
+  const inCart = useCartStore((state) =>
+    state.cartItems.some(
+      (item) => String(item.productId) === String(product.id),
+    ),
+  );
 
   const safeRating = Math.min(5, Math.max(0, Number(product.rating) || 0));
   const safeCount = Number(product.reviewCount) || 0;
@@ -26,8 +39,14 @@ const ProductCard = ({
   const isClickable = Boolean(product?.id) && product.id !== "placeholder";
 
   const handleToggleLike = () => {
-    setLiked((prev) => !prev);
+    const next = !liked;
+    toggleLike(product.id);
     onToggleLike?.(product.id);
+    showSuccessToast(
+      next
+        ? "상품이 찜 목록에 추가되었습니다."
+        : "찜 목록에서 삭제되었습니다."
+    );
   };
 
   const handleAddToCart = () => {
@@ -111,10 +130,50 @@ const ProductCard = ({
             onClick={handleAddToCart}
             data-just-added={justAdded}
             onAnimationEnd={(event) => {
+              // 버튼 안쪽 물결(waterRise) 애니메이션 종료도 버블링되므로,
+              // 버튼 자신의 흔들림(cartShake) 애니메이션이 끝났을 때만 반응하게 함
               if (event.target === event.currentTarget) setJustAdded(false);
             }}
           >
-            <BasketIcon width={24} height={24} />
+            <BasketIcon width={24} height={24}>
+              {inCart && (
+                <>
+                  <clipPath id={clipId}>
+                    <polygon points={BASKET_WINDOW_POINTS} />
+                  </clipPath>
+                  <S.CartWaterGroup clipPath={`url(#${clipId})`}>
+                    <path
+                      d="M-12,10.8 Q-9,9.6 -6,10.8 T0,10.8 T6,10.8 T12,10.8 T18,10.8 T24,10.8 T30,10.8 T36,10.8 V17 H-12 Z"
+                      fill={theme.colors.emphasis}
+                      opacity={0.85}
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        from="0 0"
+                        to="12 0"
+                        dur="2.4s"
+                        repeatCount="indefinite"
+                      />
+                    </path>
+                    <path
+                      d="M-12,11.3 Q-9,10.1 -6,11.3 T0,11.3 T6,11.3 T12,11.3 T18,11.3 T24,11.3 T30,11.3 T36,11.3 V17 H-12 Z"
+                      fill={theme.colors.emphasis}
+                      opacity={0.45}
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        type="translate"
+                        from="0 0"
+                        to="-12 0"
+                        dur="3.2s"
+                        repeatCount="indefinite"
+                      />
+                    </path>
+                  </S.CartWaterGroup>
+                </>
+              )}
+            </BasketIcon>
           </S.CartButton>
         </S.IconStack>
       </S.ImageWrapper>

@@ -147,6 +147,19 @@ export const CartButton = styled.button(({ theme }) => ({
   },
 }));
 
+const waterRise = keyframes`
+  0% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+`;
+
+// 이미 장바구니에 담긴 상품임을 나타내는 물결 효과.
+// 바구니 아이콘 자체의 path가 만드는 안쪽 창(구멍) 영역에 clipPath로 끼워 넣어서 사용
+export const CartWaterGroup = styled.g({
+  transformBox: "fill-box",
+  transformOrigin: "bottom",
+  animation: `${waterRise} 0.5s ease-out forwards`,
+});
+
 export const Info = styled.div(({ theme }) => ({
   display: "flex",
   width: "100%",
