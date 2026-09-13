@@ -84,7 +84,7 @@ function DeskCurationSection({ items = [] }) {
       return;
     }
 
-    if (productData?.id === activeProductNumber) return;
+    //if (productData?.id === activeProductNumber) return;
 
     let ignore = false;
 
@@ -117,7 +117,7 @@ function DeskCurationSection({ items = [] }) {
     return () => {
       ignore = true;
     };
-  }, [activeProductNumber, productData?.id]);
+  }, [activeProductNumber]); // productData?.id]
 
   // 화면이 처음 열릴 때 imageUrl을 미리 저장
   useEffect(() => {

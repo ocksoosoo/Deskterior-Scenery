@@ -70,7 +70,7 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
   const [sliderSize, setSliderSize] = useState({
     step: 0, // 카드 한 장 이동 거리(카드 너비 + 간격)
     sideSpace: 0, // 카드를 가운데 두기 위한 왼쪽 여백
-  })
+  });
 
   useEffect(() => {
     if (items.length > 0 && !didInitRef.current) {
@@ -139,12 +139,12 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
     const viewport = viewportRef.current;
     const track = trackRef.current;
 
-    if(!viewport || !track) return;
+    if (!viewport || !track) return;
 
     const firstCard = track.children[0];
     const secondCard = track.children[1];
 
-    if(!firstCard || !secondCard) return;
+    if (!firstCard || !secondCard) return;
 
     function measureSlider() {
       // offsetWidth: 가운데 카드를 강조하는 CSS transform(scale)의 영향을 받지 않는
@@ -152,7 +152,8 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
       const cardWidth = firstCard.offsetWidth;
       const gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
 
-      const visibleWidth = cardWidth * ITEMS_PER_PAGE + gap * (ITEMS_PER_PAGE  - 1);
+      const visibleWidth =
+        cardWidth * ITEMS_PER_PAGE + gap * (ITEMS_PER_PAGE - 1);
 
       setSliderSize({
         step: cardWidth + gap,
@@ -347,12 +348,13 @@ function ProductSection() {
     let alive = true;
     // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
     // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
-    let loadingEnded = false;
+
+    /*let loadingEnded = false;
     const finishLoading = () => {
       if (loadingEnded) return;
       loadingEnded = true;
       endLoading();
-    };
+    };*/
 
     async function fetchMainProducts() {
       startLoading();
@@ -390,7 +392,8 @@ function ProductSection() {
       } catch (error) {
         console.error("상품 데이터 조회 실패", error);
       } finally {
-        finishLoading();
+        //finishLoading();
+        endLoading();
       }
     }
 
@@ -398,7 +401,7 @@ function ProductSection() {
 
     return () => {
       alive = false;
-      finishLoading();
+      //finishLoading();
     };
   }, [startLoading, endLoading]);
 
