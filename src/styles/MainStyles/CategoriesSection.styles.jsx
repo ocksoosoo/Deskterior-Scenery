@@ -51,10 +51,14 @@ export const CategoryImage = styled.img(({ theme }) => ({
   height: "150px",
   borderRadius: theme.radius.full,
   objectFit: "cover",
+  // 사진 배경이 페이지 배경과 비슷해 경계가 안 보이는 경우를 대비해
+  // 은은한 그림자로 항상 원과 배경이 구분되게 함
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  transition: "transform 0.2s ease, box-shadow 0.2s ease",
 
-  // 호버 임시 스타일
   "&:hover": {
-    opacity: "0.6",
+    transform: "scale(1.03)",
+    boxShadow: "0 6px 14px rgba(0, 0, 0, 0.12)",
   }
 }));
 

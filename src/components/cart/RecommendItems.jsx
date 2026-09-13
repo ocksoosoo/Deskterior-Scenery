@@ -72,6 +72,7 @@ const RecommendItems = () => {
             key={product.id || product.productId}
             product={product}
             showCategory={false}
+            useListBackground
             onAddToCart={() => handleAddToCart(product)}
           />
         ))}

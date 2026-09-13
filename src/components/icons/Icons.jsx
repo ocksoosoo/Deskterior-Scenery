@@ -126,9 +126,11 @@ export const HeartIcon = ({ filled = false, ...props }) => (
   >
     <path
       d="M18.9999 10.2107C18.9924 8.29168 17.9856 6.48696 16.0007 5.84751C14.6377 5.40767 13.153 5.65227 12 7.30766C10.847 5.65227 9.3623 5.40767 7.99932 5.84751C6.01416 6.48703 5.00735 8.2921 5.00007 10.2114C4.9817 14.0283 8.84934 16.949 11.999 18.345L12 18.3446L12.001 18.345C15.1508 16.9489 19.0187 14.0279 18.9999 10.2107Z"
-      fill={filled ? "#C8473F" : "none"}
+      fill="#C8473F"
+      fillOpacity={filled ? 1 : 0}
       stroke={filled ? "#C8473F" : "currentColor"}
       strokeLinecap="round"
+      style={{ transition: "fill-opacity 0.2s ease, stroke 0.2s ease" }}
     />
   </svg>
 );

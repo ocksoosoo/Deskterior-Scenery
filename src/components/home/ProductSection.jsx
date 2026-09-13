@@ -7,6 +7,8 @@ import {
   IndicatorButton,
   SliderViewport,
   SliderTrack,
+  SlideItem,
+  SlideOverlay,
 } from "../../styles/MainStyles/ProductSection.styles";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
 import ProductCard from "../product/ProductCard";
@@ -21,6 +23,20 @@ import { showSuccessToast, showFailToast } from "../common/ShowToast";
 // 페이지별 상품 표시 개수
 const ITEMS_PER_PAGE = 3;
 
+// 카드 이동(트랙)과 확대/축소(가운데 카드 강조)를 같은 스프링 설정으로 움직여서
+// 서로 다른 애니메이션 엔진(타이밍/이징 곡선)을 쓸 때 생기던 어긋남을 없앤다.
+// 기존 damping(70)이 이 stiffness/mass 기준 임계감쇠(약 22)의 3배가 넘어서
+// 실제로 멈추기까지 1.6초 가까이 걸렸음 - 임계감쇠에 가깝게 낮춰서 훨씬 빨리 멈추게 함
+const SLIDE_SPRING = {
+  type: "spring",
+  stiffness: 300,
+  damping: 26,
+  mass: 0.4,
+  // 순간 이동(duration:0) 리셋 직후 이어지는 스프링이, 그 직전 애니메이션의
+  // 속도를 이어받아 반대 방향으로 크게 튕겨나가는 것을 방지 (항상 정지 상태에서 시작)
+  velocity: 0,
+};
+
 // getCategoryname(): 카테고리 이름을 찾는 함수, 일치하는 categoryId를 찾으면 category name을 반환하고 찾지 못하면 categoryId를 반환함
 function getCategoryName(categoryId) {
   const category = categories.find((item) => item.id === categoryId);
@@ -33,6 +49,12 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
   const [isResetting, setIsResetting] = useState(false);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
+  // 끝(경계)에 도달하는 애니메이션이 아직 끝나지 않았는데 화살표를 또 눌렀을 때,
+  // 그 클릭을 버리지 않고 리셋이 끝난 직후 이어서 처리하기 위한 예약
+  const pendingDirectionRef = useRef(null);
+  // 상품이 로드되기 전 currentIndex 초기값(1)은 두 번째 상품을 가리키므로,
+  // 실제 상품이 도착하면 첫 번째 상품이 가운데에서 시작하도록 한 번만 보정
+  const didInitRef = useRef(false);
 
   const [sliderSize, setSliderSize] = useState({
     step: 0, // 카드 한 장 이동 거리(카드 너비 + 간격)
@@ -40,10 +62,27 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
   })
 
   useEffect(() => {
+    if (items.length > 0 && !didInitRef.current) {
+      didInitRef.current = true;
+      setIsResetting(true);
+      setCurrentIndex(items.length);
+    }
+  }, [items.length]);
+
+  useEffect(() => {
     if (!isResetting) return;
 
     const frameId = requestAnimationFrame(() => {
       setIsResetting(false);
+
+      // 리셋(순간 이동)이 끝나자마자, 그동안 밀려 있던 클릭이 있으면 정상 애니메이션으로 이어서 처리
+      const pendingDirection = pendingDirectionRef.current;
+      if (pendingDirection) {
+        pendingDirectionRef.current = null;
+        setCurrentIndex((previousIndex) =>
+          pendingDirection === "next" ? previousIndex + 1 : previousIndex - 1,
+        );
+      }
     });
 
     return () => cancelAnimationFrame(frameId);
@@ -61,8 +100,10 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
     if(!firstCard || !secondCard) return;
 
     function measureSlider() {
-      const cardWidth = firstCard.getBoundingClientRect().width;
-      const gap = parseFloat(window.getComputedStyle(track).columGap) || 0;
+      // offsetWidth: 가운데 카드를 강조하는 CSS transform(scale)의 영향을 받지 않는
+      // 레이아웃 상의(변형 전) 너비를 가져오기 위해 getBoundingClientRect 대신 사용
+      const cardWidth = firstCard.offsetWidth;
+      const gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
 
       const visibleWidth = cardWidth * ITEMS_PER_PAGE + gap * (ITEMS_PER_PAGE  - 1);
 
@@ -100,16 +141,14 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
     items[2 % items.length],
   ];
 
-  // 제품 개수를 3으로 나누면 페이지 수가 나옴
-  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-  const actualIndex = (currentIndex - 1 + items.length) % items.length;
-  const activePage = Math.floor(actualIndex / ITEMS_PER_PAGE);
+  // 현재 가운데(활성)에 와 있는 상품이 실제 상품 목록에서 몇 번째인지
+  const activeItemIndex = currentIndex % items.length;
 
-  // Page Indicator
+  // Page Indicator - 상품 개수만큼 점을 하나씩 생성
   const pageNumbers = [];
 
-  for (let page = 0; page < totalPages; page++) {
-    pageNumbers.push(page);
+  for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+    pageNumbers.push(itemIndex);
   }
 
   // handlePrevious(): 제품 카드의 이전 페이지로 이동하는 함수
@@ -118,12 +157,14 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
 
     setDirection(-1);
 
-    setCurrentIndex((previousIndex) => {
-      if (previousIndex <= 0) {
-        return previousIndex;
-      }
-      return previousIndex - 1;
-    });
+    // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
+    // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
+    if (currentIndex <= 0) {
+      pendingDirectionRef.current = "previous";
+      return;
+    }
+
+    setCurrentIndex((previousIndex) => previousIndex - 1);
   }
 
   // handleNext(): 제품 카드의 다음 페이지로 이동하는 함수
@@ -132,12 +173,14 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
 
     setDirection(1);
 
-    setCurrentIndex((previousIndex) => {
-      if (previousIndex >= items.length + 1) {
-        return previousIndex;
-      }
-      return previousIndex + 1;
-    });
+    // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
+    // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
+    if (currentIndex >= items.length + 1) {
+      pendingDirectionRef.current = "next";
+      return;
+    }
+
+    setCurrentIndex((previousIndex) => previousIndex + 1);
   }
 
   // handleAnimationComplete(): 애니메이션 완료 함수
@@ -177,33 +220,39 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
             animate={{
               x: sliderSize.sideSpace - currentIndex * sliderSize.step,
             }}
-            transition={
-              isResetting
-                ? { duration: 0 }
-                : {
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 70,
-                    mass: 0.4,
-                  }
-            }
+            transition={isResetting ? { duration: 0 } : SLIDE_SPRING}
             onAnimationComplete={handleAnimationComplete}
           >
             {sliderProducts.map((product, index) => {
               const badgeFields = deriveBadgeFields(product);
+              // 3칸짜리 보이는 창(currentIndex, currentIndex+1, currentIndex+2) 중
+              // 가운데(currentIndex+1)에 오는 카드가 시각적으로도 중앙에 위치함
+              const isActive = index === currentIndex + 1;
               return (
-                <ProductCard
+                <SlideItem
                   key={`${product.id}-${index}`}
-                  product={{
-                    ...product,
-                    categoryName: getCategoryName(product.categoryId),
-                    ...badgeFields,
+                  initial={false}
+                  animate={{
+                    scale: isActive ? 1.08 : 0.88,
+                    opacity: isActive ? 1 : 0.6,
                   }}
-                  showCategory
-                  isBest={badgeFields.isBest}
-                  isNew={badgeFields.isNew}
-                  onAddToCart={onAddToCart}
-                />
+                  transition={isResetting ? { duration: 0 } : SLIDE_SPRING}
+                  style={{ zIndex: isActive ? 2 : 1 }}
+                >
+                  <ProductCard
+                    product={{
+                      ...product,
+                      categoryName: getCategoryName(product.categoryId),
+                      ...badgeFields,
+                    }}
+                    showCategory
+                    isBest={badgeFields.isBest}
+                    isNew={badgeFields.isNew}
+                    useListBackground={isBest}
+                    onAddToCart={onAddToCart}
+                  />
+                  {!isActive && <SlideOverlay />}
+                </SlideItem>
               );
             })}
           </SliderTrack>
@@ -223,16 +272,18 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
       </ProductSlider>
 
       <PageIndicator>
-        {pageNumbers.map((pageIndex) => (
+        {pageNumbers.map((itemIndex) => (
           <IndicatorButton
-            key={pageIndex}
+            key={itemIndex}
             type="button"
-            aria-label={`${title} ${pageIndex + 1}페이지`}
-            aria-current={pageIndex === activePage ? "page" : undefined}
+            aria-label={`${title} ${itemIndex + 1}번째 상품`}
+            aria-current={itemIndex === activeItemIndex ? "page" : undefined}
             onClick={() => {
-              const nextIndex = pageIndex * ITEMS_PER_PAGE + 1;
+              // itemIndex번째 상품이 가운데로 오도록. 0번째는 currentIndex=0(경계용 임시 상태)이
+              // 아니라 items.length로 매핑해야 정상 범위(1~items.length) 안에서 같은 상품을 가리킴
+              const nextIndex = itemIndex === 0 ? items.length : itemIndex;
 
-              setDirection(nextIndex > currentIndex ? 1 : -1);
+              setDirection(nextIndex >= currentIndex ? 1 : -1);
 
               setCurrentIndex(nextIndex);
             }}
@@ -327,7 +378,7 @@ function ProductSection() {
         imageUrl: product.imageUrl,
         isSoldOut: product.soldOut,
       });
-      showSuccessToast("장바구니에 담겼습니다");
+      showSuccessToast("상품이 장바구니에 담겼습니다");
     } catch (err) {
       console.error("장바구니 담기 실패:", err);
       showFailToast("장바구니 담기에 실패했습니다");
