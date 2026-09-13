@@ -40,6 +40,9 @@ export const ImageBox = styled.div(({ theme }) => ({
   flexShrink: 0,
   borderRadius: theme.radius.md,
   overflow: "hidden",
+  "&:hover img": {
+    transform: "scale(1.06)",
+  },
 }));
 
 // 이미지 태그 스타일
@@ -90,6 +93,10 @@ export const ItemName = styled.h4(({ theme }) => ({
   fontSize: theme.fontSize.xl,
   fontWeight: theme.fontWeight.semiBold,
   color: theme.colors.textMain,
+  cursor: "pointer",
+  "&:hover": {
+    textDecoration: "underline",
+  },
 }));
 
 // 원가

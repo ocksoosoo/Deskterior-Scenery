@@ -74,7 +74,9 @@ const CartItem = ({
         </Link>
 
         <InfoBox>
-          <ItemName>{item.name}</ItemName>
+          <Link to={`/products/${item.productId}`}>
+            <ItemName>{item.name}</ItemName>
+          </Link>
           <ItemPrice>₩ {item.price.toLocaleString()}원</ItemPrice>
         </InfoBox>
       </ItemLeft>

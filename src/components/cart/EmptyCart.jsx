@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import {
   EmptyContainer,
   IconWrapper,
@@ -7,6 +8,11 @@ import {
 } from "../../styles/CartStyles/EmptyCart.styles";
 
 const EmptyCart = () => {
+  const navigate = useNavigate();
+  const handleGoToProducts = () => {
+    navigate("/lightingpage");
+  };
+
   return (
     <EmptyContainer>
       <IconWrapper>
@@ -30,7 +36,9 @@ const EmptyCart = () => {
 
       <Subtitle>데스크 취향을 발견하고 물건을 담으러 가볼까요?</Subtitle>
 
-      <ContinueButton>Continue shopping</ContinueButton>
+      <ContinueButton onClick={handleGoToProducts}>
+        Continue shopping
+      </ContinueButton>
     </EmptyContainer>
   );
 };

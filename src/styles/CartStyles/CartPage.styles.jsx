@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router";
 
 // 메인박스
 export const CartContainer = styled.div(({ theme }) => ({
@@ -20,13 +21,23 @@ export const TitleWrapper = styled.div(({ theme }) => ({
   marginBottom: theme.spacing.xl,
 }));
 
-// 경로
+// 경로 박스
 export const Course = styled.span(({ theme }) => ({
   fontSize: theme.fontSize.xs,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.secondText,
   marginBottom: theme.spacing.xs,
 }));
+
+// 경로 태그
+export const BreadcrumbLink = styled.a({
+  cursor: "pointer",
+  color: "inherit",
+  textDecoration: "none",
+  "&:hover": {
+    textDecoration: "underline", // 마우스 올리면 밑줄 쫙!
+  },
+});
 
 // Cart
 export const PageTitle = styled.h2(({ theme }) => ({
