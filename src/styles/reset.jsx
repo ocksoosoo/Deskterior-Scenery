@@ -35,6 +35,9 @@ export const reset = css`
     font-size: 16px;
     scroll-behavior: smooth;
     overflow-y: scroll;
+    /* 이미지 등 위쪽 콘텐츠 크기 변화에 브라우저가 스크롤 위치를 자동으로 보정하는 것을 막음
+       (직접 구현한 스크롤 복원 로직과 충돌해서 위치가 어긋나는 문제 방지) */
+    overflow-anchor: none;
   }
 
   /* 리스트 점박이 제거 */
