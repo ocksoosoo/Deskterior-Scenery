@@ -28,7 +28,7 @@ import diary from "../../assets/obj-diary-pen.png";
 import flowerVase from "../../assets/obj-flower-vase.png";
 import headphones from "../../assets/obj-headphones.png";
 import penTray from "../../assets/obj-pen-tray.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAnimate, motion } from "motion/react";
 
 function HeroSection() {
@@ -37,6 +37,8 @@ function HeroSection() {
   const [isExpanded, setIsexpanded] = useState(false);
   // 이미지(전체) 호버 상태
   const [isAreaHovered, setIsAreaHovered] = useState(false);
+  // 생성한 애니메이션 제어 객체를 보관
+  const floatingControls = useRef([]);
 
   // useAnimate(): Framer Motion에서 애니메이션을 세밀하게 제어할 수 있게 해주는 hook
   // scope: 애니메이션을 적용할 DOM의 기준점(ref)
@@ -76,16 +78,26 @@ function HeroSection() {
   ];
 
   // 호버 상태에 따라 모든 아이템 일시정지 또는 재개
-  controlsList.forEach((controls) => {
-    if (isAreaHovered) {
-      controls.pause();
-    } else {
-      controls.play();
-    }
-  });
+  floatingControls.current = controlsList;
 
-  return () => controlsList.forEach((controls) => controls.stop());
-}, [isReady, isExpanded, isAreaHovered, animate]);
+  return() => {
+    controlsList.forEach((controls) => controls.stop());
+    floatingControls.current = [];
+  };
+}, [isReady, isExpanded, animate]);
+
+  // 호버 제어 전용 effect
+  useEffect(() => {
+    if(!isReady || isExpanded) return;
+
+    floatingControls.current.forEach((controls) => {
+      if(isAreaHovered) {
+        controls.pause();
+      } else {
+        controls.play();
+      }
+    });
+  }, [isAreaHovered, isReady, isExpanded]);
 
   function handleImageLoad() {
     setLoadedCount((count) => count + 1);
@@ -190,7 +202,7 @@ function HeroSection() {
         }}
         animate={
           isReady && isExpanded
-          ? { x: 0, y: 0, scale: 1, rotat: 0 }
+          ? { x: 0, y: 0, scale: 1, rotate: 0 }
           : undefined
         }
         transition={{
