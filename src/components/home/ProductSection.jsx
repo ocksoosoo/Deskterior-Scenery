@@ -1,0 +1,441 @@
+import {
+  ProductsSection,
+  ProductTitle,
+  ProductSlider,
+  SliderButton,
+  PageIndicator,
+  IndicatorButton,
+  SliderViewport,
+  SliderTrack,
+  SlideItem,
+  SlideOverlay,
+} from "../../styles/MainStyles/ProductSection.styles";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
+import ProductCard from "../product/ProductCard";
+import categories from "../../data/categories";
+import { getProducts, deriveBadgeFields } from "../../api/productsApi";
+import { preloadingImages } from "../../utils/preloadingImages";
+import { useState, useEffect, useRef } from "react";
+import useCartStore from "../../store/cartStore";
+import { showSuccessToast, showFailToast } from "../common/ShowToast";
+
+// 페이지별 상품 표시 개수
+const ITEMS_PER_PAGE = 3;
+
+// 카드 이동(트랙)과 확대/축소(가운데 카드 강조)를 같은 스프링 설정으로 움직여서
+// 서로 다른 애니메이션 엔진(타이밍/이징 곡선)을 쓸 때 생기던 어긋남을 없앤다.
+// 기존 damping(70)이 이 stiffness/mass 기준 임계감쇠(약 22)의 3배가 넘어서
+// 실제로 멈추기까지 1.6초 가까이 걸렸음 - 임계감쇠에 가깝게 낮춰서 훨씬 빨리 멈추게 함
+const SLIDE_SPRING = {
+  type: "spring",
+  stiffness: 300,
+  damping: 26,
+  mass: 0.4,
+  // 순간 이동(duration:0) 리셋 직후 이어지는 스프링이, 그 직전 애니메이션의
+  // 속도를 이어받아 반대 방향으로 크게 튕겨나가는 것을 방지 (항상 정지 상태에서 시작)
+  velocity: 0,
+};
+
+// getCategoryname(): 카테고리 이름을 찾는 함수, 일치하는 categoryId를 찾으면 category name을 반환하고 찾지 못하면 categoryId를 반환함
+function getCategoryName(categoryId) {
+  const category = categories.find((item) => item.id === categoryId);
+  return category?.name ?? categoryId;
+}
+
+// 상품 상세(리뷰 등)를 보고 뒤로가기했을 때, 캐러셀 가운데에 있던 상품을 그대로
+// 기억하기 위한 세션 저장 - DeskCurationSection.jsx의 동일한 패턴을 그대로 따름
+function readCarouselSelection() {
+  try {
+    const saved = sessionStorage.getItem("homeProductCarouselSelection");
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+}
+
+function ProductGroup({ title, items, isBest = false, onAddToCart }) {
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const [, setDirection] = useState(1);
+  const [isResetting, setIsResetting] = useState(false);
+  const viewportRef = useRef(null);
+  const trackRef = useRef(null);
+  // 끝(경계)에 도달하는 애니메이션이 아직 끝나지 않았는데 화살표를 또 눌렀을 때,
+  // 그 클릭을 버리지 않고 리셋이 끝난 직후 이어서 처리하기 위한 예약
+  const pendingDirectionRef = useRef(null);
+  // 상품이 로드되기 전 currentIndex 초기값(1)은 두 번째 상품을 가리키므로,
+  // 실제 상품이 도착하면 첫 번째 상품이 가운데에서 시작하도록 한 번만 보정
+  const didInitRef = useRef(false);
+
+  const [sliderSize, setSliderSize] = useState({
+    step: 0, // 카드 한 장 이동 거리(카드 너비 + 간격)
+    sideSpace: 0, // 카드를 가운데 두기 위한 왼쪽 여백
+  });
+
+  useEffect(() => {
+    if (items.length > 0 && !didInitRef.current) {
+      didInitRef.current = true;
+      setIsResetting(true);
+
+      // 상품 상세를 보고 뒤로가기했을 때는 첫 상품이 아니라, 떠나기 전
+      // 가운데에 있던 상품을 그대로 복원한다
+      const savedProductId = readCarouselSelection()[title];
+      const savedItemIndex = items.findIndex(
+        (item) => item.id === savedProductId,
+      );
+      const initialIndex =
+        savedItemIndex === -1
+          ? items.length // 저장된 값이 없으면 기존대로 첫 상품이 가운데
+          : savedItemIndex === 0
+            ? items.length // 0번째는 currentIndex=0(경계용 임시 상태)이 아니라 items.length로 매핑
+            : savedItemIndex;
+
+      setCurrentIndex(initialIndex);
+    }
+  }, [items, title]);
+
+  // 캐러셀이 이동할 때마다 지금 가운데에 있는 상품을 세션에 기록 - 상품명/이미지/리뷰 등
+  // 어떤 걸 눌러서 상세로 이동하든 상관없이 항상 최신 상태로 남도록 별도 effect로 분리
+  useEffect(() => {
+    if (items.length === 0 || isResetting) return;
+
+    const activeItemIndex = currentIndex % items.length;
+    const activeProduct = items[activeItemIndex];
+    if (!activeProduct) return;
+
+    const selection = readCarouselSelection();
+    selection[title] = activeProduct.id;
+
+    try {
+      sessionStorage.setItem(
+        "homeProductCarouselSelection",
+        JSON.stringify(selection),
+      );
+    } catch {
+      // sessionStorage 접근 불가(프라이빗 모드 등)면 다음 방문 때 첫 상품으로 시작됨
+    }
+  }, [currentIndex, items, title, isResetting]);
+
+  useEffect(() => {
+    if (!isResetting) return;
+
+    const frameId = requestAnimationFrame(() => {
+      setIsResetting(false);
+
+      // 리셋(순간 이동)이 끝나자마자, 그동안 밀려 있던 클릭이 있으면 정상 애니메이션으로 이어서 처리
+      const pendingDirection = pendingDirectionRef.current;
+      if (pendingDirection) {
+        pendingDirectionRef.current = null;
+        setCurrentIndex((previousIndex) =>
+          pendingDirection === "next" ? previousIndex + 1 : previousIndex - 1,
+        );
+      }
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [isResetting]);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+
+    if (!viewport || !track) return;
+
+    const firstCard = track.children[0];
+    const secondCard = track.children[1];
+
+    if (!firstCard || !secondCard) return;
+
+    function measureSlider() {
+      // offsetWidth: 가운데 카드를 강조하는 CSS transform(scale)의 영향을 받지 않는
+      // 레이아웃 상의(변형 전) 너비를 가져오기 위해 getBoundingClientRect 대신 사용
+      const cardWidth = firstCard.offsetWidth;
+      const gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+
+      const visibleWidth =
+        cardWidth * ITEMS_PER_PAGE + gap * (ITEMS_PER_PAGE - 1);
+
+      setSliderSize({
+        step: cardWidth + gap,
+        sideSpace: (viewport.clientWidth - visibleWidth) / 2,
+      });
+    }
+
+    measureSlider();
+
+    const observer = new ResizeObserver(measureSlider); // 요소 크기가 달라지면 재측정
+
+    observer.observe(viewport);
+    observer.observe(firstCard);
+
+    return () => observer.disconnect();
+  }, [items.length]); // 서버 상품이 도착해서 카드가 생겼을 때도 측정
+
+  // 데이터 로딩 전에 슬라이더가 오류없이 불러와지게 설정
+  if (items.length === 0) {
+    return (
+      <ProductsSection isBest={isBest}>
+        <ProductTitle>{title}</ProductTitle>
+        <p>표시할 상품이 없습니다.</p>
+      </ProductsSection>
+    );
+  }
+
+  const sliderProducts = [
+    items[items.length - 1],
+    ...items,
+    items[0],
+    items[1 % items.length],
+    items[2 % items.length],
+  ];
+
+  // 현재 가운데(활성)에 와 있는 상품이 실제 상품 목록에서 몇 번째인지
+  const activeItemIndex = currentIndex % items.length;
+
+  // Page Indicator - 상품 개수만큼 점을 하나씩 생성
+  const pageNumbers = [];
+
+  for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+    pageNumbers.push(itemIndex);
+  }
+
+  // handlePrevious(): 제품 카드의 이전 페이지로 이동하는 함수
+  function handlePrevious() {
+    if (items.length <= 1) return;
+
+    setDirection(-1);
+
+    // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
+    // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
+    if (currentIndex <= 0) {
+      pendingDirectionRef.current = "previous";
+      return;
+    }
+
+    setCurrentIndex((previousIndex) => previousIndex - 1);
+  }
+
+  // handleNext(): 제품 카드의 다음 페이지로 이동하는 함수
+  function handleNext() {
+    if (items.length <= 1) return;
+
+    setDirection(1);
+
+    // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
+    // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
+    if (currentIndex >= items.length + 1) {
+      pendingDirectionRef.current = "next";
+      return;
+    }
+
+    setCurrentIndex((previousIndex) => previousIndex + 1);
+  }
+
+  // handleAnimationComplete(): 애니메이션 완료 함수
+  function handleAnimationComplete() {
+    if (currentIndex === 0) {
+      setIsResetting(true);
+      setCurrentIndex(items.length);
+    }
+
+    if (currentIndex === items.length + 1) {
+      setIsResetting(true);
+      setCurrentIndex(1);
+    }
+  }
+
+  return (
+    <ProductsSection isBest={isBest}>
+      <ProductTitle>{title}</ProductTitle>
+
+      <ProductSlider>
+        <SliderButton
+          type="button"
+          onClick={handlePrevious}
+          aria-label={`${title} 이전 상품`}
+        >
+          <ChevronLeftIcon width={24} height={24} />
+        </SliderButton>
+
+        <SliderViewport ref={viewportRef}>
+          <SliderTrack
+            ref={trackRef}
+            initial={false}
+            animate={{
+              x: sliderSize.sideSpace - currentIndex * sliderSize.step,
+            }}
+            transition={isResetting ? { duration: 0 } : SLIDE_SPRING}
+            onAnimationComplete={handleAnimationComplete}
+          >
+            {sliderProducts.map((product, index) => {
+              const badgeFields = deriveBadgeFields(product);
+              // 3칸짜리 보이는 창(currentIndex, currentIndex+1, currentIndex+2) 중
+              // 가운데(currentIndex+1)에 오는 카드가 시각적으로도 중앙에 위치함
+              const isActive = index === currentIndex + 1;
+              return (
+                <SlideItem
+                  key={`${product.id}-${index}`}
+                  initial={false}
+                  animate={{
+                    scale: isActive ? 1.0 : 0.88,
+                    opacity: isActive ? 1 : 0.6,
+                  }}
+                  transition={isResetting ? { duration: 0 } : SLIDE_SPRING}
+                  style={{ zIndex: isActive ? 2 : 1 }}
+                >
+                  <ProductCard
+                    product={{
+                      ...product,
+                      categoryName: getCategoryName(product.categoryId),
+                      ...badgeFields,
+                    }}
+                    showCategory
+                    isBest={badgeFields.isBest}
+                    isNew={badgeFields.isNew}
+                    useListBackground={isBest}
+                    onAddToCart={onAddToCart}
+                  />
+                  {!isActive && <SlideOverlay />}
+                </SlideItem>
+              );
+            })}
+          </SliderTrack>
+        </SliderViewport>
+
+        <SliderButton
+          type="button"
+          onClick={handleNext}
+          aria-label={`${title} 다음 상품`}
+        >
+          <ChevronRightIcon width={24} height={24} />
+        </SliderButton>
+      </ProductSlider>
+
+      <PageIndicator>
+        {pageNumbers.map((itemIndex) => (
+          <IndicatorButton
+            key={itemIndex}
+            type="button"
+            aria-label={`${title} ${itemIndex + 1}번째 상품`}
+            aria-current={itemIndex === activeItemIndex ? "page" : undefined}
+            onClick={() => {
+              // itemIndex번째 상품이 가운데로 오도록. 0번째는 currentIndex=0(경계용 임시 상태)이
+              // 아니라 items.length로 매핑해야 정상 범위(1~items.length) 안에서 같은 상품을 가리킴
+              const nextIndex = itemIndex === 0 ? items.length : itemIndex;
+
+              setDirection(nextIndex >= currentIndex ? 1 : -1);
+
+              setCurrentIndex(nextIndex);
+            }}
+          />
+        ))}
+      </PageIndicator>
+    </ProductsSection>
+  );
+}
+
+function ProductSection({ onInitialLoadComplete }) {
+  const [bestProducts, setBestProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
+
+  const addToCart = useCartStore((s) => s.addToCart);
+
+  // 서버 API 호출 및 상태 업데이트
+  useEffect(() => {
+    let alive = true;
+    // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
+    // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
+
+    /*let loadingEnded = false;
+    const finishLoading = () => {
+      if (loadingEnded) return;
+      loadingEnded = true;
+      endLoading();
+    };*/
+
+    const fetchMainProducts = async () => {
+      try {
+        const [bestResult, newResult] = await Promise.all([
+          getProducts({
+            isBest: true,
+            soldOut: false,
+            page: 1,
+            limit: 12,
+          }),
+
+          getProducts({
+            isNew: true,
+            soldOut: false,
+            page: 1,
+            limit: 12,
+          }),
+        ]);
+
+        const bestItems = bestResult.products || [];
+        const newItems = newResult.products || [];
+
+        await preloadingImages(
+          [...bestItems, ...newItems].map((product) => product.imageUrl),
+        );
+
+        if (!alive) return;
+
+        setBestProducts(bestItems);
+        setNewProducts(newItems);
+      } catch (error) {
+        console.error("상품 데이터 조회 실패", error);
+      } finally {
+        //finishLoading();
+        if (alive) {
+          onInitialLoadComplete?.(true);
+        }
+      }
+    };
+
+    fetchMainProducts();
+
+    return () => {
+      alive = false;
+      //finishLoading();
+    };
+  }, [onInitialLoadComplete]);
+
+  // 서버 데이터 기준으로 카트 추가
+  const handleAddToCart = async (productId) => {
+    const allLoadedProducts = [...bestProducts, ...newProducts];
+    const product = allLoadedProducts.find((p) => p.id === productId);
+
+    if (!product) return;
+
+    try {
+      await addToCart({
+        productId: product.id,
+        name: product.name,
+        price: product.discountPrice || product.price,
+        imageUrl: product.imageUrl,
+        isSoldOut: product.soldOut,
+      });
+      showSuccessToast("상품이 장바구니에 담겼습니다");
+    } catch (err) {
+      console.error("장바구니 담기 실패:", err);
+      showFailToast("장바구니 담기에 실패했습니다");
+    }
+  };
+
+  return (
+    <>
+      <ProductGroup
+        title="Best Items"
+        items={bestProducts}
+        isBest
+        onAddToCart={handleAddToCart}
+      />
+      <ProductGroup
+        title="New Items"
+        items={newProducts}
+        onAddToCart={handleAddToCart}
+      />
+    </>
+  );
+}
+
+export { ProductSection };

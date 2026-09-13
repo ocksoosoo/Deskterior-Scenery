@@ -1,0 +1,69 @@
+import AuthForm from "../components/AuthForm";
+import { login } from "../api/authApi";
+import useCartStore from "../store/cartStore";
+import loginbanner from "../assets/loginbanner.webp";
+import useAuthStore from "../store/UseAuthStore";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import useLoadingStore from "../store/UseLoadingStore";
+
+import {
+  LoginPage,
+  LoginImage,
+  LoginCard,
+  Title,
+  SignupLink,
+  LoginImageWrap,
+} from "../styles/LoginForm.styles";
+
+function LoginForm() {
+  const { pathname } = useLocation();
+
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  useEffect(() => {
+    finishPageLoading(pathname);
+  }, [pathname, finishPageLoading]);
+
+  // 장바구니 병합 함수
+  const { mergeLocalCartToServer } = useCartStore();
+
+  const handleLogin = async (data) => {
+    const result = await login(data);
+
+    localStorage.setItem("token", result.token);
+
+    setUser(result.userInfo);
+
+    // 장바구니 로컬데이터 옮김
+    try {
+      await mergeLocalCartToServer();
+    } catch (error) {
+      console.error("장바구니 병합 중 에러 발생:", error);
+    }
+
+    return true;
+  };
+
+  return (
+    <>
+      <LoginPage>
+        <LoginImageWrap>
+          <LoginImage src={loginbanner} alt="Login banner" />
+        </LoginImageWrap>
+
+        <LoginCard>
+          <Title>Log In</Title>
+
+          <AuthForm mode="login" onSubmit={handleLogin} />
+
+          <SignupLink to="/signup">Create an account</SignupLink>
+        </LoginCard>
+      </LoginPage>
+    </>
+  );
+}
+
+export default LoginForm;
