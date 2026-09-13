@@ -88,7 +88,7 @@ function DeskCurationSection({ items = [] }) {
 
     let ignore = false;
 
-    async function fetchSelectedProduct() {
+    const fetchSelectedProduct = async () => {
       setIsProductLoading(true);
       setProductError("");
 
@@ -111,13 +111,13 @@ function DeskCurationSection({ items = [] }) {
           setIsProductLoading(false);
         }
       }
-    }
+    };
     fetchSelectedProduct();
 
     return () => {
       ignore = true;
     };
-  }, [activeProductNumber]); // productData?.id]
+  }, [activeProductNumber]);
 
   // 화면이 처음 열릴 때 imageUrl을 미리 저장
   useEffect(() => {

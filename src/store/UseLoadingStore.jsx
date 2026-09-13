@@ -1,17 +1,32 @@
 import { create } from "zustand";
 
 const useLoadingStore = create((set) => ({
-  loadingCount: 0,
+  acitvePage: null,
+  readyPage: null,
 
-  startLoading: () =>
-    set((state) => ({
-      loadingCount: state.loadingCount + 1,
-    })),
+  startPageLoading: (pathname) => {
+    set({
+      activePage: pathname,
+      readyPage: null,
+    });
+  },
 
-  endLoading: () =>
-    set((state) => ({
-      loadingCount: Math.max(0, state.loadingCount - 1),
-    })),
+  finishPageLoading: (pathname) => {
+    /*set({
+      readyPage: pathname,
+    });*/
+    set((state) => {
+      // 이미 다른 페이지로 이동했다면
+      // 이전 페이지의 늦은 완료 신호는 무시
+      if (state.activePage !== pathname) {
+        return state;
+      }
+
+      return {
+        readyPage: pathname,
+      };
+    });
+  },
 }));
 
 export default useLoadingStore;

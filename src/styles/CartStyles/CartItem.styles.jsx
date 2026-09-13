@@ -52,11 +52,22 @@ export const ImageBox = styled.div(({ theme }) => ({
   },
 }));
 
+export const ImageLoading = styled.div({
+  position: "absolute",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "14px",
+  color: "#666",
+});
+
 // 이미지 태그 스타일
-export const ItemImage = styled.img(({ theme }) => ({
+export const ItemImage = styled.img(({ theme, $isLoaded }) => ({
   width: "100%",
   height: "100%",
   objectFit: "cover",
+  opacity: $isLoaded ? 1 : 0,
 }));
 
 // 뱃지 묶음 (Sold out / Best / New 가로 배치)

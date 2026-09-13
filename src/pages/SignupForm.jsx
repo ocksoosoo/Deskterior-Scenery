@@ -1,6 +1,9 @@
 import AuthForm from "../components/AuthForm";
 import signupbanner from "../assets/signupbanner.webp";
 import { signUp } from "../api/authApi";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import useLoadingStore from "../store/UseLoadingStore";
 import {
   SignupPage,
   SignupImageWrap,
@@ -10,6 +13,14 @@ import {
 } from "../styles/SignupForm.styles";
 
 function SignupForm() {
+  const { pathname } = useLocation();
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  useEffect(() => {
+    finishPageLoading(pathname);
+  }, [pathname, finishPageLoading]);
+
   const handleSignUp = async (data) => {
     const result = await signUp(data);
 

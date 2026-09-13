@@ -28,11 +28,10 @@ import * as S from "../../styles/ProductDetail/ProductDetailPage.styles";
 const ProductDetailPage = () => {
   const user = useAuthStore((state) => state.user);
 
-  const startLoading = useLoadingStore((state) => state.startLoading);
-  const endLoading = useLoadingStore((state) => state.endLoading);
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
 
   const { id } = useParams();
-  const { hash } = useLocation();
+  const { hash, pathname } = useLocation();
 
   // 이전 페이지의 스크롤 위치가 그대로 이어지지 않도록, 상품이 바뀔 때마다 항상 맨 위에서 시작
   // (해시가 있으면 ScrollRestoration이 리셋을 건너뛰기 때문에, 리뷰로 스크롤하는 방향이
@@ -51,6 +50,8 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [productError, setProductError] = useState(false);
 
+  const [loadedProductForId, setLoadedProductForId] = useState(null);
+
   useEffect(() => {
     let alive = true;
     // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
@@ -64,8 +65,6 @@ const ProductDetailPage = () => {
     };*/
 
     const loadProduct = async () => {
-      startLoading();
-
       try {
         const data = await getProduct(id);
 
@@ -83,7 +82,7 @@ const ProductDetailPage = () => {
         }
       } finally {
         //finishLoading();
-        endLoading();
+        if (alive) setLoadedProductForId(id);
       }
     };
 
@@ -93,14 +92,14 @@ const ProductDetailPage = () => {
       alive = false;
       //finishLoading();
     };
-  }, [id, startLoading, endLoading]);
+  }, [id]);
 
   const isCurrentProduct = product != null && String(product.id) === id;
-
   const [reviews, setReviews] = useState([]);
   // 리뷰 로딩이 끝난 상품 id를 기록 - 현재 id와 비교해 "이 상품 리뷰까지 로드 완료"를 파생시킴
   const [loadedReviewsForId, setLoadedReviewsForId] = useState(null);
   const reviewsLoaded = loadedReviewsForId === id;
+  const productLoaded = loadedProductForId === id;
 
   // 상품(id)이 바뀌거나 로그인 상태(user)가 바뀌면 리뷰 목록 새로 조회
   // (같은 페이지에서 로그인/로그아웃해도 isAuthor 가 최신 상태로 갱신되게)
@@ -118,6 +117,14 @@ const ProductDetailPage = () => {
       alive = false;
     };
   }, [id, user]);
+
+  useEffect(() => {
+    if (!productLoaded || !reviewsLoaded) {
+      return;
+    }
+
+    finishPageLoading(pathname);
+  }, [productLoaded, reviewsLoaded, pathname, finishPageLoading]);
 
   const reloadReviews = () =>
     getReviews(id)

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTheme } from "@emotion/react";
 import { Link } from "react-router";
 import Badge from "../common/Badge";
@@ -7,6 +8,7 @@ import {
   ItemCheckbox,
   ImageBox,
   ItemImage,
+  ImageLoading,
   BadgeGroup,
   ImageOverlay,
   InfoBox,
@@ -33,6 +35,8 @@ const CartItem = ({
   onDelete,
 }) => {
   const theme = useTheme();
+
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const badges = [
     isSoldOut && {
@@ -61,7 +65,14 @@ const CartItem = ({
 
         <Link to={`/products/${item.productId}`}>
           <ImageBox>
-            <ItemImage src={item.imageUrl} alt={item.name} />
+            {!imageLoaded && <ImageLoading>상품 불러오는 중...</ImageLoading>}
+            <ItemImage
+              src={item.imageUrl}
+              alt={item.name}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageLoaded(true)}
+              $isLoaded={imageLoaded}
+            />
             {isSoldOut && <ImageOverlay />}
             {badges.length > 0 && (
               <BadgeGroup>

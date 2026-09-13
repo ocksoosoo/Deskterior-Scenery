@@ -14,7 +14,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
 import ProductCard from "../product/ProductCard";
 import categories from "../../data/categories";
 import { getProducts, deriveBadgeFields } from "../../api/productsApi";
-import useLoadingStore from "../../store/UseLoadingStore";
 import { preloadingImages } from "../../utils/preloadingImages";
 import { useState, useEffect, useRef } from "react";
 import useCartStore from "../../store/cartStore";
@@ -334,14 +333,11 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
   );
 }
 
-function ProductSection() {
+function ProductSection({ onInitialLoadComplete }) {
   const [bestProducts, setBestProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
 
   const addToCart = useCartStore((s) => s.addToCart);
-
-  const startLoading = useLoadingStore((state) => state.startLoading);
-  const endLoading = useLoadingStore((state) => state.endLoading);
 
   // 서버 API 호출 및 상태 업데이트
   useEffect(() => {
@@ -356,9 +352,7 @@ function ProductSection() {
       endLoading();
     };*/
 
-    async function fetchMainProducts() {
-      startLoading();
-
+    const fetchMainProducts = async () => {
       try {
         const [bestResult, newResult] = await Promise.all([
           getProducts({
@@ -379,11 +373,9 @@ function ProductSection() {
         const bestItems = bestResult.products || [];
         const newItems = newResult.products || [];
 
-        const imageUrls = [...bestItems, ...newItems].map(
-          (product) => product.imageUrl,
+        await preloadingImages(
+          [...bestItems, ...newItems].map((product) => product.imageUrl),
         );
-
-        await preloadingImages(imageUrls);
 
         if (!alive) return;
 
@@ -393,9 +385,11 @@ function ProductSection() {
         console.error("상품 데이터 조회 실패", error);
       } finally {
         //finishLoading();
-        endLoading();
+        if (alive) {
+          onInitialLoadComplete?.(true);
+        }
       }
-    }
+    };
 
     fetchMainProducts();
 
@@ -403,7 +397,7 @@ function ProductSection() {
       alive = false;
       //finishLoading();
     };
-  }, [startLoading, endLoading]);
+  }, [onInitialLoadComplete]);
 
   // 서버 데이터 기준으로 카트 추가
   const handleAddToCart = async (productId) => {

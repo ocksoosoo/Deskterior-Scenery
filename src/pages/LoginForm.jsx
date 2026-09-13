@@ -3,6 +3,9 @@ import { login } from "../api/authApi";
 import useCartStore from "../store/cartStore";
 import loginbanner from "../assets/loginbanner.webp";
 import useAuthStore from "../store/UseAuthStore";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import useLoadingStore from "../store/UseLoadingStore";
 
 import {
   LoginPage,
@@ -14,7 +17,15 @@ import {
 } from "../styles/LoginForm.styles";
 
 function LoginForm() {
+  const { pathname } = useLocation();
+
   const setUser = useAuthStore((state) => state.setUser);
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  useEffect(() => {
+    finishPageLoading(pathname);
+  }, [pathname, finishPageLoading]);
 
   // 장바구니 병합 함수
   const { mergeLocalCartToServer } = useCartStore();

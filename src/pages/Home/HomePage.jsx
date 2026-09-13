@@ -3,20 +3,27 @@ import { HeroSection } from "../../components/home/HeroSection";
 import { DeskCurationSection } from "../../components/home/DeskCurationSection";
 import { ProductSection } from "../../components/home/ProductSection";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { getCategories } from "../../api/categoriesApi";
 import { getMain } from "../../api/mainApi";
 import useLoadingStore from "../../store/UseLoadingStore";
 import { preloadingImages } from "../../utils/preloadingImages";
 
 export default function HomePage() {
+  const location = useLocation();
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
   const [mainImages, setMainImages] = useState([]);
 
   const categoryItems = mainImages.filter((item) => item.categoryId);
+
   const styleItems = mainImages.filter((item) => item.styleId);
+
   const [categories, setCategories] = useState([]);
 
-  const startLoading = useLoadingStore((state) => state.startLoading);
-  const endLoading = useLoadingStore((state) => state.endLoading);
+  const [homeReady, setHomeReady] = useState(false);
+
+  const [productsReady, setProductsReady] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -30,9 +37,7 @@ export default function HomePage() {
       endLoading();
     };*/
 
-    async function fetchHomeData() {
-      startLoading();
-
+    const fetchHomeData = async () => {
       try {
         const [mainResponse, categoryResponse] = await Promise.all([
           getMain(),
@@ -40,7 +45,6 @@ export default function HomePage() {
         ]);
 
         const images = mainResponse.data.images;
-        //const imageUrls = images.map((item) => item.imageUrl);
 
         await preloadingImages(images.map((item) => item.imageUrl));
 
@@ -52,9 +56,11 @@ export default function HomePage() {
         console.error("홈 데이터 로딩 실패:", error);
       } finally {
         //finishLoading();
-        endLoading();
+        if (alive) {
+          setHomeReady(true);
+        }
       }
-    }
+    };
 
     fetchHomeData();
 
@@ -62,7 +68,15 @@ export default function HomePage() {
       alive = false;
       //finishLoading();
     };
-  }, [startLoading, endLoading]);
+  }, []);
+
+  useEffect(() => {
+    if (!homeReady || !productsReady) {
+      return;
+    }
+
+    finishPageLoading(location.pathname);
+  }, [homeReady, productsReady, location.pathname, finishPageLoading]);
 
   return (
     <>
@@ -70,7 +84,7 @@ export default function HomePage() {
         <HeroSection />
         <CategoriesSection items={categoryItems} categories={categories} />
         <DeskCurationSection items={styleItems} />
-        <ProductSection />
+        <ProductSection onInitialLoadComplete={setProductsReady} />
       </main>
     </>
   );

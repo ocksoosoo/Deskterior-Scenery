@@ -1,7 +1,7 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { Global } from "@emotion/react";
 import { reset } from "./styles/reset";
-import { Routes, Route } from "react-router";
+import { Routes, Route, useLocation } from "react-router";
 //import SignupForm from "./pages/SignupForm";
 //import LoginForm from "./pages/LoginForm";
 //import CartPage from "./pages/Cart/CartPage";
@@ -31,7 +31,14 @@ function App() {
   const setUser = useAuthStore((state) => state.setUser);
   const clearUser = useAuthStore((state) => state.clearUser);
 
-  const isLoading = useLoadingStore((state) => state.loadingCount > 0);
+  const location = useLocation();
+  const readyPage = useLoadingStore((state) => state.readyPage);
+  const startPageLoading = useLoadingStore((state) => state.startPageLoading);
+  const isPageLoading = readyPage !== location.pathname;
+
+  useLayoutEffect(() => {
+    startPageLoading(location.pathname);
+  }, [location.pathname, startPageLoading]);
 
   useEffect(() => {
     const restoreLogin = async () => {
@@ -69,9 +76,9 @@ function App() {
 
       <Toast />
 
-      {isLoading && <Loading />}
+      {isPageLoading && <Loading />}
 
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={null}>
         <Routes>
           <Route element={<CommonLayout />}>
             <Route path="/" element={<HomePage />} />
