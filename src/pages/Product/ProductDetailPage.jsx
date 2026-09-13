@@ -9,7 +9,7 @@ import MobileCtaBar from "../../components/product/MobileCtaBar";
 import ProductDetailContent from "../../components/product/ProductDetailContent";
 import ReviewSection from "../../components/review/ReviewSection";
 import ScrollTopButton from "../../components/common/ScrollTopButton";
-import useLoadingStore from "../../store/UseloadingStore";
+import useLoadingStore from "../../store/UseLoadingStore";
 import { preloadingImages } from "../../utils/preloadingImages";
 import {
   showSuccessToast,
@@ -44,6 +44,14 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     let alive = true;
+    // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
+    // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
+    let loadingEnded = false;
+    const finishLoading = () => {
+      if (loadingEnded) return;
+      loadingEnded = true;
+      endLoading();
+    };
 
     const loadProduct = async () => {
       startLoading();
@@ -64,7 +72,7 @@ const ProductDetailPage = () => {
           setProductError(true);
         }
       } finally {
-        endLoading();
+        finishLoading();
       }
     };
 
@@ -72,6 +80,7 @@ const ProductDetailPage = () => {
 
     return () => {
       alive = false;
+      finishLoading();
     };
   }, [id, startLoading, endLoading]);
 
