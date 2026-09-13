@@ -23,6 +23,11 @@ export const Nav = styled.nav(({ theme }) => ({
     padding: 0,
     marginBottom: theme.spacing.md,
   },
+
+  [theme.media.wide]: {
+    gap: theme.spacing.xl,
+    alignSelf: "stretch",
+  },
 }));
 
 export const BackButton = styled.button(({ theme }) => ({
@@ -46,13 +51,16 @@ export const Trail = styled.ol(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   flexWrap: "wrap",
-  width: "100%",
   minWidth: 0,
   color: theme.colors.secondText,
   fontSize: theme.fontSize.xs, // 0.75rem
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
   letterSpacing: "-0.0075rem",
+
+  [theme.media.mobile]: {
+    width: "100%",
+  },
 }));
 
 export const Crumb = styled.li(({ theme }) => ({

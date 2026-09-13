@@ -21,7 +21,7 @@ export const Category = styled.p(({ theme }) => ({
   letterSpacing: "-0.0075rem",
 }));
 
-export const Title = styled.h1(({ theme }) => ({
+export const Title = styled.h2(({ theme }) => ({
   fontFamily: theme.fontFamily.display,
   fontSize: theme.fontSize["5xl"], // 2.5rem
   fontWeight: theme.fontWeight.regular, // 400
@@ -29,6 +29,10 @@ export const Title = styled.h1(({ theme }) => ({
   letterSpacing: "-0.0625rem",
   color: theme.colors.textMain,
   margin: 0,
+
+  [theme.media.wide]: {
+    letterSpacing: "normal",
+  },
 }));
 
 export const RatingRow = styled.p(({ theme }) => ({
@@ -76,6 +80,15 @@ export const DescBox = styled.div(({ theme }) => ({
     height: "6.5rem", // 104
     background: theme.colors.subtle, // solid #EBEAE4
   },
+
+  [theme.media.wide]: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    alignSelf: "stretch",
+    gap: theme.spacing.md, // 16
+    height: "6.5rem", // 104
+  },
 }));
 
 export const DescLabel = styled.p(({ theme }) => ({
@@ -84,10 +97,7 @@ export const DescLabel = styled.p(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
   color: theme.colors.textMain,
-  marginBottom: theme.spacing["2xs"],
-
-  [theme.media.tablet]: { marginBottom: 0 },
-  [theme.media.mobile]: { marginBottom: 0 },
+  marginBottom: theme.spacing.xs, // 8px
 }));
 
 export const DescText = styled.p(({ theme }) => ({
@@ -104,6 +114,11 @@ export const DescText = styled.p(({ theme }) => ({
     letterSpacing: "-0.00875rem",
   },
   [theme.media.mobile]: {
+    fontSize: theme.fontSize.sm, // 0.875rem
+    fontWeight: theme.fontWeight.regular, // 400
+    letterSpacing: "-0.00875rem",
+  },
+  [theme.media.wide]: {
     fontSize: theme.fontSize.sm, // 0.875rem
     fontWeight: theme.fontWeight.regular, // 400
     letterSpacing: "-0.00875rem",

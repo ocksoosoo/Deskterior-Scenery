@@ -7,37 +7,26 @@ export const Wrapper = styled.div(({ theme }) => ({
 }));
 
 export const Stepper = styled.div(({ theme }) => ({
-  display: "inline-flex",
+  display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
+  justifyContent: "center",
   alignSelf: "flex-start",
-  width: "126px",
-
-  [theme.media.tablet]: {
-    display: "flex",
-    width: "7.5rem",
-    justifyContent: "center",
-    gap: theme.spacing.md,
-  },
-
-  // 모바일: 태블릿과 동일
-  [theme.media.mobile]: {
-    display: "flex",
-    width: "7.5rem",
-    justifyContent: "center",
-    gap: theme.spacing.md,
-  },
+  width: "7.5rem",
+  gap: theme.spacing.md,
 }));
 
 export const StepButton = styled.button(({ theme }) => ({
   width: "35px",
   height: "35px",
   display: "flex",
+  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  padding: "0 0 3.5px 0",
+  gap: "0.625rem",
+  flexShrink: 0,
+  padding: "0 0.4375rem 0.125rem 0.4375rem",
   cursor: "pointer",
-  backgroundColor: theme.colors.cards,
+  background: "#FFF",
   border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
   borderRadius: theme.radius.full,
   color: theme.colors.textMain,
@@ -51,20 +40,7 @@ export const StepButton = styled.button(({ theme }) => ({
   },
 
   [theme.media.tablet]: {
-    flexDirection: "column",
-    gap: "0.625rem",
-    flexShrink: 0,
     padding: "0 0.3125rem 0.125rem 0.3125rem",
-    background: "#FFF",
-  },
-
-  // 모바일: 태블릿과 같은 구조, 좌우 패딩만 7px
-  [theme.media.mobile]: {
-    flexDirection: "column",
-    gap: "0.625rem",
-    flexShrink: 0,
-    padding: "0 0.4375rem 0.125rem 0.4375rem",
-    background: "#FFF",
   },
 }));
 
@@ -99,7 +75,6 @@ export const ButtonRow = styled.div(({ theme }) => ({
   display: "flex",
   gap: theme.spacing.xs,
 
-  // 모바일: 하단 고정 CTA 바(MobileCtaBar)가 대신 보여줌
   [theme.media.mobile]: {
     display: "none",
   },
@@ -140,6 +115,10 @@ export const WishButton = styled.button(({ theme }) => ({
   color: theme.colors.textMain,
 
   [theme.media.tablet]: {
+    width: "2.4375rem",
+  },
+
+  [theme.media.wide]: {
     width: "2.4375rem",
   },
 }));

@@ -17,6 +17,10 @@ export const Section = styled.section(({ theme }) => ({
     padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
     background: theme.colors.background,
   },
+
+  [theme.media.wide]: {
+    marginTop: theme.spacing["3xl"], // 64
+  },
 }));
 
 export const Inner = styled.div(({ theme }) => ({
@@ -31,25 +35,32 @@ export const Inner = styled.div(({ theme }) => ({
     gap: theme.spacing.lg, // 24
     padding: 0,
   },
+
+  [theme.media.wide]: {
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "stretch",
+    gap: theme.spacing.xl, // 32
+    padding: `${theme.spacing["3xl"]} 9rem`, // 64 144
+  },
 }));
 
 export const Title = styled.h2(({ theme }) => ({
   margin: "0 0 24px",
   fontFamily: theme.fontFamily.display,
-  fontSize: theme.fontSize.dpMd, // 3rem
+  fontSize: theme.fontSize["4xl"], // 32px
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
   letterSpacing: "-0.01em",
   color: theme.colors.textMain, // #1F211F
 
-  [theme.media.tablet]: {
-    fontSize: theme.fontSize["4xl"],
-  },
-
   [theme.media.mobile]: {
     margin: 0,
-    fontSize: theme.fontSize["4xl"], // 32px
+    letterSpacing: "normal",
+  },
+
+  [theme.media.wide]: {
     letterSpacing: "normal",
   },
 }));
