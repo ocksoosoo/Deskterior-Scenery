@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 
 export const HeroContainer = styled.section(({ theme }) => ({
   width: "100%",
-  minHeight: "720px",
   maxHeight: "900px",
   height: "100vh",
   background: `radial-gradient(circle at 50% 50%, ${theme.colors.cards} 0%, ${theme.colors.background || "#F8F7F2"} 70%)`,
@@ -12,6 +11,14 @@ export const HeroContainer = styled.section(({ theme }) => ({
     height: "720px",
     minHeight: 0,
     maxHeight: "none",},
+
+    [theme.media.mobile]: {
+      height: "380px",
+    },
+
+    [theme.media.smallMobile]: {
+      height: "380px",
+    }
   }));
 
 // 히어로 이미지 배너 또는 영상 삽입
@@ -50,6 +57,18 @@ export const HeroTitle = styled(motion.h2)(({theme}) => ({
     fontSize: "clamp(72px, 10vw, 102px)",
     lineHeight: 1,
     margin: 0,
+  },
+
+  [theme.media.mobile]: {
+    top: "40%",
+    fontSize: "clamp(48px, 10vw, 76px",
+    margin: 0,
+  },
+
+  [theme.media.smallMobile]: {
+    top: "40%",
+    margin: 0,
+    fontSize: "clamp(28px, 10vw, 48px)",
   }
 }));
 
@@ -65,6 +84,7 @@ export const DeskLampButton = styled(motion.button)(({theme}) => ({
   [theme.media.tablet]: {
     top: "10%",
   },
+
 }));
 
 export const DeskLampImage = styled(motion.img)({
@@ -83,7 +103,7 @@ export const HeadphonesButton = styled(motion.button)(({theme}) => ({
   cursor: "pointer",
 
   [theme.media.tablet]: {
-  top: "9%",
+  top: "5%",
   },
 }));
 
@@ -98,7 +118,7 @@ export const PenTrayButton = styled(motion.button)(({theme}) => ({
 
   position: "absolute",
   right: "7%",
-  top: "50%",
+  top: "45%",
   width: "25%",
   border: "none",
   cursor: "pointer",
@@ -138,7 +158,7 @@ export const DiaryImage =  styled(motion.img)({
 export const FlowerVaseButton = styled(motion.button)(({theme}) => ({
   position: "absolute",
   right: "48%",
-  top: "44%",
+  top: "38%",
   width: "15%",
   border: "none",
   cursor: "pointer",
@@ -205,11 +225,11 @@ export const HeadphonesLabel = styled(motion.div)(({theme}) => ({
 export const PenTrayLabel = styled(motion.div)(({theme}) => ({
   position: "absolute",
   right: "15%",
-  top: "52%",
+  top: "47%",
   color: theme.colors.textMain,
 
   [theme.media.tablet]: {
-  top: "60%",    
+  top: "45%",    
   }
 }));
 
@@ -269,3 +289,10 @@ export const GuideText = styled(motion.span)(({theme}) => ({
     left: "63%",
   }
 }));
+
+export const MobileHeroVideo = styled.video({
+  display: "block",
+  width: "100%",
+  height: "100%",
+  objectFit: "contain",
+});

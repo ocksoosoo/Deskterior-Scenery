@@ -13,6 +13,15 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
   // tablet(768-1023)
   [theme.media.tablet] : {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
+  },
+
+  [theme.media.mobile]: {
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.lg}`,
+    gap: theme.spacing.lg,
+  },
+
+  [theme.media.smallMobile]: {
+  padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
   }
 }));
 
@@ -22,6 +31,14 @@ export const SectionTitle = styled.h2(({ theme }) => ({
   fontSize: theme.fontSize["4xl"], // 32px
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.textMain,
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize["3xl"],
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize["2xl"],
+  },
 }));
 
 export const CategoryList = styled.div(({ theme }) => ({
@@ -34,6 +51,19 @@ export const CategoryList = styled.div(({ theme }) => ({
     maxWidth: "578px",
     flexWrap: "wrap",
     justifyContent: "center",
+  },
+
+  [theme.media.mobile]: {
+    width: "100%",
+    maxWidth: "480px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    columnGap: theme.spacing.md,
+    rowGap: theme.spacing.lg,
+  },
+
+  [theme.media.smallMobile]: {
+    columnGap: theme.spacing.sm,
   }
 }));
 
@@ -44,6 +74,14 @@ export const CategoryItem = styled.div(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing.xs, // 8px
   cursor: "pointer",
+
+  [theme.media.mobile]: {
+    width: `calc((100% - ${theme.spacing.md} * 2) / 3)`,
+  },
+
+  [theme.media.smallMobile]: {
+    width: `calc((100% - ${theme.spacing.sm} * 2) / 3)`,
+  },
 }));
 
 export const CategoryImage = styled.img(({ theme }) => ({
@@ -59,7 +97,18 @@ export const CategoryImage = styled.img(({ theme }) => ({
   "&:hover": {
     transform: "scale(1.03)",
     boxShadow: "0 6px 14px rgba(0, 0, 0, 0.12)",
-  }
+  },
+
+  [theme.media.mobile]: {
+    width: "100%",
+    maxWidth: "120px",
+    height: "auto",
+    aspectRatio: "1 / 1",
+  },
+
+  [theme.media.smallMobile]: {
+    maxWidth: "100px",
+  },
 }));
 
 export const CategoryName = styled.div(({ theme }) => ({
@@ -68,4 +117,12 @@ export const CategoryName = styled.div(({ theme }) => ({
   fontWeight: theme.fontWeight.semiBold,
   color: theme.colors.textMain,
   textAlign: "center",
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.sm,
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize.xs,
+  },
 }));
