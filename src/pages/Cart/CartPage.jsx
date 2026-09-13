@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { toast } from "react-toastify";
 import useCartStore from "../../store/cartStore";
 import { getProduct } from "../../api/productsApi";
@@ -13,6 +14,7 @@ import {
   CartContainer,
   TitleWrapper,
   Course,
+  BreadcrumbLink,
   PageTitle,
   ActionBar,
   SelectAllLabel,
@@ -197,7 +199,9 @@ const CartPage = () => {
     return (
       <CartContainer>
         <TitleWrapper>
-          <Course>Home &gt; Cart</Course>
+          <Course>
+            <BreadcrumbLink to="/">Home</BreadcrumbLink> &gt; Cart
+          </Course>
           <PageTitle>Cart</PageTitle>
         </TitleWrapper>
         <div>불러오는 중...</div>
@@ -209,7 +213,13 @@ const CartPage = () => {
     <>
       <CartContainer>
         <TitleWrapper>
-          <Course>Home &gt; Cart</Course>
+          <Course>
+            {/* 🌟 2. as={Link} 를 써서 껍데기는 a태그, 기능은 라우터 Link로 합체! */}
+            <BreadcrumbLink as={Link} to="/">
+              Home
+            </BreadcrumbLink>{" "}
+            &gt; Cart
+          </Course>
           <PageTitle>Cart</PageTitle>
         </TitleWrapper>
 
