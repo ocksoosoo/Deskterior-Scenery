@@ -117,8 +117,9 @@ export const Content = styled.div(({ theme }) => ({
 export const EmptyState = styled.div(({ theme }) => ({
   display: "flex",
   width: "100%",
-  // 상품 2행 그리드와 높이가 같도록: 카드 414px * 2 + 행 간격 48px
-  minHeight: "876px",
+  // 상품 2행 그리드와 높이가 같도록: 카드 높이(약 400px, ProductName이 1줄이든 2줄이든
+  // minHeight로 통일됨) * 2 + 행 간격(2xl, 48px). 실제 렌더링 값으로 측정해서 반영함
+  minHeight: "848px",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
@@ -167,16 +168,6 @@ export const Row = styled.div(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   gap: theme.spacing.md,
-
-  // 카드 높이를 고정하지 않고 내용에 맞게 자동으로 - 상품명이 몇 줄이든 카드 높이가 통일되게 함 (전 구간 공통)
-  "&& > *": {
-    height: "auto",
-  },
-
-  // 상품명이 1줄이든 2줄이든 항상 같은 높이를 차지해서, 아래 별점이 카드 밑에 눌리지 않게 함 (전 구간 공통)
-  "&& > * > div:nth-of-type(2) > strong": {
-    minHeight: "2.4em",
-  },
 
   [theme.media.tablet]: {
     alignItems: "flex-start",
