@@ -55,12 +55,13 @@ const ProductDetailPage = () => {
     let alive = true;
     // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
     // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
-    let loadingEnded = false;
+
+    /*let loadingEnded = false;
     const finishLoading = () => {
       if (loadingEnded) return;
       loadingEnded = true;
       endLoading();
-    };
+    };*/
 
     const loadProduct = async () => {
       startLoading();
@@ -81,7 +82,8 @@ const ProductDetailPage = () => {
           setProductError(true);
         }
       } finally {
-        finishLoading();
+        //finishLoading();
+        endLoading();
       }
     };
 
@@ -89,7 +91,7 @@ const ProductDetailPage = () => {
 
     return () => {
       alive = false;
-      finishLoading();
+      //finishLoading();
     };
   }, [id, startLoading, endLoading]);
 
@@ -134,7 +136,9 @@ const ProductDetailPage = () => {
       if (scrolled) return;
       scrolled = true;
       observer.disconnect();
-      document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document
+        .querySelector(hash)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
     const scheduleScroll = () => {
       clearTimeout(settleTimer);

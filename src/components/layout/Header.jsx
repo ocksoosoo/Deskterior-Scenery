@@ -73,7 +73,8 @@ const Header = () => {
 
   useEffect(() => {
     return () => {
-      if (closeMenuTimeoutRef.current) clearTimeout(closeMenuTimeoutRef.current);
+      if (closeMenuTimeoutRef.current)
+        clearTimeout(closeMenuTimeoutRef.current);
     };
   }, []);
 
@@ -204,10 +205,7 @@ const Header = () => {
       {isMenuRendered &&
         createPortal(
           <>
-            <MobileMenuOverlay
-              data-open={isMenuOpen}
-              onClick={closeMenu}
-            />
+            <MobileMenuOverlay data-open={isMenuOpen} onClick={closeMenu} />
             <MobileMenuPanel data-open={isMenuOpen}>
               <MobileMenuHeader>
                 <MobileMenuLogo>SCENERY</MobileMenuLogo>
