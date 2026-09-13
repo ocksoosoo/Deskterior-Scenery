@@ -21,6 +21,11 @@ export const Card = styled.div(({ theme, useListBackground }) => ({
   overflow: "hidden",
   // 카드가 배경 위에 살짝 떠 있는 느낌을 주는 은은한 그림자
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.08)",
+
+  [theme.media.mobile]: {
+    paddingBottom: theme.spacing.xs,
+    gap: theme.spacing.xs,
+  },
 }));
 
 export const ImageWrapper = styled.div(({ theme }) => ({
@@ -102,13 +107,13 @@ export const LikeButton = styled.button(({ theme }) => ({
   cursor: "pointer",
   // 상품 이미지 배경이 흰색이면 버튼 배경(반투명 흰색)과 경계가 안 보이므로,
   // 호버 여부와 상관없이 기본 그림자를 항상 줘서 항상 구분되게 함
-  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.12)",
+  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.4)",
   transition: "transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease",
 
   "&:hover": {
     transform: "scale(1.05)",
     background: "rgba(253, 253, 253, 0.95)",
-    boxShadow: "0 3px 8px rgba(0, 0, 0, 0.18)",
+    boxShadow: "0 3px 12px rgba(0, 0, 0, 0.5)",
   },
 
   "&:active": {

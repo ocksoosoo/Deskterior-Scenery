@@ -16,12 +16,26 @@ import { EmptyBoxIcon } from "../../components/icons/Icons";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
 const PAGE_SIZE = 6;
-const ROW_SIZE = 3;
+// 모바일(theme.media.mobile 기준 768px 미만)에서는 한 줄에 2개씩,
+// 그 외(태블릿/PC)에서는 3개씩 묶어서 한 행(Row)을 만든다
+const MOBILE_BREAKPOINT = 768;
 
 const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
 const CategoryPage = ({ categoryId = "lighting" }) => {
   const addToCart = useCartStore((s) => s.addToCart);
+
+  // 화면 크기에 따라 한 행에 들어가는 상품 개수(2/3)를 동적으로 계산
+  const [isMobile, setIsMobile] = useState(
+    () => window.innerWidth < MOBILE_BREAKPOINT,
+  );
+  useEffect(() => {
+    const handleResize = () =>
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  const rowSize = isMobile ? 2 : 3;
 
   const [categories, setCategories] = useState(null);
   const [categoriesFailed, setCategoriesFailed] = useState(false);
@@ -185,8 +199,8 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     ];
 
     const rows = [];
-    for (let i = 0; i < gridItems.length; i += ROW_SIZE) {
-      rows.push(gridItems.slice(i, i + ROW_SIZE));
+    for (let i = 0; i < gridItems.length; i += rowSize) {
+      rows.push(gridItems.slice(i, i + rowSize));
     }
 
     resultsContent = (

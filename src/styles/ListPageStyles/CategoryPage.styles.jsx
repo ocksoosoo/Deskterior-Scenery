@@ -39,6 +39,15 @@ export const Header = styled.div(({ theme }) => ({
     gap: theme.spacing.sm,
     borderBottom: "none",
   },
+
+  [theme.media.mobile]: {
+    maxWidth: "100%",
+    height: "auto",
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
+    alignItems: "flex-start",
+    gap: theme.spacing.sm,
+    borderBottom: "none",
+  },
 }));
 
 export const Breadcrumb = styled.nav({
@@ -55,6 +64,10 @@ export const Trail = styled.ol(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.12px",
   color: theme.colors.secondText,
+
+  [theme.media.mobile]: {
+    letterSpacing: "normal",
+  },
 }));
 
 export const Crumb = styled.li(({ theme }) => ({
@@ -70,7 +83,7 @@ export const CrumbLink = styled(Link)({
   },
 });
 
-export const PageTitle = styled.h1(({ theme }) => ({
+export const PageTitle = styled.h2(({ theme }) => ({
   ...headingStyle(theme),
   fontSize: theme.fontSize.dpMd,
   fontWeight: theme.fontWeight.regular,
@@ -79,6 +92,14 @@ export const PageTitle = styled.h1(({ theme }) => ({
   color: "#000",
   textAlign: "center",
   margin: 0,
+
+  [theme.media.mobile]: {
+    fontSize: "40px",
+    fontWeight: theme.fontWeight.regular,
+    letterSpacing: "normal",
+    lineHeight: "normal",
+    color: theme.colors.textMain,
+  },
 }));
 
 export const PageSubtitle = styled.p(({ theme }) => ({
@@ -90,6 +111,11 @@ export const PageSubtitle = styled.p(({ theme }) => ({
   color: "#000",
   textAlign: "center",
   margin: 0,
+
+  [theme.media.mobile]: {
+    letterSpacing: "normal",
+    color: theme.colors.textMain,
+  },
 }));
 
 export const Content = styled.div(({ theme }) => ({
@@ -111,6 +137,15 @@ export const Content = styled.div(({ theme }) => ({
     maxWidth: "100%",
     padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
     gap: theme.spacing.lg,
+  },
+
+  [theme.media.mobile]: {
+    maxWidth: "100%",
+    alignItems: "flex-start",
+    padding: `${theme.spacing.xl} ${theme.spacing.md} ${theme.spacing["2xl"]} ${theme.spacing.md}`,
+    gap: theme.spacing.lg,
+    borderTop: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+    background: theme.colors.background,
   },
 }));
 
@@ -160,6 +195,12 @@ export const ProductGrid = styled.div(({ theme }) => ({
     maxWidth: "100%",
     gap: theme.spacing.lg,
   },
+
+  [theme.media.mobile]: {
+    maxWidth: "100%",
+    // 상품 행(Row) 사이 간격은 32px(xl) - Content 자체의 gap(lg)과는 다른 값
+    gap: theme.spacing.xl,
+  },
 }));
 
 export const Row = styled.div(({ theme }) => ({
@@ -188,6 +229,31 @@ export const Row = styled.div(({ theme }) => ({
     "&& button[aria-label='찜하기'], && button[aria-label='장바구니 담기']": {
       width: "30px",
       height: "30px",
+      borderRadius: "15px",
+    },
+  },
+
+  // 모바일은 한 행에 2개(태블릿의 3개짜리 유연한 행과 같은 방식, 개수만 다름)
+  [theme.media.mobile]: {
+    alignItems: "flex-start",
+    // 카드 2개(167.5px) + 사이 간격(xs, 8px) = 콘텐츠 폭(343px)에 맞춰야 하므로
+    // 태블릿(md)보다 좁은 xs 간격을 사용
+    gap: theme.spacing.xs,
+
+    "&& > *": {
+      flex: "1 0 0",
+      minWidth: 0,
+      gap: theme.spacing.xs,
+    },
+
+    "&& > * > div:nth-of-type(2)": {
+      padding: `0 ${theme.spacing.sm}`,
+      gap: theme.spacing["2xs"],
+    },
+
+    "&& button[aria-label='찜하기'], && button[aria-label='장바구니 담기']": {
+      width: "28px",
+      height: "28px",
       borderRadius: "15px",
     },
   },
