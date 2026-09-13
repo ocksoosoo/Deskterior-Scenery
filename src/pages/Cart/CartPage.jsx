@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import useCartStore from "../../store/cartStore";
 import { getProduct } from "../../api/productsApi";
@@ -10,6 +10,7 @@ import RecommendItems from "../../components/cart/RecommendItems";
 import Modal from "../../components/common/Modal";
 import FailToast from "../../components/common/FailToast";
 import SuccessToast from "../../components/common/SuccessToast";
+import useLoadingStore from "../../store/UseLoadingStore";
 import {
   CartContainer,
   TitleWrapper,
@@ -28,7 +29,6 @@ import {
 const CartPage = () => {
   const {
     cartItems,
-    isLoading,
     error,
     fetchCart,
     increaseQuantity,
@@ -38,13 +38,47 @@ const CartPage = () => {
     removeSelectedItems,
   } = useCartStore();
 
+  const { pathname } = useLocation();
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
   const [checkedItems, setCheckedItems] = useState([]);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [productInfoMap, setProductInfoMap] = useState({});
 
+  // 최초 장바구니 조회 완료 여부
+  const [cartLoaded, setCartLoaded] = useState(false);
+
+  // soldOut / Best / New 정보 조회 완료 여부
+  const [productInfoReady, setProductInfoReady] = useState(false);
+
+  // 최초 체크박스 설정 완료 여부
+  const [initialChecksReady, setInitialChecksReady] = useState(false);
+
   // 최초 서버에서 장바구니 조회
-  useEffect(() => {
+  /*useEffect(() => {
     fetchCart();
+  }, [fetchCart]);*/
+  useEffect(() => {
+    let alive = true;
+
+    const loadCart = async () => {
+      try {
+        await fetchCart();
+      } catch (error) {
+        console.error("장바구니 로딩 실패:", error);
+      } finally {
+        if (alive) {
+          setCartLoaded(true);
+        }
+      }
+    };
+
+    loadCart();
+
+    return () => {
+      alive = false;
+    };
   }, [fetchCart]);
 
   // 장바구니 상품들의 최신 품절/뱃지 상태를 상품 상세 API로 조회
@@ -52,7 +86,7 @@ const CartPage = () => {
     .sort()
     .join(",");
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!productIdsKey) return;
     const productIds = productIdsKey.split(",").map(Number);
 
@@ -65,18 +99,69 @@ const CartPage = () => {
     ).then((results) => {
       setProductInfoMap(Object.fromEntries(results));
     });
-  }, [productIdsKey]);
+  }, [productIdsKey]);*/
+  useEffect(() => {
+    if (!cartLoaded) return;
+
+    let alive = true;
+
+    async function loadProductInfo() {
+      setProductInfoReady(false);
+
+      // 장바구니가 비어있으면 별도로 조회할 상품이 없음
+      if (!productIdsKey) {
+        if (alive) {
+          setProductInfoMap({});
+          setProductInfoReady(true);
+        }
+
+        return;
+      }
+
+      const productIds = productIdsKey.split(",").map(Number);
+
+      try {
+        const results = await Promise.all(
+          productIds.map((id) =>
+            getProduct(id)
+              .then((product) => [id, product])
+              .catch((error) => {
+                console.error(`상품 ${id} 정보 조회 실패:`, error);
+
+                // 하나의 상품 조회가 실패해도
+                // 페이지 전체 Loading은 끝날 수 있도록 처리
+                return [id, null];
+              }),
+          ),
+        );
+
+        if (!alive) return;
+
+        setProductInfoMap(Object.fromEntries(results));
+      } finally {
+        if (alive) {
+          setProductInfoReady(true);
+        }
+      }
+    }
+
+    loadProductInfo();
+
+    return () => {
+      alive = false;
+    };
+  }, [cartLoaded, productIdsKey]);
 
   const isSoldOutProduct = (productId) =>
     Boolean(productInfoMap[productId]?.soldOut);
 
   // 품절 정보(productInfoMap) 조회가 끝났는지 여부 - 끝나기 전엔 체크 초기화를 미룬다
-  const productInfoLoaded = cartItems.every(
+  /*const productInfoLoaded = cartItems.every(
     (item) => item.productId in productInfoMap,
-  );
+  );*/
 
   // 체크 초기화 (cartItems + 품절 정보가 로드된 후 1회)
-  useEffect(() => {
+  /*useEffect(() => {
     if (
       cartItems.length > 0 &&
       productInfoLoaded &&
@@ -88,7 +173,37 @@ const CartPage = () => {
           .map((item) => item.cartItemId),
       );
     }
-  }, [cartItems, productInfoLoaded]);
+  }, [cartItems, productInfoLoaded]);*/
+
+  // 최초 체크박스 설정, 품절 상품을 제외한 상품들을 기본 선택
+  useEffect(() => {
+    if (!productInfoReady || initialChecksReady) {
+      return;
+    }
+
+    setCheckedItems(
+      cartItems
+        .filter((item) => !isSoldOutProduct(item.productId))
+        .map((item) => item.cartItemId),
+    );
+
+    setInitialChecksReady(true);
+  }, [productInfoReady, initialChecksReady, cartItems]);
+
+  // 장바구니 + 최신 상품 정보 + 체크 상태까지 준비되면 App의 전역 Loading 종료
+  useEffect(() => {
+    if (!cartLoaded || !productInfoReady || !initialChecksReady) {
+      return;
+    }
+
+    finishPageLoading(pathname);
+  }, [
+    cartLoaded,
+    productInfoReady,
+    initialChecksReady,
+    pathname,
+    finishPageLoading,
+  ]);
 
   // 토스트 공통 헬퍼
   const showFailToast = (message) => toast(<FailToast message={message} />);
@@ -115,6 +230,7 @@ const CartPage = () => {
   const availableItems = cartItems.filter(
     (item) => !isSoldOutProduct(item.productId),
   );
+
   const isAllChecked =
     availableItems.length > 0 && availableItems.length === checkedItems.length;
 
@@ -195,7 +311,7 @@ const CartPage = () => {
     cartItems.length > 0 &&
     cartItems.every((item) => isSoldOutProduct(item.productId));
 
-  if (isLoading) {
+  /*if (isLoading) {
     return (
       <CartContainer>
         <TitleWrapper>
@@ -207,7 +323,7 @@ const CartPage = () => {
         <div>불러오는 중...</div>
       </CartContainer>
     );
-  }
+  }*/
 
   return (
     <>

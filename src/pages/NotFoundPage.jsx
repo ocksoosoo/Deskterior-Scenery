@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
+import useLoadingStore from "../store/UseLoadingStore";
 import {
   NotFoundBox,
   ErrorContent,
@@ -14,6 +15,14 @@ import {
 function NotFoundPage({ autoRedirect = true }) {
   const [count, setCount] = useState(5);
   const navigate = useNavigate();
+
+  const { pathname } = useLocation();
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  useEffect(() => {
+    finishPageLoading(pathname);
+  }, [pathname, finishPageLoading]);
 
   useEffect(() => {
     if (!autoRedirect) return;

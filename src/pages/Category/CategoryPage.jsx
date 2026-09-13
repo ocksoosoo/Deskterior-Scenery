@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useLocation, useSearchParams } from "react-router";
 import { getCategories } from "../../api/categoriesApi";
 import staticCategories from "../../data/categories";
 import { getProducts, deriveBadgeFields } from "../../api/productsApi";
@@ -11,7 +11,8 @@ import {
 import ProductCard from "../../components/product/ProductCard";
 import ProductToolbar from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
-import Loading from "../../components/common/Loading";
+import useLoadingStore from "../../store/UseLoadingStore";
+import { preloadingImages } from "../../utils/preloadingImages";
 import { EmptyBoxIcon } from "../../components/icons/Icons";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
@@ -24,6 +25,10 @@ const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
 const CategoryPage = ({ categoryId = "lighting" }) => {
   const addToCart = useCartStore((s) => s.addToCart);
+
+  const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  const { pathname } = useLocation();
 
   // 화면 크기에 따라 한 행에 들어가는 상품 개수(2/3)를 동적으로 계산
   const [isMobile, setIsMobile] = useState(
@@ -39,6 +44,8 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   const [categories, setCategories] = useState(null);
   const [categoriesFailed, setCategoriesFailed] = useState(false);
+
+  const [categoriesReady, setCategoriesReady] = useState(false);
   useEffect(() => {
     let alive = true;
     getCategories()
@@ -52,6 +59,11 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
         // API가 실패해도 이름/경로는 항상 같은 정적 목록으로 대체해서 slug 대신 정상 표기되게 함
         setCategories(staticCategories);
         showFailToast("페이지 정보를 불러오지 못했습니다.");
+      })
+      .finally(() => {
+        if (alive) {
+          setCategoriesReady(true);
+        }
       });
     return () => {
       alive = false;
@@ -85,10 +97,13 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [erroredKey, setErroredKey] = useState(null);
 
+  const [loadedProductsForCategoryId, setLoadedProductsForCategoryId] =
+    useState(null);
+
   const queryKey = `${categoryId}|${currentPage}|${sortBy}|${search}`;
   const hasLoadedRef = useRef(false);
 
-  useEffect(() => {
+  /*useEffect(() => {
     let alive = true;
     getProducts({
       category: categoryId,
@@ -121,7 +136,70 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     return () => {
       alive = false;
     };
+  }, [categoryId, currentPage, sortBy, search, queryKey]);*/
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadProducts() {
+      try {
+        const data = await getProducts({
+          category: categoryId,
+          page: currentPage,
+          limit: PAGE_SIZE,
+          sort: sortBy,
+          q: search,
+        });
+
+        const products = data.products.map((product) => ({
+          ...product,
+          ...deriveBadgeFields(product),
+        }));
+
+        await preloadingImages(products.map((product) => product.imageUrl));
+
+        if (!alive) return;
+
+        setPageProducts(products);
+
+        setTotalPages(Math.max(1, data.pagination.totalPages));
+
+        setErroredKey(null);
+
+        hasLoadedRef.current = true;
+      } catch (error) {
+        console.error("상품목록 로딩 실패:", error);
+
+        if (!alive) return;
+
+        setErroredKey(queryKey);
+
+        if (hasLoadedRef.current) {
+          showFailToast("목록을 불러오지 못했어요. 다시 시도해주세요.");
+        }
+      } finally {
+        if (alive) {
+          setLoadedProductsForCategoryId(categoryId);
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      alive = false;
+    };
   }, [categoryId, currentPage, sortBy, search, queryKey]);
+
+  const productsReady = loadedProductsForCategoryId === categoryId;
+
+  useEffect(() => {
+    if (!categoriesReady || !productsReady) {
+      return;
+    }
+
+    finishPageLoading(pathname);
+  }, [categoriesReady, productsReady, pathname, finishPageLoading]);
 
   // 카테고리/정렬/검색/페이지가 바뀌어 재조회 중이어도, 이미 보여줄 데이터가 있으면
   // 화면 전체를 스피너로 갈아치우지 않고 기존 목록을 유지하다가 새 데이터로 자연스럽게 교체
@@ -130,7 +208,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   // 카테고리 목록이 아직 로딩 중(실패도 아직 안 함)이면 유효한 categoryId인지도 아직 알 수 없으니 대기
   if (categories === null && !categoriesFailed) {
-    return <Loading />;
+    return null;
   }
 
   // 카테고리 목록을 정상적으로 받아왔는데 그 안에 없는 id면 진짜 잘못된 페이지
@@ -145,7 +223,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   // 진짜 첫 로딩(에러도 데이터도 아직 없음)일 때만 전체 화면 스피너
   if (!hasLoadedOnce && !isCurrentError) {
-    return <Loading />;
+    return null;
   }
 
   const handleAddToCart = async (productId) => {
