@@ -18,6 +18,9 @@ const ProductCard = ({
   showCategory = false,
   isBest = false,
   isNew = false,
+  // 카드가 놓이는 배경이 카드 자체 배경색과 겹쳐 경계가 안 보이는 경우
+  // (ex. 홈 화면 베스트 섹션), 카드 배경을 상품목록 페이지 배경색으로 대신 사용
+  useListBackground = false,
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -45,7 +48,7 @@ const ProductCard = ({
     showSuccessToast(
       next
         ? "상품이 찜 목록에 추가되었습니다."
-        : "찜 목록에서 삭제되었습니다."
+        : "상품이 찜 목록에서 삭제되었습니다."
     );
   };
 
@@ -88,7 +91,7 @@ const ProductCard = ({
   };
 
   return (
-    <S.Card>
+    <S.Card useListBackground={useListBackground}>
       <S.ImageWrapper>
         {product.soldOut && <S.ImageOverlay />}
 
@@ -143,7 +146,7 @@ const ProductCard = ({
                   </clipPath>
                   <S.CartWaterGroup clipPath={`url(#${clipId})`}>
                     <path
-                      d="M-12,10.8 Q-9,9.6 -6,10.8 T0,10.8 T6,10.8 T12,10.8 T18,10.8 T24,10.8 T30,10.8 T36,10.8 V17 H-12 Z"
+                      d="M-12,10.15 Q-9,9.45 -6,10.15 T0,10.15 T6,10.15 T12,10.15 T18,10.15 T24,10.15 T30,10.15 T36,10.15 V17 H-12 Z"
                       fill={theme.colors.emphasis}
                       opacity={0.85}
                     >
@@ -152,12 +155,12 @@ const ProductCard = ({
                         type="translate"
                         from="0 0"
                         to="12 0"
-                        dur="2.4s"
+                        dur="3.6s"
                         repeatCount="indefinite"
                       />
                     </path>
                     <path
-                      d="M-12,11.3 Q-9,10.1 -6,11.3 T0,11.3 T6,11.3 T12,11.3 T18,11.3 T24,11.3 T30,11.3 T36,11.3 V17 H-12 Z"
+                      d="M-12,10.55 Q-9,9.95 -6,10.55 T0,10.55 T6,10.55 T12,10.55 T18,10.55 T24,10.55 T30,10.55 T36,10.55 V17 H-12 Z"
                       fill={theme.colors.emphasis}
                       opacity={0.45}
                     >
@@ -166,7 +169,7 @@ const ProductCard = ({
                         type="translate"
                         from="0 0"
                         to="-12 0"
-                        dur="3.2s"
+                        dur="4.8s"
                         repeatCount="indefinite"
                       />
                     </path>

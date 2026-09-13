@@ -147,7 +147,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
         imageUrl: product.imageUrl,
         isSoldOut: product.soldOut,
       });
-      showSuccessToast("장바구니에 담겼습니다");
+      showSuccessToast("상품이 장바구니에 담겼습니다");
     } catch (err) {
       console.error("장바구니 담기 실패:", err);
       showFailToast("장바구니 담기에 실패했습니다");

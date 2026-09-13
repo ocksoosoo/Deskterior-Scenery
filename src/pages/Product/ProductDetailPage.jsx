@@ -125,8 +125,6 @@ const ProductDetailPage = () => {
   // 상세 이미지들이 하나씩 늦게 로드되며 레이아웃이 계속 바뀌기 때문에,
   // 크기 변화가 잠잠해지면 스크롤하되 - 한 번 스크롤한 뒤에는 이후 이미지 로딩으로
   // 또 움직이지 않도록 더 이상 반응하지 않는다 (약간의 위치 오차보다 정확한 위치가 우선)
-  // 페이지 이동(다른 곳에서 클릭해서 왔든, 새로고침했든) 자체가 이미 "새 화면"이므로
-  // 스크롤 애니메이션 없이 항상 그 위치에 바로 자리잡는다
   useEffect(() => {
     if (!hash || !isCurrentProduct || !reviewsLoaded) return;
 
@@ -136,7 +134,7 @@ const ProductDetailPage = () => {
       if (scrolled) return;
       scrolled = true;
       observer.disconnect();
-      document.querySelector(hash)?.scrollIntoView({ behavior: "instant", block: "start" });
+      document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
     const scheduleScroll = () => {
       clearTimeout(settleTimer);
@@ -176,7 +174,7 @@ const ProductDetailPage = () => {
         },
         quantity,
       );
-      showSuccessToast("장바구니에 담겼습니다");
+      showSuccessToast("상품이 장바구니에 담겼습니다");
     } catch (err) {
       console.error("장바구니 담기 실패:", err);
       showFailToast("장바구니 담기에 실패했습니다");

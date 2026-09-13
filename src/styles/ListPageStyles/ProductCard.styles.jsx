@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 
-export const Card = styled.div(({ theme }) => ({
+export const Card = styled.div(({ theme, useListBackground }) => ({
   position: "relative",
   display: "flex",
   width: "280px",
@@ -14,9 +14,13 @@ export const Card = styled.div(({ theme }) => ({
   gap: theme.spacing.sm,
   flexShrink: 0,
   textAlign: "left",
-  background: theme.colors.cards,
+  // 카드가 놓이는 배경이 카드 자체 배경색(theme.colors.cards)과 같아서 경계가 안 보이는
+  // 경우(ex. 홈 화면 베스트 섹션)에는 상품목록 페이지 배경색을 대신 사용
+  background: useListBackground ? theme.colors.background : theme.colors.cards,
   borderRadius: theme.radius.md,
   overflow: "hidden",
+  // 카드가 배경 위에 살짝 떠 있는 느낌을 주는 은은한 그림자
+  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.08)",
 }));
 
 export const ImageWrapper = styled.div(({ theme }) => ({
@@ -76,13 +80,15 @@ export const IconStack = styled.div(({ theme }) => ({
   gap: theme.spacing.xs,
 }));
 
-const likeBounce = keyframes`
-  0% { transform: scale(1); }
-  40% { transform: scale(1.3); }
-  100% { transform: scale(1); }
+// 찜 클릭 시 크기 변화(스케일) 없이, 얇은 링이 살짝 번지며 사라지는 것으로만
+// "확인됐다"는 피드백을 줌 — 하트가 커졌다 작아지는 통통 튄 느낌 대신 절제된 톤 유지
+const pulseRing = keyframes`
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
 `;
 
 export const LikeButton = styled.button(({ theme }) => ({
+  position: "relative",
   display: "flex",
   width: "36px",
   height: "36px",
@@ -94,20 +100,33 @@ export const LikeButton = styled.button(({ theme }) => ({
   background: "rgba(253, 253, 253, 0.75)",
   color: theme.colors.textMain,
   cursor: "pointer",
+  // 상품 이미지 배경이 흰색이면 버튼 배경(반투명 흰색)과 경계가 안 보이므로,
+  // 호버 여부와 상관없이 기본 그림자를 항상 줘서 항상 구분되게 함
+  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.12)",
   transition: "transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease",
 
   "&:hover": {
-    transform: "scale(1.1)",
+    transform: "scale(1.05)",
     background: "rgba(253, 253, 253, 0.95)",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+    boxShadow: "0 3px 8px rgba(0, 0, 0, 0.18)",
   },
 
   "&:active": {
     transform: "scale(0.95)",
   },
 
-  '&[aria-pressed="true"]': {
-    animation: `${likeBounce} 0.3s ease`,
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    borderRadius: "inherit",
+    border: `2px solid ${theme.colors.error}`,
+    opacity: 0,
+    pointerEvents: "none",
+  },
+
+  '&[aria-pressed="true"]::after': {
+    animation: `${pulseRing} 0.5s ease-out`,
   },
 }));
 
@@ -132,10 +151,11 @@ export const CartButton = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
   color: "#fff",
   cursor: "pointer",
-  transition: "transform 0.15s ease",
+  transition: "transform 0.15s ease, box-shadow 0.15s ease",
 
   "&:hover": {
-    transform: "scale(1.1)",
+    transform: "scale(1.05)",
+    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
   },
 
   "&:active": {
