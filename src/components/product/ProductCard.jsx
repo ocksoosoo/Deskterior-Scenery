@@ -16,6 +16,7 @@ const ProductCard = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const [liked, setLiked] = useState(!!product.liked);
+  const [justAdded, setJustAdded] = useState(false);
 
   const safeRating = Math.min(5, Math.max(0, Number(product.rating) || 0));
   const safeCount = Number(product.reviewCount) || 0;
@@ -29,7 +30,10 @@ const ProductCard = ({
     onToggleLike?.(product.id);
   };
 
-  const handleAddToCart = () => onAddToCart?.(product.id);
+  const handleAddToCart = () => {
+    onAddToCart?.(product.id);
+    setJustAdded(true);
+  };
 
   // 상품명/이미지 클릭 시 상세페이지로 이동
   const handleGoToDetail = (event) => {
@@ -105,6 +109,10 @@ const ProductCard = ({
             type="button"
             aria-label="장바구니 담기"
             onClick={handleAddToCart}
+            data-just-added={justAdded}
+            onAnimationEnd={(event) => {
+              if (event.target === event.currentTarget) setJustAdded(false);
+            }}
           >
             <BasketIcon width={24} height={24} />
           </S.CartButton>
