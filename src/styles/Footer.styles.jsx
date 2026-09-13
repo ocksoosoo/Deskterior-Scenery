@@ -2,12 +2,19 @@ import styled from "@emotion/styled";
 
 export const FooterContainer = styled.footer({
   width: "100%",
-  backgroundColor: "#000000",
+  // color-text-primary: 태블릿/PC/와이드/모바일 전 구간 통일
+  backgroundColor: "#1F211F",
   padding: "70px 0 30px",
   boxSizing: "border-box",
 
   "@media (min-width: 320px) and (width < 768px)": {
-    padding: "42px 14px 28px",
+    display: "flex",
+    // spacing-2xl(48) spacing-md(16) spacing-xl(32) spacing-md(16)
+    padding: "48px 16px 32px",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "32px", // spacing-xl
+    alignSelf: "stretch",
   },
 });
 
@@ -22,7 +29,10 @@ export const FooterInner = styled.div({
     width: "100%",
     margin: 0,
     flexDirection: "column",
-    gap: "25px",
+    alignItems: "flex-start",
+    // FooterContainer 자체가 32px gap을 가진 flex column이 되면서, FooterInfo/FooterSupport가
+    // 이 안에 있어도 같은 32px 간격으로 보이도록 여기 gap도 동일하게 맞춤(spacing-xl)
+    gap: "32px",
   },
 });
 
@@ -39,7 +49,7 @@ export const FooterInfo = styled.section({
 
 export const FooterLogo = styled.h2({
   margin: 0,
-  color: "#ffffff",
+  color: "#FDFDFD", // Cards
   fontSize: "22px",
   fontWeight: 600,
   textAlign: "left",
@@ -51,7 +61,7 @@ export const FooterLogo = styled.h2({
 
 export const FooterDescription = styled.p({
   margin: 0,
-  color: "#777777",
+  color: "#74766F", // Secondary Text
   fontSize: "16px",
   lineHeight: 1.4,
   textAlign: "left",
@@ -77,13 +87,18 @@ export const FooterSupport = styled.section({
 
 export const SupportTitle = styled.h3({
   margin: 0,
-  color: "#ffffff",
+  color: "#74766F", // Secondary Text
   fontSize: "16px",
   fontWeight: 500,
   textAlign: "left",
+  cursor: "pointer",
+  transition: "color 0.2s ease",
+
+  "&:hover": {
+    color: "#FDFDFD", // Cards
+  },
 
   "@media (min-width: 320px) and (width < 768px)": {
-    color: "#777777",
     fontWeight: 0,
     fontSize: "13px",
   },
@@ -91,9 +106,15 @@ export const SupportTitle = styled.h3({
 
 export const SupportText = styled.p({
   margin: 0,
-  color: "#777777",
+  color: "#74766F", // Secondary Text
   fontSize: "16px",
   textAlign: "left",
+  cursor: "pointer",
+  transition: "color 0.2s ease",
+
+  "&:hover": {
+    color: "#FDFDFD", // Cards
+  },
 
   "@media (min-width: 320px) and (width < 768px)": {
     fontSize: "13px",
@@ -103,13 +124,14 @@ export const SupportText = styled.p({
 export const Copyright = styled.p({
   width: "85%",
   margin: "60px auto 0",
-  color: "#777777",
+  color: "#74766F", // Secondary Text
   fontSize: "13px",
   textAlign: "left",
 
   "@media (min-width: 320px) and (width < 768px)": {
     width: "100%",
-    margin: "20px 0 0",
+    // FooterContainer의 gap(32px)이 이미 위쪽 간격을 만들어주므로 margin은 없앰
+    margin: 0,
     fontSize: "12px",
   },
 });

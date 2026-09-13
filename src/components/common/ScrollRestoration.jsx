@@ -10,6 +10,11 @@ const ScrollRestoration = () => {
   const { pathname, hash } = useLocation();
   const navigationType = useNavigationType();
   const pathnameRef = useRef(pathname);
+  // 복원 중에 우리가 직접 호출하는 window.scrollTo()도 "scroll" 이벤트를 발생시키는데,
+  // 이걸 handleScroll이 그대로 기록해버리면 헤더 높이만큼 보정된 값이 다음번의
+  // "원본" 저장값이 되어버려서, 뒤로가기를 반복할 때마다 헤더 높이만큼씩 스크롤 위치가
+  // 계속 줄어드는 문제가 있었다. 복원 도중에는 기록을 건너뛰어서 이를 방지한다
+  const isRestoringRef = useRef(false);
 
   // 브라우저 자체의 자동 스크롤 복원이 우리 로직과 다른 시점에 끼어들어 덮어쓰지 않도록 끈다
   useLayoutEffect(() => {
@@ -30,6 +35,7 @@ const ScrollRestoration = () => {
   // 페이지를 벗어나기 전까지 현재 스크롤 위치를 계속 기록해둔다
   useLayoutEffect(() => {
     const handleScroll = () => {
+      if (isRestoringRef.current) return;
       scrollPositions.set(pathnameRef.current, window.scrollY);
     };
     window.addEventListener("scroll", handleScroll);
@@ -48,14 +54,26 @@ const ScrollRestoration = () => {
       // 목표 위치까지 스크롤 가능해질 때(body 높이가 바뀔 때)마다 재시도한다
       let done = false;
       let timeoutId;
+      isRestoringRef.current = true;
+
+      const finish = () => {
+        done = true;
+        observer.disconnect();
+        clearTimeout(timeoutId);
+        // window.scrollTo()가 만드는 "scroll" 이벤트는 비동기(다음 태스크)로 도착하므로,
+        // 여기서 곧바로 플래그를 내리면 그 이벤트가 handleScroll에 그대로 잡혀 기록돼버린다.
+        // 이벤트가 확실히 다 도착한 뒤에 플래그를 내리도록 한 틱 늦춘다
+        setTimeout(() => {
+          isRestoringRef.current = false;
+        }, 100);
+      };
+
       const tryRestore = () => {
         if (done) return;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         window.scrollTo({ top: Math.min(target, Math.max(maxScroll, 0)), behavior: "instant" });
         if (maxScroll >= target) {
-          done = true;
-          observer.disconnect();
-          clearTimeout(timeoutId);
+          finish();
         }
       };
 
@@ -63,16 +81,16 @@ const ScrollRestoration = () => {
       observer.observe(document.body);
       tryRestore();
 
-      // 데이터 로딩이 지나치게 오래 걸리는 경우를 대비한 안전장치
-      timeoutId = setTimeout(() => {
-        done = true;
-        observer.disconnect();
-      }, 8000);
+      // 데이터 로딩이 지나치게 오래 걸리는 경우를 대비한 안전장치.
+      // tryRestore()가 위에서 이미 동기적으로 끝냈다면(done===true) 걸지 않는다 -
+      // 걸어두면 8초 뒤 뒤늦게 finish()가 또 실행되면서, 그 사이 새로 시작된 다른
+      // 복원 사이클의 isRestoringRef를 엉뚱하게 false로 꺼버릴 수 있음
+      if (!done) {
+        timeoutId = setTimeout(finish, 8000);
+      }
 
       return () => {
-        done = true;
-        clearTimeout(timeoutId);
-        observer.disconnect();
+        finish();
       };
     }
 

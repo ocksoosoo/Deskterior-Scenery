@@ -26,11 +26,14 @@ export const ProductTitle = styled.h2(({theme}) => ({
 
 // 화면에 보여줄 상품 카드 범위를 제한
 export const SliderViewport = styled.div({
-    width: "100%",
+    // 화살표 버튼과 겹치지 않도록 폭을 1024px로 제한하되, 화면이 그보다 좁으면
+    // (버튼이 바깥에 설 자리가 없으면) flex-shrink로 같이 줄어들게 해서
+    // 가로 스크롤이 생기지 않게 함 (고정 음수 offset 방식은 좁은 화면에서 넘침 발생)
+    flex: "0 1 1024px",
+    minWidth: 0,
     overflow: "hidden",
     display: "grid",
-    // 가운데 카드가 scale(1.08)로 커지는 만큼(카드 높이의 약 8%, 위아래로 절반씩)
-    // 위아래 여유 공간을 둬서 overflow: hidden에 잘리지 않게 함
+    // 위아래 여유 공간을 둬서 overflow: hidden에 카드 그림자 등이 잘리지 않게 함
     padding: "20px 0",
 });
 
@@ -82,22 +85,21 @@ export const SlideOverlay = styled.div({
 });
 
 // previous, next slider button
+// 버튼을 카드 위에 절대 위치로 겹쳐 놓는 대신, flex row 안에서 카드 영역(SliderViewport)과
+// 나란히 자기 자리를 차지하게 해서 화면 폭에 상관없이 겹치지 않게 함
 export const ProductSlider = styled.div(({theme}) => ({
-    position: "relative",
-    width: "min(1024px, 100vw)",
-    left: "50%",
-    transform: "translateX(-50%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: theme.spacing.md,
 
     [theme.media.tablet]: {
-        width: "100%",
-        left: "auto",
-        transform: "none",
+        gap: theme.spacing["2xs"],
     },
 }));
 
 export const SliderButton = styled.button(({theme}) => ({
-    position: "absolute",
-    top: "50%",
+    flexShrink: 0,
     width: "44px",
     height: "44px",
     display: "flex",
@@ -109,8 +111,12 @@ export const SliderButton = styled.button(({theme}) => ({
     backgroundColor: theme.colors.cards,
     color: theme.colors.textMain,
     cursor: "pointer",
-    transform: "translateY(-50%)",
-    zIndex: 10,
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
+    transition: "box-shadow 0.15s ease",
+
+    "&:hover": {
+        boxShadow: "0 3px 14px rgba(0, 0, 0, 0.2)",
+    },
 }));
 
 // PageIndicator

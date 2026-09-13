@@ -9,17 +9,53 @@ const base = {
   strokeLinejoin: "round",
 };
 
+// 모바일 헤더 햄버거 메뉴 아이콘
+export const MenuIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="44"
+    height="44"
+    viewBox="0 0 44 44"
+    fill="none"
+    {...props}
+  >
+    <path
+      d="M7.33325 12.8333H36.6666M7.33325 22H36.6666M7.33325 31.1667H36.6666"
+      stroke="#1F211F"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// 모바일 메뉴 닫기(X) 아이콘
+export const CloseIcon = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <path
+      d="M7.19995 7.2L16.7999 16.8M16.7999 7.2L7.19995 16.8"
+      stroke="#74766F"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 // 상품 목록 페이지 검색 아이콘
 export const SearchIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    viewBox="0 0 16 16"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
     {...props}
   >
-    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M1.66667 7.53167C1.66667 4.2975 4.29833 1.66667 7.5325 1.66667C10.7658 1.66667 13.3975 4.2975 13.3975 7.53167C13.3975 10.7658 10.7658 13.3975 7.5325 13.3975C4.29833 13.3975 1.66667 10.7658 1.66667 7.53167ZM17.0792 16.2475L13.2467 12.425C14.3767 11.1075 15.0642 9.4 15.0642 7.53167C15.0642 3.37917 11.685 0 7.5325 0C3.37917 0 0 3.37917 0 7.53167C0 11.685 3.37917 15.0642 7.5325 15.0642C9.2175 15.0642 10.77 14.5008 12.0258 13.5617L15.9025 17.4275L17.0792 16.2475Z"
+      fill="currentColor"
+    />
   </svg>
 );
 
