@@ -52,5 +52,9 @@ export const InfoColumn = styled.div(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing.lg,
 
-  [theme.media.mobile]: { flex: "none", width: "100%" },
+  [theme.media.mobile]: {
+    flex: "none",
+    width: "100%",
+    gap: theme.spacing.md,
+  },
 }));

@@ -13,6 +13,7 @@ export const Section = styled.section(({ theme }) => ({
   },
 
   [theme.media.mobile]: {
+    marginTop: 0,
     padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
     background: theme.colors.background,
   },
@@ -27,7 +28,7 @@ export const Inner = styled.div(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    gap: theme.spacing.md, // 16
+    gap: theme.spacing.lg, // 24
     padding: 0,
   },
 }));
@@ -48,6 +49,8 @@ export const Title = styled.h2(({ theme }) => ({
 
   [theme.media.mobile]: {
     margin: 0,
+    fontSize: theme.fontSize["4xl"], // 32px
+    letterSpacing: "normal",
   },
 }));
 

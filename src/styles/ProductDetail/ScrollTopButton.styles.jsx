@@ -20,6 +20,7 @@ export const Button = styled.button(({ theme }) => ({
 
   [theme.media.mobile]: {
     bottom: "calc(81px + env(safe-area-inset-bottom, 0px))",
+    padding: theme.spacing.xs,
   },
 }));
 
