@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router";
 
 export const Card = styled.div(({ theme }) => ({
   position: "relative",
   display: "flex",
   width: "280px",
-  height: "414px",
+  // 상품명이 1줄이든 2줄이든 카드 높이가 자동으로 통일되도록 고정값 대신 auto 사용
+  // (아래 ProductName의 min-height와 함께 적용됨)
+  height: "auto",
   paddingBottom: theme.spacing.md,
   flexDirection: "column",
   alignItems: "flex-start",
@@ -16,13 +17,6 @@ export const Card = styled.div(({ theme }) => ({
   borderRadius: theme.radius.md,
   overflow: "hidden",
 }));
-
-// 카드 전체를 덮는 투명 링크 (상세페이지 이동)
-export const StretchedLink = styled(Link)({
-  position: "absolute",
-  inset: 0,
-  zIndex: 1,
-});
 
 export const ImageWrapper = styled.div(({ theme }) => ({
   position: "relative",
@@ -117,6 +111,9 @@ export const ProductName = styled.strong(({ theme }) => ({
   WebkitLineClamp: 2,
   WebkitBoxOrient: "vertical",
   overflow: "hidden",
+  // 상품명이 1줄이든 2줄이든 항상 2줄 분량의 공간을 차지해서, 카드 높이가 통일되고
+  // 아래 별점이 카드 밑에 눌리지 않게 함
+  minHeight: "2.4em",
   lineHeight: "normal",
   fontFamily: theme.fontFamily.base,
   fontSize: theme.fontSize.lg,
@@ -146,6 +143,16 @@ export const Rating = styled.p(({ theme }) => ({
   fontSize: theme.fontSize.xs,
   color: theme.colors.secondText,
   width: "fit-content",
+  // 터치 범위만 넓히고 시각적 위치/간격은 그대로 유지 (padding + 상쇄용 negative margin)
+  // 아래쪽은 카드 자체의 paddingBottom(md)만큼까지, 카드 하단 여백 전체를 클릭 범위로 활용
+  paddingTop: theme.spacing.xs,
+  paddingBottom: theme.spacing.md,
+  paddingLeft: theme.spacing.sm,
+  paddingRight: theme.spacing.sm,
+  marginTop: `-${theme.spacing.xs}`,
+  marginBottom: `-${theme.spacing.md}`,
+  marginLeft: `-${theme.spacing.sm}`,
+  marginRight: `-${theme.spacing.sm}`,
 
   "&:hover": {
     textDecoration: "underline",

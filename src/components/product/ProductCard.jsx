@@ -31,14 +31,15 @@ const ProductCard = ({
 
   const handleAddToCart = () => onAddToCart?.(product.id);
 
-  const handleNameClick = (event) => {
+  // 상품명/이미지 클릭 시 상세페이지로 이동
+  const handleGoToDetail = (event) => {
     event.stopPropagation();
     if (!isClickable) return;
     navigate(`/products/${product.id}`);
   };
 
   // 키보드(Tab 으로 포커스 → Enter / Space)로도 상세페이지 이동
-  const handleNameKeyDown = (event) => {
+  const handleGoToDetailKeyDown = (event) => {
     event.stopPropagation();
     if (!isClickable) return;
     if (event.key === "Enter" || event.key === " ") {
@@ -79,7 +80,16 @@ const ProductCard = ({
         )}
 
         {product.imageUrl && (
-          <S.ProductImage src={product.imageUrl} alt={product.name} />
+          <S.ProductImage
+            src={product.imageUrl}
+            alt={product.name}
+            onClick={handleGoToDetail}
+            onKeyDown={handleGoToDetailKeyDown}
+            role={isClickable ? "button" : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+            aria-label={isClickable ? `${product.name} 상세 보기` : undefined}
+            style={isClickable ? { cursor: "pointer" } : undefined}
+          />
         )}
 
         <S.IconStack>
@@ -106,8 +116,8 @@ const ProductCard = ({
           <S.CategoryName>{product.categoryName}</S.CategoryName>
         )}
         <S.ProductName
-          onClick={handleNameClick}
-          onKeyDown={handleNameKeyDown}
+          onClick={handleGoToDetail}
+          onKeyDown={handleGoToDetailKeyDown}
           role={isClickable ? "button" : undefined}
           tabIndex={isClickable ? 0 : undefined}
           aria-label={isClickable ? `${product.name} 상세 보기` : undefined}
@@ -129,14 +139,6 @@ const ProductCard = ({
           {safeRating.toFixed(1)}({safeCount})
         </S.Rating>
       </S.Info>
-
-      {/* 카드 전체를 덮는 투명 링크 */}
-      {isClickable && (
-        <S.StretchedLink
-          to={`/products/${product.id}`}
-          aria-label={`${product.name} 상세 보기`}
-        />
-      )}
     </S.Card>
   );
 };
