@@ -9,6 +9,9 @@ export const CartContainer = styled.div(({ theme }) => ({
   padding: `${theme.spacing["3xl"]} 0`,
   display: "flex",
   flexDirection: "column",
+  [theme.media.tablet]: {
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
+  },
 }));
 
 // 타이틀

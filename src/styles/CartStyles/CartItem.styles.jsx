@@ -8,7 +8,10 @@ export const ItemWrapper = styled.div(({ theme }) => ({
   padding: `${theme.spacing.lg} 0`,
   borderBottom: `1px solid ${theme.colors.subtle}`,
   "&:last-of-type": {
-    borderBottom: "none", // 밑줄 제거
+    borderBottom: "none",
+  },
+  [theme.media.tablet]: {
+    gap: theme.spacing.md,
   },
 }));
 
@@ -30,6 +33,10 @@ export const ItemLeft = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "flex-start",
   gap: theme.spacing.lg,
+  [theme.media.tablet]: {
+    gap: theme.spacing.md,
+    flex: 1,
+  },
 }));
 
 // 이미지
@@ -81,6 +88,10 @@ export const InfoBox = styled.div(({ theme }) => ({
   alignItems: "flex-start",
   width: "310px",
   gap: theme.spacing.xs,
+  [theme.media.tablet]: {
+    width: "100%",
+    minWidth: "167px",
+  },
 }));
 
 // 상품명
@@ -114,6 +125,10 @@ export const ItemRight = styled.div(({ theme }) => ({
   flex: 1,
   gap: theme.spacing.lg,
   marginTop: "4px", // 정렬 1
+  [theme.media.tablet]: {
+    gap: theme.spacing.md,
+    flex: "none",
+  },
 }));
 
 // 수량

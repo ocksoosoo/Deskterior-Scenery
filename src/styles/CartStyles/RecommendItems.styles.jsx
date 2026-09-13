@@ -8,6 +8,10 @@ export const RecommendContainer = styled.section(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  [theme.media.tablet]: {
+    paddingTop: theme.spacing["2xl"],
+    paddingBottom: theme.spacing["2xl"],
+  },
 }));
 
 export const SectionTitle = styled.h2(({ theme }) => ({
@@ -19,13 +23,21 @@ export const SectionTitle = styled.h2(({ theme }) => ({
   color: theme.colors.textMain,
   marginBottom: theme.spacing.xl,
   textAlign: "left",
+  [theme.media.tablet]: {
+    padding: `0 ${theme.spacing.xl}`,
+  },
 }));
 
-export const GridContainer = styled.div({
+export const GridContainer = styled.div(({ theme }) => ({
   width: "100%",
   maxWidth: "896px",
 
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
   gap: "26px",
-});
+  boxSizing: "border-box",
+  [theme.media.tablet]: {
+    padding: `0 ${theme.spacing.xl}`,
+    gap: theme.spacing.md,
+  },
+}));
