@@ -135,6 +135,14 @@ export const IconButton = styled.button({
   cursor: "pointer",
 });
 
+// 로그인/로그아웃 버튼 - 모바일은 햄버거 메뉴 안에 로그인/로그아웃이 이미 있어서
+// 헤더에 중복으로 노출할 필요가 없어 숨김
+export const AuthIconButton = styled(IconButton)(({ theme }) => ({
+  [theme.media.mobile]: {
+    display: "none",
+  },
+}));
+
 export const MenuButton = styled.button({
   display: "none",
 

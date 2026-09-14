@@ -25,6 +25,7 @@ import {
   NavButton,
   IconContainer,
   IconButton,
+  AuthIconButton,
   MenuButton,
   CartIconWrapper,
   CartBadge,
@@ -178,17 +179,17 @@ const Header = () => {
 
       <IconContainer>
         {user ? (
-          <IconButton
+          <AuthIconButton
             type="button"
             aria-label="로그아웃 버튼"
             onClick={handleLogout}
           >
             <LogoutIcon />
-          </IconButton>
+          </AuthIconButton>
         ) : (
-          <IconButton as={Link} to="/login" aria-label="로그인 버튼">
+          <AuthIconButton as={Link} to="/login" aria-label="로그인 버튼">
             <LoginIcon />
-          </IconButton>
+          </AuthIconButton>
         )}
 
         <IconButton as={Link} to="/cartpage" aria-label="장바구니 버튼">
