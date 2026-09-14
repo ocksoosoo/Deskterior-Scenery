@@ -9,6 +9,9 @@ import {
   SliderTrack,
   SlideItem,
   SlideOverlay,
+  MobileProductGrid,
+  MobileCardSlot,
+  MobileMoreButton,
 } from "../../styles/MainStyles/ProductSection.styles";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
 import ProductCard from "../product/ProductCard";
@@ -18,6 +21,7 @@ import { preloadingImages } from "../../utils/preloadingImages";
 import { useState, useEffect, useRef } from "react";
 import useCartStore from "../../store/cartStore";
 import { showSuccessToast, showFailToast } from "../common/ShowToast";
+import { useTheme } from "@emotion/react";
 
 // 페이지별 상품 표시 개수
 const ITEMS_PER_PAGE = 3;
@@ -53,7 +57,7 @@ function readCarouselSelection() {
   }
 }
 
-function ProductGroup({ title, items, isBest = false, onAddToCart }) {
+function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [, setDirection] = useState(1);
   const [isResetting, setIsResetting] = useState(false);
@@ -384,6 +388,138 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
         ))}
       </PageIndicator>
     </ProductsSection>
+  );
+}
+
+// mobile
+function MobileProductGroup({
+  title,
+  items,
+  isBest = false,
+  onAddToCart,
+}) {
+  const storageKey = `homeMobileProductCount:${title}`;
+
+  const [visibleCount, setVisibleCount] = useState(() => {
+    try {
+      const savedCount = Number(sessionStorage.getItem(storageKey));
+
+      return Number.isInteger(savedCount) && savedCount >= 2
+        ? savedCount
+        : 2;
+    } catch {
+      return 2;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(storageKey, String(visibleCount));
+    } catch {
+      // 저장이 불가능해도 더보기 기능은 유지
+    }
+  }, [storageKey, visibleCount]);
+
+  const visibleProducts = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
+
+  return (
+    <ProductsSection isBest={isBest}>
+      <ProductTitle>{title}</ProductTitle>
+
+      {items.length === 0 ? (
+        <p>표시할 상품이 없습니다.</p>
+      ) : (
+        <>
+          <MobileProductGrid>
+            {visibleProducts.map((product) => {
+              const badgeFields = deriveBadgeFields(product);
+
+              return (
+                <MobileCardSlot key={product.id}>
+                  <ProductCard
+                    product={{
+                      ...product,
+                      categoryName: getCategoryName(product.categoryId),
+                      ...badgeFields,
+                    }}
+                    showCategory
+                    isBest={badgeFields.isBest}
+                    isNew={badgeFields.isNew}
+                    useListBackground={isBest}
+                    onAddToCart={onAddToCart}
+                  />
+                </MobileCardSlot>
+              );
+            })}
+          </MobileProductGrid>
+
+          {hasMore && (
+            <MobileMoreButton
+              type="button"
+              aria-label={`${title} 상품 더 보기`}
+              onClick={() => {
+                setVisibleCount((count) =>
+                  Math.min(count + 2, items.length)
+                );
+              }}
+            >
+              <span aria-hidden="true">+</span>
+            </MobileMoreButton>
+          )}
+        </>
+      )}
+    </ProductsSection>
+  );
+}
+
+function ProductGroup({
+  title,
+  items,
+  isBest = false,
+  onAddToCart,
+}) {
+  const theme = useTheme();
+  const mobileQuery = theme.media.mobile.replace("@media", "").trim();
+
+  const [isMobile, setIsMobile] = useState(() =>
+    window.matchMedia(mobileQuery).matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(mobileQuery);
+
+    setIsMobile(mediaQuery.matches);
+
+    function handleChange(event) {
+      setIsMobile(event.matches);
+    }
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, [mobileQuery]);
+
+  if (isMobile) {
+    return (
+      <MobileProductGroup
+        title={title}
+        items={items}
+        isBest={isBest}
+        onAddToCart={onAddToCart}
+      />
+    );
+  }
+
+  return (
+    <DesktopProductGroup
+      title={title}
+      items={items}
+      isBest={isBest}
+      onAddToCart={onAddToCart}
+    />
   );
 }
 
