@@ -2,6 +2,9 @@ import styled from "@emotion/styled";
 
 export const CurationSection = styled.section(({ theme }) => ({
   padding: theme.spacing["3xl"], //64
+  width: "100%",
+  boxSizing: "border-box",
+  backgroundColor: theme.colors.background,
 
   [theme.media.tablet]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
@@ -14,7 +17,13 @@ export const CurationSection = styled.section(({ theme }) => ({
   [theme.media.smallMobile]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
   }
-}))
+}));
+
+export const CurationInner = styled.div({
+  width: "100%",
+  maxWidth: "896px",
+  marginInline: "auto",
+})
 
 export const CurationTitleBox = styled.div(({ theme }) => ({
   display: "flex",

@@ -14,6 +14,7 @@ import {
   KeywordTrigger,
   KeywordMenu,
   KeywordMenuButton,
+  CurationInner,
 } from "../../styles/MainStyles/DeskCurationSection.styles";
 import { getProductRaw } from "../../api/productsApi";
 import categories from "../../data/categories";
@@ -186,6 +187,8 @@ function DeskCurationSection({ items = [] }) {
 
   return (
     <CurationSection>
+      <CurationInner>
+
       <CurationTitleBox>
         <CurationSubtitle>
           <strong>데스크 테리어,</strong>
@@ -288,6 +291,8 @@ function DeskCurationSection({ items = [] }) {
           onNext={handleNextProduct}
         />
       </ClickableProductMap>
+
+      </CurationInner>
     </CurationSection>
   );
 }

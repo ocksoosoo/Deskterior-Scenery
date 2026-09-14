@@ -2,10 +2,12 @@ import styled from "@emotion/styled";
 import { motion } from "motion/react";
 
 export const ProductsSection = styled.section(({theme, isBest}) => ({
-  padding: theme.spacing["3xl"], //64
-  backgroundColor: isBest
-    ? theme.colors.cards
-    : theme.colors.background,
+    width: "100%",
+    boxSizing: "border-box",
+    padding: theme.spacing["3xl"], //64
+    backgroundColor: isBest
+        ? theme.colors.cards
+        : theme.colors.background,
 
     [theme.media.tablet]: {
         padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
@@ -21,6 +23,9 @@ export const ProductsSection = styled.section(({theme, isBest}) => ({
 }));
 
 export const ProductTitle = styled.h2(({theme}) => ({
+    width: "100%",
+    maxWidth: "896px",
+    marginInline: "auto",
     marginBottom: theme.spacing.xl,
     fontFamily: theme.fontFamily.display,
     fontSize: theme.fontSize["4xl"], //32
