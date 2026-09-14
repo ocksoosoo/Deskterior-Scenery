@@ -77,10 +77,9 @@ export const Crumb = styled.li(({ theme }) => ({
   },
 }));
 
+// 클릭 가능한 링크임을 알 수 있게 기본 상태에서도 밑줄 표시
 export const CrumbLink = styled(Link)({
-  "&:hover": {
-    textDecoration: "underline",
-  },
+  textDecoration: "underline",
 });
 
 export const PageTitle = styled.h2(({ theme }) => ({
