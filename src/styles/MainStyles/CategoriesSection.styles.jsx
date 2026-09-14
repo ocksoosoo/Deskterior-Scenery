@@ -43,7 +43,7 @@ export const SectionTitle = styled.h2(({ theme }) => ({
 
 export const CategoryList = styled.div(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing["2xl"], // 48px
+  gap: theme.spacing["3xl"], // 64px
 
   // tablet(768-1023)
   [theme.media.tablet]: {
@@ -72,7 +72,7 @@ export const CategoryItem = styled.div(({ theme }) => ({
   flexDirection: "column",
   width: "150px",
   alignItems: "center",
-  gap: theme.spacing.xs, // 8px
+  gap: theme.spacing.md, // 16px
   cursor: "pointer",
 
   [theme.media.mobile]: {
@@ -91,12 +91,12 @@ export const CategoryImage = styled.img(({ theme }) => ({
   objectFit: "cover",
   // 사진 배경이 페이지 배경과 비슷해 경계가 안 보이는 경우를 대비해
   // 은은한 그림자로 항상 원과 배경이 구분되게 함
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
   transition: "transform 0.2s ease, box-shadow 0.2s ease",
 
   "&:hover": {
     transform: "scale(1.03)",
-    boxShadow: "0 6px 14px rgba(0, 0, 0, 0.12)",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
   },
 
   [theme.media.mobile]: {

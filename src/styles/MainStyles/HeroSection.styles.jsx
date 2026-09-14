@@ -284,6 +284,7 @@ export const GuideText = styled(motion.span)(({theme}) => ({
   color: theme.colors.secondText,
   pointerEvents: "none",
   zIndex: 10,
+  textDecoration: "underline",
 
   [theme.media.tablet]: {
     left: "63%",

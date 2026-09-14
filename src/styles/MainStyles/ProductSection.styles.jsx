@@ -114,11 +114,11 @@ export const SliderButton = styled.button(({theme}) => ({
     backgroundColor: theme.colors.cards,
     color: theme.colors.textMain,
     cursor: "pointer",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
-    transition: "box-shadow 0.15s ease",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+    transition: "box-shadow 0.15s ease, transform 0.2s ease",
 
     "&:hover": {
-        boxShadow: "0 3px 14px rgba(0, 0, 0, 0.2)",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
     },
 }));
 
