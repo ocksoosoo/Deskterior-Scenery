@@ -47,13 +47,12 @@ export const StepButton = styled.button(({ theme }) => ({
 export const Qty = styled.span(({ theme }) => ({
   minWidth: "18px",
   textAlign: "center",
-  fontSize: theme.fontSize.sm,
+  fontSize: theme.fontSize.xl, // 1.25rem (20px)
 
   [theme.media.tablet]: {
     width: "1.75rem",
     flexShrink: 0,
     color: theme.colors.textMain,
-    fontSize: theme.fontSize.xl, // 1.25rem
     fontWeight: theme.fontWeight.semiBold, // 600
     lineHeight: "normal",
     letterSpacing: "-0.0125rem",
@@ -64,7 +63,6 @@ export const Qty = styled.span(({ theme }) => ({
     width: "1.75rem",
     flexShrink: 0,
     color: theme.colors.textMain,
-    fontSize: theme.fontSize.xl, // 1.25rem
     fontWeight: theme.fontWeight.semiBold, // 600
     lineHeight: "normal",
     letterSpacing: "-0.0125rem",
@@ -92,12 +90,12 @@ export const CartButton = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
   color: "#fff",
   textAlign: "center",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
 
-  "&:hover": { filter: "brightness(1.2)" }, // 팀 공통 버튼 호버
+  "&:hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 
   [theme.media.tablet]: {
@@ -133,12 +131,12 @@ export const CheckoutButton = styled.button(({ theme }) => ({
   border: `${theme.borderWidth.default} solid ${theme.colors.textMain}`,
   background: theme.colors.textMain,
   color: theme.colors.cards, // #FDFDFD
-  fontSize: theme.fontSize.md, // 1rem
+  fontSize: theme.fontSize.lg, // 1.125rem (18px)
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
   letterSpacing: "-0.01rem",
 
-  "&:not(:disabled):hover": { filter: "brightness(1.2)" }, // 팀 공통 버튼 호버
+  "&:not(:disabled):hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 
   // 모바일: 하단 고정 CTA 바(MobileCtaBar)가 대신 보여줌
