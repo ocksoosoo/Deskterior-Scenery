@@ -423,7 +423,9 @@ export const ViewMoreButton = styled.button(({ theme }) => ({
   alignItems: "center",
 
   // 호버
-
+  "&:hover": {
+    filter: "brightness(1.5)",
+  },
 }));
 
 // ProductPagination
