@@ -267,7 +267,9 @@ const Header = () => {
                 )}
                 <MobileMenuPersonButton
                   to={user ? "/mypage" : "/login"}
-                  aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
+                  aria-label={
+                    user ? "로그인 시 마이페이지" : "비로그인 시 로그인"
+                  }
                   onClick={closeMenu}
                 >
                   <PersonIcon width={20} height={20} />
