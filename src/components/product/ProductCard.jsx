@@ -21,6 +21,7 @@ const ProductCard = ({
   // 카드가 놓이는 배경이 카드 자체 배경색과 겹쳐 경계가 안 보이는 경우
   // (ex. 홈 화면 베스트 섹션), 카드 배경을 상품목록 페이지 배경색으로 대신 사용
   useListBackground = false,
+  imagePriority = false, //
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const ProductCard = ({
     showSuccessToast(
       next
         ? "상품이 찜 목록에 추가되었습니다."
-        : "상품이 찜 목록에서 삭제되었습니다."
+        : "상품이 찜 목록에서 삭제되었습니다.",
     );
   };
 
@@ -109,6 +110,9 @@ const ProductCard = ({
           <S.ProductImage
             src={product.imageUrl}
             alt={product.name}
+            loading={imagePriority ? "eager" : "lazy"} //
+            fetchPriority={imagePriority ? "high" : "auto"} //
+            decoding="async" //
             onClick={handleGoToDetail}
             onKeyDown={handleGoToDetailKeyDown}
             role={isClickable ? "button" : undefined}
