@@ -12,6 +12,12 @@ export const RecommendContainer = styled.section(({ theme }) => ({
     paddingTop: theme.spacing["2xl"],
     paddingBottom: theme.spacing["2xl"],
   },
+  [theme.media.mobile]: {
+    paddingTop: theme.spacing["2xl"],
+    paddingBottom: theme.spacing["2xl"],
+    paddingLeft: theme.spacing.md,
+    paddingRight: theme.spacing.md,
+  },
 }));
 
 export const SectionTitle = styled.h2(({ theme }) => ({
@@ -26,6 +32,10 @@ export const SectionTitle = styled.h2(({ theme }) => ({
   [theme.media.tablet]: {
     padding: `0 ${theme.spacing.xl}`,
   },
+  [theme.media.mobile]: {
+    padding: 0,
+    fontSize: `clamp(${theme.fontSize["2xl"]}, calc(10.667px + 2.778vw), ${theme.fontSize["4xl"]})`,
+  },
 }));
 
 export const GridContainer = styled.div(({ theme }) => ({
@@ -39,5 +49,14 @@ export const GridContainer = styled.div(({ theme }) => ({
   [theme.media.tablet]: {
     padding: `0 ${theme.spacing.xl}`,
     gap: theme.spacing.md,
+  },
+  [theme.media.mobile]: {
+    padding: 0,
+    gap: theme.spacing.md,
+    gridTemplateColumns: "repeat(2, 1fr)",
+    //2열 변경
+    "& > *:nth-of-type(3)": {
+      display: "none",
+    },
   },
 }));

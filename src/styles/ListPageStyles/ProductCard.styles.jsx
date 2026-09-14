@@ -25,6 +25,7 @@ export const Card = styled.div(({ theme, useListBackground }) => ({
   [theme.media.mobile]: {
     paddingBottom: theme.spacing.xs,
     gap: theme.spacing.xs,
+    width: "100%",
   },
   [theme.media.tablet]: {
     width: "100%",

@@ -2,8 +2,11 @@ import styled from "@emotion/styled";
 
 // 소계 and 버튼 컨테이너
 export const SummaryContainer = styled.div(({ theme }) => ({
-  marginTop: theme.spacing.xl,
+  marginTop: `clamp(${theme.spacing.lg}, calc(10.667px + 2.778vw), ${theme.spacing.xl})`,
   marginBottom: theme.spacing["3xl"],
+  [theme.media.mobile]: {
+    marginBottom: 0,
+  },
 }));
 
 // 토탈 박스
@@ -69,7 +72,7 @@ export const TooltipBox = styled.div(({ theme }) => ({
 
 // 소계 배송비 가격
 export const PriceText = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.md, // 16px
+  fontSize: theme.fontSize.md,
   color: theme.colors.secondText,
   fontWeight: theme.fontWeight.regular,
 }));
@@ -92,7 +95,7 @@ export const TotalPriceText = styled.strong(({ theme }) => ({
 export const CheckoutButton = styled.button(({ theme }) => ({
   width: "100%",
   height: "48px",
-  marginTop: theme.spacing.xl,
+  marginTop: `clamp(${theme.spacing.lg}, calc(10.667px + 2.778vw), ${theme.spacing.xl})`,
   padding: `${theme.spacing.sm} 0`,
   backgroundColor: theme.colors.textMain,
   color: theme.colors.cards,
