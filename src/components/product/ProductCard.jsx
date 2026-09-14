@@ -1,5 +1,4 @@
 import { useId, useState } from "react";
-import { useNavigate } from "react-router";
 import { useTheme } from "@emotion/react";
 import { BasketIcon, HeartIcon, StarIcon } from "../icons/Icons";
 import Badge from "../common/Badge";
@@ -18,13 +17,13 @@ const ProductCard = ({
   showCategory = false,
   isBest = false,
   isNew = false,
-  // 카드가 놓이는 배경이 카드 자체 배경색과 겹쳐 경계가 안 보이는 경우
-  // (ex. 홈 화면 베스트 섹션), 카드 배경을 상품목록 페이지 배경색으로 대신 사용
-  useListBackground = false,
+  // 카드가 놓이는 배경색을 바깥에서 직접 지정 (기본값은 스타일 쪽에서 처리).
+  // 예전엔 boolean(useListBackground)으로 두 색 중 하나만 고르는 구조였는데,
+  // 세 번째 배경색이 필요한 곳이 생기면 대응이 안 돼서 값 자체를 받게 바꿈
+  background,
   imagePriority = false, //
 }) => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const liked = useWishlistStore((state) => state.likedIds.has(product.id));
   const toggleLike = useWishlistStore((state) => state.toggleLike);
   const [justAdded, setJustAdded] = useState(false);
@@ -58,41 +57,8 @@ const ProductCard = ({
     setJustAdded(true);
   };
 
-  // 상품명/이미지 클릭 시 상세페이지로 이동
-  const handleGoToDetail = (event) => {
-    event.stopPropagation();
-    if (!isClickable) return;
-    navigate(`/products/${product.id}`);
-  };
-
-  // 키보드(Tab 으로 포커스 → Enter / Space)로도 상세페이지 이동
-  const handleGoToDetailKeyDown = (event) => {
-    event.stopPropagation();
-    if (!isClickable) return;
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      navigate(`/products/${product.id}`);
-    }
-  };
-
-  const handleRatingClick = (event) => {
-    event.stopPropagation();
-    if (!isClickable) return;
-    navigate(`/products/${product.id}#review`);
-  };
-
-  // 키보드(Tab 으로 포커스 → Enter / Space)로도 리뷰 이동
-  const handleRatingKeyDown = (event) => {
-    event.stopPropagation();
-    if (!isClickable) return;
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      navigate(`/products/${product.id}#review`);
-    }
-  };
-
   return (
-    <S.Card useListBackground={useListBackground}>
+    <S.Card background={background}>
       <S.ImageWrapper>
         {product.soldOut && <S.ImageOverlay />}
 
@@ -106,21 +72,29 @@ const ProductCard = ({
           </S.BadgeGroup>
         )}
 
-        {product.imageUrl && (
-          <S.ProductImage
-            src={product.imageUrl}
-            alt={product.name}
-            loading={imagePriority ? "eager" : "lazy"} //
-            fetchPriority={imagePriority ? "high" : "auto"} //
-            decoding="async" //
-            onClick={handleGoToDetail}
-            onKeyDown={handleGoToDetailKeyDown}
-            role={isClickable ? "button" : undefined}
-            tabIndex={isClickable ? 0 : undefined}
-            aria-label={isClickable ? `${product.name} 상세 보기` : undefined}
-            style={isClickable ? { cursor: "pointer" } : undefined}
-          />
-        )}
+        {product.imageUrl &&
+          (isClickable ? (
+            <S.ImageLink
+              to={`/products/${product.id}`}
+              aria-label={`${product.name} 상세 보기`}
+            >
+              <S.ProductImage
+                src={product.imageUrl}
+                alt={product.name}
+                loading={imagePriority ? "eager" : "lazy"} //
+                fetchPriority={imagePriority ? "high" : "auto"} //
+                decoding="async" //
+              />
+            </S.ImageLink>
+          ) : (
+            <S.ProductImage
+              src={product.imageUrl}
+              alt={product.name}
+              loading={imagePriority ? "eager" : "lazy"} //
+              fetchPriority={imagePriority ? "high" : "auto"} //
+              decoding="async" //
+            />
+          ))}
 
         <S.IconStack>
           <S.LikeButton
@@ -189,29 +163,35 @@ const ProductCard = ({
         {showCategory && product.categoryName && (
           <S.CategoryName>{product.categoryName}</S.CategoryName>
         )}
-        <S.ProductName
-          onClick={handleGoToDetail}
-          onKeyDown={handleGoToDetailKeyDown}
-          role={isClickable ? "button" : undefined}
-          tabIndex={isClickable ? 0 : undefined}
-          aria-label={isClickable ? `${product.name} 상세 보기` : undefined}
-        >
-          {product.name}
-        </S.ProductName>
+        {isClickable ? (
+          <S.ProductName
+            to={`/products/${product.id}`}
+            aria-label={`${product.name} 상세 보기`}
+          >
+            {product.name}
+          </S.ProductName>
+        ) : (
+          <S.ProductNameStatic>{product.name}</S.ProductNameStatic>
+        )}
         <S.Price>₩ {safePrice.toLocaleString("ko-KR")}</S.Price>
-        <S.Rating
-          onClick={handleRatingClick}
-          onKeyDown={handleRatingKeyDown}
-          role={isClickable ? "button" : undefined}
-          tabIndex={isClickable ? 0 : undefined}
-          aria-label={isClickable ? `${product.name} 리뷰 보기` : undefined}
-          style={isClickable ? { cursor: "pointer" } : undefined}
-        >
-          <S.Star>
-            <StarIcon width={12} height={12} />
-          </S.Star>{" "}
-          {safeRating.toFixed(1)}({safeCount})
-        </S.Rating>
+        {isClickable ? (
+          <S.Rating
+            to={`/products/${product.id}#review`}
+            aria-label={`${product.name} 리뷰 보기`}
+          >
+            <S.Star>
+              <StarIcon width={12} height={12} />
+            </S.Star>{" "}
+            {safeRating.toFixed(1)}({safeCount})
+          </S.Rating>
+        ) : (
+          <S.RatingStatic>
+            <S.Star>
+              <StarIcon width={12} height={12} />
+            </S.Star>{" "}
+            {safeRating.toFixed(1)}({safeCount})
+          </S.RatingStatic>
+        )}
       </S.Info>
     </S.Card>
   );
