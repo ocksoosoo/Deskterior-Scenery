@@ -50,8 +50,12 @@ export const FooterInfo = styled.section({
 export const FooterLogo = styled.h2({
   margin: 0,
   color: "#FDFDFD", // Cards
-  fontSize: "22px",
-  fontWeight: 600,
+  fontFamily: "'DM Serif Text', serif", // 헤더 로고(theme.fontFamily.display)와 동일한 폰트
+  fontSize: "20px",
+  fontStyle: "normal",
+  fontWeight: 400,
+  lineHeight: "normal",
+  letterSpacing: "-1px",
   textAlign: "left",
 
   "@media (min-width: 320px) and (width < 768px)": {

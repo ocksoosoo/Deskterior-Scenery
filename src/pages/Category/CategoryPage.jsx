@@ -103,41 +103,6 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   const queryKey = `${categoryId}|${currentPage}|${sortBy}|${search}`;
   const hasLoadedRef = useRef(false);
 
-  /*useEffect(() => {
-    let alive = true;
-    getProducts({
-      category: categoryId,
-      page: currentPage,
-      limit: PAGE_SIZE,
-      sort: sortBy,
-      q: search,
-    })
-      .then((data) => {
-        if (!alive) return;
-        setPageProducts(
-          data.products.map((product) => ({
-            ...product,
-            ...deriveBadgeFields(product),
-          })),
-        );
-        setTotalPages(Math.max(1, data.pagination.totalPages));
-        setErroredKey(null);
-        hasLoadedRef.current = true;
-      })
-      .catch((err) => {
-        console.error("상품목록 로딩 실패:", err);
-        if (!alive) return;
-        setErroredKey(queryKey);
-        // 이미 목록을 보여준 상태라 화면은 그대로 유지되니, 실패했다는 것만 토스트로 알림
-        if (hasLoadedRef.current) {
-          showFailToast("목록을 불러오지 못했어요. 다시 시도해주세요.");
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, [categoryId, currentPage, sortBy, search, queryKey]);*/
-
   useEffect(() => {
     let alive = true;
 

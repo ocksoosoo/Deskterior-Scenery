@@ -295,19 +295,60 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
                   transition={isResetting ? { duration: 0 } : SLIDE_SPRING}
                   style={{ zIndex: isActive ? 2 : 1 }}
                 >
-                  <ProductCard
-                    product={{
-                      ...product,
-                      categoryName: getCategoryName(product.categoryId),
-                      ...badgeFields,
-                    }}
-                    showCategory
-                    isBest={badgeFields.isBest}
-                    isNew={badgeFields.isNew}
-                    useListBackground={isBest}
-                    onAddToCart={onAddToCart}
-                  />
-                  {!isActive && <SlideOverlay />}
+                  {/* inert: 비활성 카드는 오버레이가 마우스 클릭은 막아주지만, 키보드
+                      Tab 이동은 z-index(시각적 가림)와 무관하게 DOM 순서를 그대로 따라가서
+                      가려진 카드 내부의 이미지/이름/찜/담기 버튼에 그대로 포커스가 가고
+                      Enter로 실행까지 돼버리는 문제가 있었다. inert로 이 안쪽 전체를
+                      포커스/클릭 대상에서 완전히 제외해 마우스·키보드 동작을 일치시킴 */}
+                  <div inert={!isActive}>
+                    <ProductCard
+                      product={{
+                        ...product,
+                        categoryName: getCategoryName(product.categoryId),
+                        ...badgeFields,
+                      }}
+                      showCategory
+                      isBest={badgeFields.isBest}
+                      isNew={badgeFields.isNew}
+                      useListBackground={isBest}
+                      onAddToCart={onAddToCart}
+                    />
+                  </div>
+                  {!isActive &&
+                    (() => {
+                      // 화면엔 항상 currentIndex(왼쪽)/currentIndex+1(가운데)/
+                      // currentIndex+2(오른쪽) 3장만 보이므로, 왼쪽 카드를 누르면
+                      // "이전" 한 칸, 오른쪽 카드를 누르면 "다음" 한 칸과 정확히 같다
+                      const isLeftNeighbor = index === currentIndex;
+                      const isRightNeighbor = index === currentIndex + 2;
+                      if (!isLeftNeighbor && !isRightNeighbor) {
+                        // 화면에 보이지 않는(클립된) 여분의 카드는 그대로 클릭 차단만
+                        return <SlideOverlay />;
+                      }
+                      const goToThisCard = isLeftNeighbor
+                        ? handlePrevious
+                        : handleNext;
+                      return (
+                        <SlideOverlay
+                          role="button"
+                          tabIndex={0}
+                          style={{ cursor: "pointer" }}
+                          aria-label={
+                            isLeftNeighbor
+                              ? `${product.name} - 이전 상품으로 이동`
+                              : `${product.name} - 다음 상품으로 이동`
+                          }
+                          onClick={goToThisCard}
+                          onKeyDown={(event) => {
+                            if (event.key !== "Enter" && event.key !== " ") {
+                              return;
+                            }
+                            event.preventDefault();
+                            goToThisCard();
+                          }}
+                        />
+                      );
+                    })()}
                 </SlideItem>
               );
             })}
