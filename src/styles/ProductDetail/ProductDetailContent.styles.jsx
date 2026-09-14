@@ -20,13 +20,14 @@ export const Section = styled.section(({ theme }) => ({
 
   [theme.media.wide]: {
     marginTop: theme.spacing["3xl"], // 64
+    padding: 0,
   },
 }));
 
 export const Inner = styled.div(({ theme }) => ({
   maxWidth: "1024px",
   margin: "0 auto",
-  padding: "0 144px", // 데스크탑·태블릿 공통
+  padding: "0 144px",
 
   [theme.media.mobile]: {
     display: "flex",
