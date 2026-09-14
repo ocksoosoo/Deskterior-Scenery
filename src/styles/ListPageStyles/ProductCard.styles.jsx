@@ -20,13 +20,12 @@ export const Card = styled.div(({ theme, useListBackground }) => ({
   borderRadius: theme.radius.md,
   overflow: "hidden",
   // 카드가 배경 위에 살짝 떠 있는 느낌을 주는 은은한 그림자
-  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.08)",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 
   [theme.media.mobile]: {
     paddingBottom: theme.spacing.xs,
     gap: theme.spacing.xs,
   },
-  // 왕님 저 민운데 이거 태블릿 반응형 제꺼 추천아이템 픽셀 수정이 안 돼서 여기에 일단 넣어놨어여 수정 하셔도 됨 말만해주세요ㅕㅇ
   [theme.media.tablet]: {
     width: "100%",
   },
