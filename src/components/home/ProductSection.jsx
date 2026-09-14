@@ -58,6 +58,7 @@ function readCarouselSelection() {
 }
 
 function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
+  const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(1);
   const [, setDirection] = useState(1);
   const [isResetting, setIsResetting] = useState(false);
@@ -299,7 +300,7 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
                     showCategory
                     isBest={badgeFields.isBest}
                     isNew={badgeFields.isNew}
-                    useListBackground={isBest}
+                    background={isBest ? theme.colors.background : undefined}
                     onAddToCart={onAddToCart}
                     imagePriority={isVisible} //
                   />
@@ -349,6 +350,7 @@ function MobileProductGroup({
   isBest = false,
   onAddToCart,
 }) {
+  const theme = useTheme();
   const storageKey = `homeMobileProductCount:${title}`;
 
   const [visibleCount, setVisibleCount] = useState(() => {
@@ -397,7 +399,7 @@ function MobileProductGroup({
                     showCategory
                     isBest={badgeFields.isBest}
                     isNew={badgeFields.isNew}
-                    useListBackground={isBest}
+                    background={isBest ? theme.colors.background : undefined}
                     onAddToCart={onAddToCart}
                   />
                 </MobileCardSlot>

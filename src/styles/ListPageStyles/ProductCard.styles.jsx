@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 
-export const Card = styled.div(({ theme, useListBackground }) => ({
+export const Card = styled.div(({ theme, background }) => ({
   position: "relative",
   display: "flex",
   width: "280px",
@@ -14,9 +14,10 @@ export const Card = styled.div(({ theme, useListBackground }) => ({
   gap: theme.spacing.sm,
   flexShrink: 0,
   textAlign: "left",
-  // 카드가 놓이는 배경이 카드 자체 배경색(theme.colors.cards)과 같아서 경계가 안 보이는
-  // 경우(ex. 홈 화면 베스트 섹션)에는 상품목록 페이지 배경색을 대신 사용
-  background: useListBackground ? theme.colors.background : theme.colors.cards,
+  // 호출하는 쪽에서 원하는 색을 직접 넘겨줄 수 있게 함(Badge.styles.jsx와 동일한 패턴).
+  // 넘기지 않으면 기본값(카드 배경색) 사용 - ex. 카드가 놓이는 배경이 이 기본값과
+  // 같아서 경계가 안 보이는 경우(홈 베스트 섹션, 장바구니 추천 섹션)에는 다른 색을 넘겨받음
+  background: background || theme.colors.cards,
   borderRadius: theme.radius.md,
   overflow: "hidden",
   // 카드가 배경 위에 살짝 떠 있는 느낌을 주는 은은한 그림자

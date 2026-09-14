@@ -18,9 +18,10 @@ const ProductCard = ({
   showCategory = false,
   isBest = false,
   isNew = false,
-  // 카드가 놓이는 배경이 카드 자체 배경색과 겹쳐 경계가 안 보이는 경우
-  // (ex. 홈 화면 베스트 섹션), 카드 배경을 상품목록 페이지 배경색으로 대신 사용
-  useListBackground = false,
+  // 카드가 놓이는 배경색을 바깥에서 직접 지정 (기본값은 스타일 쪽에서 처리).
+  // 예전엔 boolean(useListBackground)으로 두 색 중 하나만 고르는 구조였는데,
+  // 세 번째 배경색이 필요한 곳이 생기면 대응이 안 돼서 값 자체를 받게 바꿈
+  background,
   imagePriority = false, //
 }) => {
   const theme = useTheme();
@@ -92,7 +93,7 @@ const ProductCard = ({
   };
 
   return (
-    <S.Card useListBackground={useListBackground}>
+    <S.Card background={background}>
       <S.ImageWrapper>
         {product.soldOut && <S.ImageOverlay />}
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "@emotion/react";
 import { toast } from "react-toastify";
 import SuccessToast from "../../components/common/SuccessToast";
 import FailToast from "../../components/common/FailToast";
@@ -12,6 +13,7 @@ import {
 } from "../../styles/CartStyles/RecommendItems.styles";
 
 const RecommendItems = () => {
+  const theme = useTheme();
   const [recommendList, setRecommendList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart } = useCartStore();
@@ -72,7 +74,7 @@ const RecommendItems = () => {
             key={product.id || product.productId}
             product={product}
             showCategory={false}
-            useListBackground
+            background={theme.colors.background}
             onAddToCart={() => handleAddToCart(product)}
           />
         ))}

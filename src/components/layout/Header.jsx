@@ -116,6 +116,14 @@ const Header = () => {
     fetchCategories();
   }, [fetchCategories]);
 
+  // 로그인 상태일 때, 다른 탭/기기에서 장바구니가 바뀌었을 수 있으니 서버와
+  // 개수를 맞춰본다 (syncCartWithServer 자체가 비회원이면 아무것도 안 하는
+  // 가드를 갖고 있지만, 불필요한 호출 자체를 줄이려고 여기서도 한 번 더 확인)
+  useEffect(() => {
+    if (!user) return;
+    syncCartWithServer();
+  }, [user, syncCartWithServer]);
+
   const handleLogout = async () => {
     try {
       await logout();
