@@ -12,6 +12,9 @@ export const CartContainer = styled.div(({ theme }) => ({
   [theme.media.tablet]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
   },
+  [theme.media.mobile]: {
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
+  },
 }));
 
 // 타이틀
@@ -38,7 +41,7 @@ export const BreadcrumbLink = styled.a({
   color: "inherit",
   textDecoration: "none",
   "&:hover": {
-    textDecoration: "underline", // 마우스 올리면 밑줄 쫙!
+    textDecoration: "underline",
   },
 });
 
@@ -58,7 +61,7 @@ export const ActionBar = styled.div(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginBottom: theme.spacing.xl,
+  marginBottom: `clamp(${theme.spacing.lg}, calc(10.667px + 2.778vw), ${theme.spacing.xl})`,
   paddingLeft: theme.spacing.md,
 }));
 
@@ -71,6 +74,9 @@ export const SelectAllLabel = styled.label(({ theme }) => ({
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.blue,
   cursor: "pointer",
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
 }));
 
 // 왼쪽 버튼 두개
@@ -97,6 +103,9 @@ export const SelectedDeleteButton = styled.button(({ theme }) => ({
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.secondText,
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
 }));
 
 // 전체 삭제
@@ -108,6 +117,9 @@ export const ClearAllButton = styled.button(({ theme }) => ({
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.error,
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
 }));
 
 // 박스 안 박스
