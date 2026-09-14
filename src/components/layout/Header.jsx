@@ -15,6 +15,7 @@ import useCartStore from "../../store/cartStore";
 import useWishlistStore from "../../store/wishlistStore";
 import useCategoriesStore from "../../store/categoriesStore";
 import { showFailToast, showSuccessToast } from "../common/ShowToast";
+import Modal from "../common/Modal";
 import { useNavigate } from "react-router";
 import {
   HeaderSection,
@@ -36,6 +37,7 @@ import {
   MobileMenuCloseButton,
   MobileMenuAuthRow,
   MobileMenuAuthButton,
+  MobileMenuAuthActionButton,
   MobileMenuPersonButton,
   MobileMenuDivider,
   MobileMenuCategoryList,
@@ -48,6 +50,7 @@ const Header = () => {
   const MENU_TRANSITION_MS = 280;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuRendered, setIsMenuRendered] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const menuButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
   const closeMenuTimeoutRef = useRef(null);
@@ -87,7 +90,14 @@ const Header = () => {
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") closeMenu();
+      if (e.key !== "Escape") return;
+      // 로그아웃 확인 모달이 메뉴 위에 떠 있는 동안은, ESC가 뒤에 있는 메뉴를
+      // 조용히 닫아버리지 않고 지금 실제로 보고 있는 모달을 닫게 한다
+      if (isLogoutModalOpen) {
+        setIsLogoutModalOpen(false);
+        return;
+      }
+      closeMenu();
     };
     window.addEventListener("keydown", handleKeyDown);
 
@@ -96,7 +106,7 @@ const Header = () => {
       window.removeEventListener("keydown", handleKeyDown);
       menuButtonEl?.focus();
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isLogoutModalOpen]);
   // 스토어에서 cartiTRem 가져옴
   const { cartItems, syncCartWithServer, clearLocalCart } = useCartStore();
 
@@ -106,7 +116,6 @@ const Header = () => {
   const clearUser = useAuthStore((state) => state.clearUser);
   // 뱃지 갯수 계산
   const cartCount = cartItems.length;
-  const likedCount = useWishlistStore((state) => state.likedIds.size);
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
   // 스토어가 앱 전체에서 딱 한 번만 요청/캐시하므로, 다른 페이지에서 이미
@@ -125,7 +134,18 @@ const Header = () => {
     syncCartWithServer();
   }, [user, syncCartWithServer]);
 
+  const requestLogout = () => {
+    // 모바일 햄버거 메뉴를 여기서 같이 닫아버리면, 메뉴가 닫힐 때 실행되는
+    // 포커스 복귀 로직(menuButtonEl.focus())이 모달이 뜨는 순간과 겹쳐서
+    // 포커스가 모달이 아니라 햄버거 버튼으로 가버린다. 실제로 로그아웃이
+    // 확정된 뒤에만 메뉴를 닫아서 이 문제를 피한다 (햄버거에서 안 눌렀다면 열려있지도 않으니 무해함)
+    setIsLogoutModalOpen(true);
+  };
+
   const handleLogout = async () => {
+    setIsLogoutModalOpen(false);
+    closeMenu();
+
     try {
       await logout();
     } catch (error) {
@@ -182,7 +202,7 @@ const Header = () => {
           <AuthIconButton
             type="button"
             aria-label="로그아웃 버튼"
-            onClick={handleLogout}
+            onClick={requestLogout}
           >
             <LogoutIcon />
           </AuthIconButton>
@@ -206,7 +226,6 @@ const Header = () => {
         >
           <CartIconWrapper>
             <PersonIcon width={30} height={30} />
-            {likedCount > 0 && <CartBadge>{likedCount}</CartBadge>}
           </CartIconWrapper>
         </AuthIconButton>
       </IconContainer>
@@ -230,16 +249,12 @@ const Header = () => {
 
               <MobileMenuAuthRow>
                 {user ? (
-                  <MobileMenuAuthButton
-                    as="button"
+                  <MobileMenuAuthActionButton
                     type="button"
-                    onClick={() => {
-                      closeMenu();
-                      handleLogout();
-                    }}
+                    onClick={requestLogout}
                   >
                     Logout
-                  </MobileMenuAuthButton>
+                  </MobileMenuAuthActionButton>
                 ) : (
                   <>
                     <MobileMenuAuthButton to="/login" onClick={closeMenu}>
@@ -252,7 +267,9 @@ const Header = () => {
                 )}
                 <MobileMenuPersonButton
                   to={user ? "/mypage" : "/login"}
-                  aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
+                  aria-label={
+                    user ? "로그인 시 마이페이지" : "비로그인 시 로그인"
+                  }
                   onClick={closeMenu}
                 >
                   <PersonIcon width={20} height={20} />
@@ -274,6 +291,21 @@ const Header = () => {
               </MobileMenuCategoryList>
             </MobileMenuPanel>
           </>,
+          document.body,
+        )}
+
+      {isLogoutModalOpen &&
+        // 헤더의 backdrop-filter가 position:fixed 자식의 기준(containing block)을
+        // 뷰포트가 아닌 헤더 박스로 바꿔버려서, 모달이 화면 중앙이 아니라 헤더
+        // 안에 갇혀 보이는 문제가 있었다. 햄버거 메뉴와 같은 방식으로 body에 포탈.
+        createPortal(
+          <Modal
+            title="Logout?"
+            description="정말 로그아웃 하시겠습니까?"
+            confirmText="Logout"
+            onClose={() => setIsLogoutModalOpen(false)}
+            onConfirm={handleLogout}
+          />,
           document.body,
         )}
     </HeaderSection>

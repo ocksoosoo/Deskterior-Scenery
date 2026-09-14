@@ -8,7 +8,10 @@ export const ModalOverlay = styled.div({
   right: 0,
   bottom: 0,
   backgroundColor: "rgba(31, 33, 31, 0.5)",
-  zIndex: 100,
+  // 모바일 햄버거 메뉴 오버레이(zIndex 100)와 같은 값이면 DOM 삽입 순서에 따라
+  // 드로어가 열려있는 동안 뜬 모달의 클릭이 씹힐 수 있어, 앱의 다른 오버레이보다
+  // 항상 위에 오도록 확실히 높은 값을 준다
+  zIndex: 200,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

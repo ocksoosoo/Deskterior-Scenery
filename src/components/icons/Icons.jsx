@@ -30,7 +30,14 @@ export const MenuIcon = (props) => (
 
 // 모바일 메뉴 닫기(X) 아이콘
 export const CloseIcon = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <path
       d="M7.19995 7.2L16.7999 16.8M16.7999 7.2L7.19995 16.8"
       stroke="#74766F"
@@ -115,6 +122,7 @@ export const LogoutIcon = (props) => (
     viewBox="0 0 30 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    {...props}
   >
     <path
       fill-rule="evenodd"

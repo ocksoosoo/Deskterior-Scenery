@@ -53,9 +53,7 @@ const ProductDetailPage = () => {
   // ProductCard와 동일한 전역 스토어를 사용 - 예전엔 이 페이지만 useState(false)로 된
   // 가짜 로컬 상태를 써서, 이미 찜한 상품이어도 상세페이지에선 항상 하트가 빈 채로
   // 보이고 여기서 누른 찜도 실제로 저장되지 않아 목록 페이지와 동기화가 안 됐었다
-  const isWished = useWishlistStore((state) =>
-    state.likedIds.has(product?.id),
-  );
+  const isWished = useWishlistStore((state) => state.likedIds.has(product?.id));
   const toggleWish = useWishlistStore((state) => state.toggleLike);
 
   const [loadedProductForId, setLoadedProductForId] = useState(null);
