@@ -43,7 +43,7 @@ export const SectionTitle = styled.h2(({ theme }) => ({
 
 export const CategoryList = styled.div(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing["2xl"], // 48px
+  gap: theme.spacing["3xl"], // 64px
 
   // tablet(768-1023)
   [theme.media.tablet]: {
@@ -72,7 +72,7 @@ export const CategoryItem = styled.div(({ theme }) => ({
   flexDirection: "column",
   width: "150px",
   alignItems: "center",
-  gap: theme.spacing.xs, // 8px
+  gap: theme.spacing.md, // 16px
   cursor: "pointer",
 
   [theme.media.mobile]: {
