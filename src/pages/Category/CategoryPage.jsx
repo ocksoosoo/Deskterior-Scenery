@@ -214,7 +214,12 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
       </S.EmptyState>
     );
   } else {
-    const placeholderCount = PAGE_SIZE - pageProducts.length;
+    // PAGE_SIZE(6)만큼 항상 채우면, 실제 상품이 적은 페이지(ex. 2개)에서도
+    // 안 보이는 빈 칸이 남은 줄만큼 생겨 페이지네이션이 상품 개수와 무관하게
+    // 항상 같은 위치(맨 아래)에 고정돼버린다. 마지막 줄만 채워서 페이지네이션이
+    // 실제 상품 개수에 맞게 자연스럽게 따라오게 함 (뷰포트별 한 줄당 개수는 rowSize)
+    const placeholderCount =
+      (rowSize - (pageProducts.length % rowSize)) % rowSize;
 
     const gridItems = [
       ...pageProducts.map((product) => ({ key: String(product.id), product })),
