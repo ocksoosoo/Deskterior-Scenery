@@ -66,6 +66,12 @@ export const SearchInput = styled.input(({ theme }) => ({
   "&::placeholder": {
     color: theme.colors.secondText,
   },
+
+  // 클릭(포커스)하는 동안엔 힌트 텍스트를 숨기고, 다른 곳을 클릭(블러)하면
+  // 입력값이 비어있을 때 다시 보이게 함 (기본 동작은 값이 없어도 포커스 중엔 계속 보임)
+  "&:focus::placeholder": {
+    opacity: 0,
+  },
 }));
 
 export const SortBox = styled.div(({ theme }) => ({
