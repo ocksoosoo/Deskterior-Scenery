@@ -59,7 +59,7 @@ export const Trail = styled.ol(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   fontFamily: theme.fontFamily.base,
-  fontSize: theme.fontSize.xs,
+  fontSize: theme.fontSize.md,
   fontWeight: theme.fontWeight.regular,
   lineHeight: "normal",
   letterSpacing: "-0.12px",
@@ -103,7 +103,7 @@ export const PageTitle = styled.h2(({ theme }) => ({
 
 export const PageSubtitle = styled.p(({ theme }) => ({
   fontFamily: theme.fontFamily.base,
-  fontSize: theme.fontSize.sm,
+  fontSize: theme.fontSize.md,
   fontWeight: theme.fontWeight.regular,
   lineHeight: "normal",
   letterSpacing: "-0.14px",

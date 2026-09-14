@@ -47,7 +47,7 @@ export const FooterInfo = styled.section({
   },
 });
 
-export const FooterLogo = styled.h2({
+export const FooterLogo = styled.h2(({ theme }) => ({
   margin: 0,
   color: "#FDFDFD", // Cards
   fontFamily: "'DM Serif Text', serif", // 헤더 로고(theme.fontFamily.display)와 동일한 폰트
@@ -55,13 +55,20 @@ export const FooterLogo = styled.h2({
   fontStyle: "normal",
   fontWeight: 400,
   lineHeight: "normal",
-  letterSpacing: "-1px",
   textAlign: "left",
 
+  // 헤더 로고도 모바일에서만 -1px, 그 외(태블릿/데스크탑/와이드)엔 letterSpacing을
+  // 안 줘서(normal) 두 로고가 같은 폰트·크기일 때 똑같이 보이는데, 여긴 -1px가
+  // 항상 걸려있어서 폰트사이즈가 같아도(24px) 글자 간격 때문에 더 좁아 보였음
   "@media (min-width: 320px) and (width < 768px)": {
     fontSize: "16px",
+    letterSpacing: "-1px",
   },
-});
+
+  [theme.media.wide]: {
+    fontSize: "24px",
+  },
+}));
 
 export const FooterDescription = styled.p({
   margin: 0,
@@ -76,7 +83,7 @@ export const FooterDescription = styled.p({
   },
 });
 
-export const FooterSupport = styled.section({
+export const FooterSupport = styled.section(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -87,7 +94,11 @@ export const FooterSupport = styled.section({
     alignItems: "center",
     gap: "15px",
   },
-});
+
+  [theme.media.wide]: {
+    gap: theme.spacing.sm,
+  },
+}));
 
 export const SupportTitle = styled.h3({
   margin: 0,
@@ -129,7 +140,7 @@ export const Copyright = styled.p({
   width: "85%",
   margin: "60px auto 0",
   color: "#74766F", // Secondary Text
-  fontSize: "13px",
+  fontSize: "14px",
   textAlign: "left",
 
   "@media (min-width: 320px) and (width < 768px)": {

@@ -7,7 +7,7 @@ export const HeaderSection = styled.header(({ theme }) => ({
   zIndex: 50,
   width: "100%",
   height: theme.layout.headerHeight,
-  padding: `0 ${theme.spacing.xl}`,
+  padding: `0 ${theme.spacing["3xl"]}`,
   display: "flex",
   alignItems: "center",
   backgroundColor: `${theme.colors.background}BF`, // BF: 불투명도 약 80%
@@ -57,6 +57,10 @@ export const Logo = styled.h1(({ theme }) => ({
   [theme.media.smallMobile]: {
     fontSize: "20px",
   },
+
+  [theme.media.wide]: {
+    fontSize: "24px",
+  },
 }));
 
 export const Navigation = styled.nav({
@@ -102,6 +106,10 @@ export const NavButton = styled("a", {
   },
   "&:hover::after": {
     width: "100%",
+  },
+
+  [theme.media.wide]: {
+    fontSize: theme.fontSize.md,
   },
 }));
 
