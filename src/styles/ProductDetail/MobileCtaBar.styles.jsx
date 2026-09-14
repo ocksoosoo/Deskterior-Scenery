@@ -9,6 +9,7 @@ export const Bar = styled.div(({ theme }) => ({
     alignItems: "center",
     gap: theme.spacing.xs, // 8
     width: "100%",
+    boxSizing: "border-box",
     padding: theme.spacing.md, // 16
     paddingBottom: `calc(${theme.spacing.md} + env(safe-area-inset-bottom, 0px))`,
 
@@ -38,7 +39,7 @@ export const WishButton = styled.button(({ theme }) => ({
 export const CartButton = styled.button(({ theme }) => ({
   display: "flex",
   width: "auto",
-  whiteSpace: "nowrap", // 텍스트 줄바꿈 없이 한 줄 보장
+  whiteSpace: "nowrap",
   height: "3rem", // 48
   flexShrink: 0,
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
@@ -54,7 +55,7 @@ export const CartButton = styled.button(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
 
-  "&:hover": { filter: "brightness(1.2)" }, // 팀 공통 버튼 호버
+  "&:hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 }));
 
@@ -73,6 +74,6 @@ export const CheckoutButton = styled.button(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.01rem",
 
-  "&:not(:disabled):hover": { filter: "brightness(1.2)" }, // 팀 공통 버튼 호버
+  "&:not(:disabled):hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 }));

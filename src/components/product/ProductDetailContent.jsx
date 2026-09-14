@@ -1,4 +1,3 @@
-import SafeImage from "../common/SafeImage";
 import SceneryBox from "../common/SceneryBox";
 import * as S from "../../styles/ProductDetail/ProductDetailContent.styles";
 
@@ -13,7 +12,7 @@ const ProductDetailContent = ({ sections = [] }) => {
         {sections.map((section) => (
           <S.Article key={section.id}>
             {section.image && (
-              <SafeImage
+              <S.DetailImage
                 src={section.image}
                 alt={section.title || ""}
                 loading="lazy"
@@ -25,13 +24,6 @@ const ProductDetailContent = ({ sections = [] }) => {
                     big
                   />
                 }
-                style={{
-                  display: "block",
-                  maxWidth: "100%", // 컨테이너보다 크면 축소만 (확대 X)
-                  height: "auto", // 축소 시 비율 유지
-                  margin: "0 auto", // 가운데 정렬
-                  borderRadius: 8,
-                }}
               />
             )}
 
