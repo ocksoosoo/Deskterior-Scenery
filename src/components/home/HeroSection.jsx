@@ -22,6 +22,7 @@ import {
   CollectionLabel,
   ObjectInteractionArea,
   GuideText,
+  MobileHeroVideo,
 } from "../../styles/MainStyles/HeroSection.styles";
 import deskLamp from "../../assets/obj-desk-lamp.png";
 import diary from "../../assets/obj-diary-pen.png";
@@ -30,8 +31,10 @@ import headphones from "../../assets/obj-headphones.png";
 import penTray from "../../assets/obj-pen-tray.png";
 import { useEffect, useRef, useState } from "react";
 import { useAnimate, motion } from "motion/react";
+import heroPoster from "../../assets/Hero.png";
+import mobileHeroVideo from "../../assets/hero-tangled-objects.mp4";
 
-function HeroSection() {
+function AnimateHeroSection() {
   const [loadedCount, setLoadedCount] = useState(0);
   // 이미지 펼침 여부
   const [isExpanded, setIsexpanded] = useState(false);
@@ -386,4 +389,46 @@ function HeroSection() {
     </HeroContainer>
   )
 }
+
+function HeroSection() {
+  const [isMobile, setIsMobile] = useState(() =>
+    window.matchMedia("(max-width: 767px)").matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    function handleChange(event) {
+      setIsMobile(event.matches);
+    }
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  if (isMobile) {
+    return (
+      <HeroContainer>
+        <MobileHeroVideo
+          src={mobileHeroVideo}
+          poster={heroPoster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          preload="metadata"
+          aria-label="SCENERY 모바일 히어로 영상"
+        />
+      </HeroContainer>
+    );
+  }
+
+  return <AnimateHeroSection />;
+}
+
+export { AnimateHeroSection };
 export { HeroSection };

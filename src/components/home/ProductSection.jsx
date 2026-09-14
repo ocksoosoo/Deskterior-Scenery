@@ -204,10 +204,17 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
 
     setDirection(-1);
 
+    if (isResetting) {
+      pendingDirectionRef.current = "previous";
+      return;
+    }
+
     // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
     // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
     if (currentIndex <= 0) {
       pendingDirectionRef.current = "previous";
+      setIsResetting(true);
+      setCurrentIndex(items.length);
       return;
     }
 
@@ -220,10 +227,16 @@ function ProductGroup({ title, items, isBest = false, onAddToCart }) {
 
     setDirection(1);
 
+     if (isResetting) {
+    pendingDirectionRef.current = "next";
+    return;
+    }
     // 끝(경계)에 도달하는 애니메이션이 아직 안 끝났는데 또 눌렀다면, 지금 애니메이션을
     // 도중에 끊어서 튀어 보이게 하지 않고, 리셋이 끝난 직후 자연스럽게 이어서 한 칸 더 이동되도록 예약만 해둔다
     if (currentIndex >= items.length + 1) {
       pendingDirectionRef.current = "next";
+      setIsResetting(true);
+      setCurrentIndex(1);
       return;
     }
 
