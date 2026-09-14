@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
+import { Link } from "react-router";
 
 export const Card = styled.div(({ theme, background }) => ({
   position: "relative",
@@ -45,6 +46,14 @@ export const ImageWrapper = styled.div(({ theme }) => ({
     transform: "scale(1.06)",
   },
 }));
+
+// 진짜 <a>(Link)로 감싸서 키보드 포커스/Enter, 가운데 클릭(새 탭 열기) 등을
+// 브라우저가 기본으로 처리해주게 함 - onClick+onKeyDown으로 흉내내지 않음
+export const ImageLink = styled(Link)({
+  display: "block",
+  width: "100%",
+  height: "100%",
+});
 
 export const ProductImage = styled.img({
   width: "100%",
@@ -201,7 +210,12 @@ export const Info = styled.div(({ theme }) => ({
   flex: "1 0 0",
 }));
 
-export const ProductName = styled.strong(({ theme }) => ({
+// emotion의 as prop은 styled(Link)처럼 "컴포넌트"를 감싼 경우 런타임에
+// 다른 태그로 바꿔치기가 안 먹혀서(to={undefined}여도 여전히 Link로 렌더링되며
+// 현재 페이지 자신을 가리키는 링크가 생겨버림), 스타일만 공유하고 컴포넌트
+// 자체는 둘로 나눔 - 클릭 가능한 곳은 ProductName(Link), placeholder처럼
+// 클릭 불가한 곳은 ProductNameStatic(순수 strong)을 쓴다
+const productNameStyle = (theme) => ({
   position: "relative",
   zIndex: 2,
   cursor: "pointer",
@@ -218,11 +232,19 @@ export const ProductName = styled.strong(({ theme }) => ({
   fontWeight: theme.fontWeight.semiBold,
   letterSpacing: "-0.18px",
   color: theme.colors.textMain,
+  textDecoration: "none",
 
   "&:hover": {
     textDecoration: "underline",
   },
-}));
+});
+
+// 상품 상세로 이동하는 진짜 링크
+export const ProductName = styled(Link)(({ theme }) => productNameStyle(theme));
+// 클릭 불가(placeholder) 카드용 - 링크가 아닌 순수 텍스트
+export const ProductNameStatic = styled.strong(({ theme }) =>
+  productNameStyle(theme),
+);
 
 export const CategoryName = styled.span(({ theme }) => ({
   color: theme.colors.emphasis,
@@ -235,11 +257,15 @@ export const Price = styled.p(({ theme }) => ({
   margin: 0,
 }));
 
-export const Rating = styled.p(({ theme }) => ({
+// ProductName과 같은 이유로 스타일만 공유하고 컴포넌트를 둘로 나눔
+const ratingStyle = (theme) => ({
   position: "relative",
   zIndex: 2,
+  // <a>는 기본이 inline이라 위아래 padding이 클릭 영역을 못 넓히므로 block 계열로 지정
+  display: "inline-block",
   fontSize: theme.fontSize.xs,
   color: theme.colors.secondText,
+  textDecoration: "none",
   width: "fit-content",
   // 터치 범위만 넓히고 시각적 위치/간격은 그대로 유지 (padding + 상쇄용 negative margin)
   // 아래쪽은 카드 자체의 paddingBottom(md)만큼까지, 카드 하단 여백 전체를 클릭 범위로 활용
@@ -255,7 +281,12 @@ export const Rating = styled.p(({ theme }) => ({
   "&:hover": {
     textDecoration: "underline",
   },
-}));
+});
+
+// 리뷰 섹션으로 이동하는 진짜 링크
+export const Rating = styled(Link)(({ theme }) => ratingStyle(theme));
+// 클릭 불가(placeholder) 카드용 - 링크가 아닌 순수 텍스트
+export const RatingStatic = styled.p(({ theme }) => ratingStyle(theme));
 
 export const Star = styled.span({
   display: "inline-flex",
