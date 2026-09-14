@@ -13,12 +13,20 @@ export const ItemWrapper = styled.div(({ theme }) => ({
   [theme.media.tablet]: {
     gap: theme.spacing.md,
   },
+  [theme.media.mobile]: {
+    position: "relative",
+    padding: "16px 0",
+    gap: "12px",
+    alignItems: "stretch",
+    height: "clamp(177px, calc(145.33px + 6.6vw), 196px)",
+  },
 }));
 
 // 체크박스
 export const ItemCheckbox = styled.input(({ theme }) => ({
   width: "20px",
   height: "20px",
+  flexShrink: 0,
   accentColor: theme.colors.emphasis,
   cursor: "pointer",
   // 비활성화
@@ -37,14 +45,20 @@ export const ItemLeft = styled.div(({ theme }) => ({
     gap: theme.spacing.md,
     flex: 1,
   },
+  [theme.media.mobile]: {
+    gap: "12px",
+    flex: 1,
+    minWidth: 0,
+  },
 }));
 
 // 이미지
 export const ImageBox = styled.div(({ theme }) => ({
   position: "relative",
-  width: "132px",
-  height: "132px",
+  width: "clamp(80px, calc(-6.67px + 18.06vw), 132px)",
+  height: "clamp(80px, calc(-6.67px + 18.06vw), 132px)",
   flexShrink: 0,
+  transition: "width 0.25s ease, height 0.25s ease",
   borderRadius: theme.radius.md,
   overflow: "hidden",
   "&:hover img": {
@@ -68,6 +82,7 @@ export const ItemImage = styled.img(({ theme, $isLoaded }) => ({
   height: "100%",
   objectFit: "cover",
   opacity: $isLoaded ? 1 : 0,
+  transition: "opacity 0.2s ease, transform 0.3s ease",
 }));
 
 // 뱃지 묶음 (Sold out / Best / New 가로 배치)
@@ -103,6 +118,11 @@ export const InfoBox = styled.div(({ theme }) => ({
     width: "100%",
     minWidth: "167px",
   },
+  [theme.media.mobile]: {
+    width: "100%",
+    minWidth: 0,
+    gap: "8px",
+  },
 }));
 
 // 상품명
@@ -119,6 +139,16 @@ export const ItemName = styled.h4(({ theme }) => ({
   "&:hover": {
     textDecoration: "underline",
   },
+  [theme.media.tablet]: {
+    fontSize: `clamp(${theme.fontSize.lg}, 2vw, ${theme.fontSize.xl})`,
+  },
+  [theme.media.mobile]: {
+    width: "clamp(100px, calc(-11.67px + 23.26vw), 167px)",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
 }));
 
 // 원가
@@ -127,6 +157,9 @@ export const ItemPrice = styled.p(({ theme }) => ({
   fontSize: theme.fontSize.sm,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.textMain,
+  [theme.media.mobile]: {
+    whiteSpace: "nowrap",
+  },
 }));
 
 // 우
@@ -140,6 +173,14 @@ export const ItemRight = styled.div(({ theme }) => ({
     gap: theme.spacing.md,
     flex: "none",
   },
+  [theme.media.mobile]: {
+    flex: "none",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    gap: 0,
+    marginTop: 0,
+  },
 }));
 
 // 수량
@@ -148,6 +189,13 @@ export const QuantityBox = styled.div(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   width: "130px",
+  [theme.media.mobile]: {
+    width: "clamp(92px, calc(28.69px + 13.19vw), 130px)",
+    flexShrink: 0,
+    position: "absolute",
+    left: "calc(44px + clamp(80px, calc(-6.67px + 18.06vw), 132px))",
+    top: "75px",
+  },
 }));
 
 // 수량 버튼
@@ -171,11 +219,15 @@ export const QuantityButton = styled.button(({ theme }) => ({
     color: theme.colors.subtle,
     cursor: "not-allowed",
   },
+  [theme.media.mobile]: {
+    width: "clamp(24px, calc(5.67px + 3.82vw), 35px)",
+    height: "clamp(24px, calc(5.67px + 3.82vw), 35px)",
+  },
 }));
 
 // 수량 텍스트
 export const QuantityText = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.xl,
+  fontSize: `clamp(18px, calc(12px + 0.78vw), 20px)`,
   fontWeight: theme.fontWeight.semiBold,
   Width: "28px",
   flexShrink: 0,
@@ -184,17 +236,26 @@ export const QuantityText = styled.span(({ theme }) => ({
 }));
 
 // 총합
-export const TotalPrice = styled.div({
+export const TotalPrice = styled.div(({ theme }) => ({
   width: "120px",
   textAlign: "right",
   paddingTop: "4px", // 정렬 1
-});
+  [theme.media.mobile]: {
+    paddingTop: 0,
+  },
+}));
 
 // 총합 텍스트
 export const TotalPriceText = styled.strong(({ theme }) => ({
   fontSize: theme.fontSize.xl,
   fontWeight: theme.fontWeight.semiBold,
   color: theme.colors.textMain,
+  [theme.media.tablet]: {
+    fontSize: `clamp(${theme.fontSize.lg}, 2vw, ${theme.fontSize.xl})`,
+  },
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
 }));
 
 // 삭제 버튼
@@ -208,4 +269,11 @@ export const DeleteButton = styled.button(({ theme }) => ({
   justifyContent: "center",
   color: theme.colors.secondText,
   marginLeft: "auto",
+  [theme.media.mobile]: {
+    position: "absolute", // 우측 상단으로 띄우기
+    top: "16px",
+    right: "0",
+    paddingTop: 0,
+    marginLeft: 0,
+  },
 }));
