@@ -57,13 +57,6 @@ const ProductDetailPage = () => {
     // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
     // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
 
-    /*let loadingEnded = false;
-    const finishLoading = () => {
-      if (loadingEnded) return;
-      loadingEnded = true;
-      endLoading();
-    };*/
-
     const loadProduct = async () => {
       try {
         const data = await getProduct(id);
@@ -81,7 +74,6 @@ const ProductDetailPage = () => {
           setProductError(true);
         }
       } finally {
-        //finishLoading();
         if (alive) setLoadedProductForId(id);
       }
     };
@@ -90,7 +82,6 @@ const ProductDetailPage = () => {
 
     return () => {
       alive = false;
-      //finishLoading();
     };
   }, [id]);
 
