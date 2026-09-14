@@ -54,6 +54,14 @@ const Header = () => {
   const menuButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
   const closeMenuTimeoutRef = useRef(null);
+  // ESC 핸들러 안에서 최신 값만 읽기 위한 ref - 의존성 배열에 isLogoutModalOpen을
+  // 직접 넣으면, 모달을 열고 닫을 때마다 아래 effect 전체(스크롤 잠금·포커스 이동)가
+  // 다시 실행되면서 포커스가 모달이 아니라 드로어의 닫기 버튼으로 튕겨가 버린다.
+  // (렌더 중에 ref를 직접 갱신하면 안 되는 프로젝트 lint 규칙 때문에 effect로 동기화)
+  const isLogoutModalOpenRef = useRef(isLogoutModalOpen);
+  useEffect(() => {
+    isLogoutModalOpenRef.current = isLogoutModalOpen;
+  }, [isLogoutModalOpen]);
 
   const openMenu = () => {
     // 닫는 도중(언마운트 타이머 대기 중)에 다시 열면, 예약돼있던 언마운트가
@@ -93,7 +101,7 @@ const Header = () => {
       if (e.key !== "Escape") return;
       // 로그아웃 확인 모달이 메뉴 위에 떠 있는 동안은, ESC가 뒤에 있는 메뉴를
       // 조용히 닫아버리지 않고 지금 실제로 보고 있는 모달을 닫게 한다
-      if (isLogoutModalOpen) {
+      if (isLogoutModalOpenRef.current) {
         setIsLogoutModalOpen(false);
         return;
       }
@@ -106,7 +114,7 @@ const Header = () => {
       window.removeEventListener("keydown", handleKeyDown);
       menuButtonEl?.focus();
     };
-  }, [isMenuOpen, isLogoutModalOpen]);
+  }, [isMenuOpen]);
   // 스토어에서 cartiTRem 가져옴
   const { cartItems, syncCartWithServer, clearLocalCart } = useCartStore();
 
