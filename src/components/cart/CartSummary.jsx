@@ -15,8 +15,6 @@ import {
 } from "../../styles/CartStyles/CartSummary.styles";
 
 const CartSummary = ({ subtotal, deliveryFee, total, isAllSoldOut }) => {
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-
   return (
     <SummaryContainer>
       <SummaryInfoBox>
@@ -30,10 +28,7 @@ const CartSummary = ({ subtotal, deliveryFee, total, isAllSoldOut }) => {
         <DeliveryRow>
           <LabelText>
             Delivery Fee
-            <IconWrapper
-              onMouseEnter={() => setIsTooltipOpen(true)}
-              onMouseLeave={() => setIsTooltipOpen(false)}
-            >
+            <IconWrapper>
               <svg
                 width="18"
                 height="18"
@@ -61,13 +56,12 @@ const CartSummary = ({ subtotal, deliveryFee, total, isAllSoldOut }) => {
                 />
               </svg>
 
-              {isTooltipOpen && (
-                <TooltipBox>
-                  80,000원 이상 구매 시 무료로 배송되며,
-                  <br />
-                  미만 주문 건은 기본 배송비 3,000원이 부과됩니다.
-                </TooltipBox>
-              )}
+              {/* ★ 상태(State) 없이 무조건 렌더링. CSS가 PC와 모바일을 알아서 제어함! */}
+              <TooltipBox>
+                80,000원 이상 구매 시 무료로 배송되며,
+                <br />
+                미만 주문 건은 기본 배송비 3,000원이 부과됩니다.
+              </TooltipBox>
             </IconWrapper>
           </LabelText>
           <PriceText>₩ {deliveryFee.toLocaleString()}</PriceText>

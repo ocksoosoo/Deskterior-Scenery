@@ -236,7 +236,7 @@ export const QuantityButton = styled.button(({ theme }) => ({
 export const QuantityText = styled.span(({ theme }) => ({
   fontSize: `clamp(18px, calc(12px + 0.78vw), 20px)`,
   fontWeight: theme.fontWeight.semiBold,
-  Width: "28px",
+  width: "28px",
   flexShrink: 0,
   textAlign: "center", //숫자 두 자리여도 자리 고정
   color: theme.colors.textMain,
