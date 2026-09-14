@@ -1,33 +1,228 @@
-import { useEffect } from "react";
+import useAuthStore from "../store/UseAuthStore";
+import useWishlistStore from "../store/wishlistStore";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
+import { logout } from "../api/authApi";
+import {
+  showSuccessToast,
+  showFailToast,
+} from "../components/common/ShowToast";
+import Modal from "../components/common/Modal";
+import { useNavigate } from "react-router";
+
+import {
+  MypageBox,
+  MypageTitle,
+  CardBox,
+  UserCard,
+  UserHead,
+  UserName,
+  UserLogOut,
+  UserId,
+  AccountCard,
+  AccountTitle,
+  AccountForm,
+  AccountGrid,
+  AccountField,
+  AccountLabel,
+  Required,
+  AccountInput,
+  AddressField,
+  SaveButton,
+  WishlistCard,
+  WishlistTitle,
+  SettingsCard,
+  SettingsTitle,
+  Settingstext,
+  SettingsBtnGroup,
+  SettingsDeleteBtn,
+  SettingsChangeBtn,
+} from "../styles/MyPage.styles";
 
 function Mypage() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
+
+  const clearUser = useAuthStore((state) => state.clearUser);
+  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
+
+  const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
+  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
 
   useEffect(() => {
     finishPageLoading(pathname);
   }, [pathname, finishPageLoading]);
 
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [phone, setPhone] = useState("");
+  const [id, setId] = useState("");
+  const [address, setAddress] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const updatedUserInfo = {
+      first,
+      last,
+      phone,
+      id,
+      address,
+    };
+
+    console.log("수정할 회원정보:", updatedUserInfo);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("로그아웃 API 실패:", error);
+      showFailToast("Logout Fail");
+    } finally {
+      // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니·찜)은 항상 정리한다
+      localStorage.removeItem("token");
+      clearUser();
+      clearWishlist();
+      setIsLogOutModalOpen(false);
+      showSuccessToast("Logout successful");
+      navigate("/");
+    }
+  };
+
+  const handleDeleteUser = () => {
+    setIsDeleteUserModalOpen(false);
+    showSuccessToast("계정이 성공적으로 탈퇴하였습니다.");
+    navigate("/");
+  };
+
   return (
-    <h1>
-      이 편지는 영국에서 최초로 시작되어 일년에 한바퀴 돌면서 받는 사람에게
-      행운을 주었고 지금은 당신에게로 옮겨진 이 편지는 4일 안에 당신 곁을 떠나야
-      합니다. 이 편지를 포함해서 7통을 행운이 필요한 사람에게 보내 주셔야
-      합니다. 복사를 해도 좋습니다. 혹 미신이라 하실지 모르지만 사실입니다.
-      영국에서 HGXWCH이라는 사람은 1930년에 이 편지를 받았습니다. 그는 비서에게
-      복사해서 보내라고 했습니다. 며칠 뒤에 복권이 당첨되어 20억을 받았습니다.
-      어떤 이는 이 편지를 받았으나 96시간 이내 자신의 손에서 떠나야 한다는
-      사실을 잊었습니다. 그는 곧 사직되었습니다. 나중에야 이 사실을 알고 7통의
-      편지를 보냈는데 다시 좋은 직장을 얻었습니다. 미국의 케네디 대통령은 이
-      편지를 받았지만 그냥 버렸습니다. 결국 9일 후 그는 암살 당했습니다. 기억해
-      주세요. 이 편지를 보내면 7년의 행운이 있을 것이고 그렇지 않으면 3년의
-      불행이 있을 것입니다. 그리고 이 편지를 버리거나 낙서를 해서는 절대로
-      안됩니다. 7통입니다. 이 편지를 받은 사람은 행운이 깃들 것입니다.
-      힘들겠지만 좋은게 좋다고 생각하세요. 7년의 행운을 빌면서...
-    </h1>
+    <>
+      <MypageBox>
+        <MypageTitle>My Page</MypageTitle>
+
+        <CardBox>
+          <UserCard>
+            <UserHead>
+              <UserName>홍길동</UserName>
+              <UserLogOut
+                type="button"
+                aria-label="로그아웃 버튼"
+                onClick={() => setIsLogOutModalOpen(true)}
+              >
+                Log out
+              </UserLogOut>
+            </UserHead>
+            <UserId>hong</UserId>
+          </UserCard>
+
+          <AccountCard>
+            <AccountTitle>Account Information</AccountTitle>
+            <AccountForm onSubmit={handleSubmit}>
+              <AccountGrid>
+                <AccountField>
+                  <AccountLabel>
+                    First Name<Required>*</Required>
+                  </AccountLabel>
+
+                  <AccountInput
+                    id="first"
+                    type="text"
+                    value={first}
+                    onChange={(e) => setFirst(e.target.value)}
+                  />
+                </AccountField>
+
+                <AccountField>
+                  <AccountLabel>
+                    Last Name<Required>*</Required>
+                  </AccountLabel>
+
+                  <AccountInput
+                    id="last"
+                    type="text"
+                    value={last}
+                    onChange={(e) => setLast(e.target.value)}
+                  />
+                </AccountField>
+
+                <AccountField>
+                  <AccountLabel>ID</AccountLabel>
+
+                  <AccountInput id="userId" type="text" value={id} readOnly />
+                </AccountField>
+
+                <AccountField>
+                  <AccountLabel>Phone</AccountLabel>
+
+                  <AccountInput
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </AccountField>
+
+                <AddressField>
+                  <AccountLabel>Address</AccountLabel>
+
+                  <AccountInput
+                    id="address"
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </AddressField>
+              </AccountGrid>
+
+              <SaveButton type="submit">Save Changes</SaveButton>
+            </AccountForm>
+          </AccountCard>
+
+          <WishlistCard>
+            <WishlistTitle>Wish List</WishlistTitle>
+          </WishlistCard>
+
+          <SettingsCard>
+            <SettingsTitle>Account Settings</SettingsTitle>
+            <Settingstext>
+              회원 탈퇴시 모든 계정 정보와 활동 내역이 영구적으로 삭제되며,
+              복구할 수 없습니다. <br /> 비말번호 변경은 보안을 위해 주기적으로
+              권장드립니다.
+            </Settingstext>
+            <SettingsBtnGroup>
+              <SettingsDeleteBtn onClick={() => setIsDeleteUserModalOpen(true)}>
+                Delete account
+              </SettingsDeleteBtn>
+              <SettingsChangeBtn>Change Password</SettingsChangeBtn>
+            </SettingsBtnGroup>
+          </SettingsCard>
+          {isLogOutModalOpen && (
+            <Modal
+              title="Are you sure?"
+              description="정말 로그아웃 하시겠습니까?"
+              confirmText="Log out"
+              onClose={() => setIsLogOutModalOpen(false)}
+              onConfirm={handleLogout}
+            />
+          )}
+          {isDeleteUserModalOpen && (
+            <Modal
+              title="Withdrawal Confirmation"
+              description={
+                "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보와 작성하신 리뷰가 모두 삭제되며 복구가 불가능 합니다."
+              }
+              confirmText="Confirm"
+              onClose={() => setIsDeleteUserModalOpen(false)}
+              onConfirm={handleDeleteUser}
+            />
+          )}
+        </CardBox>
+      </MypageBox>
+    </>
   );
 }
 
