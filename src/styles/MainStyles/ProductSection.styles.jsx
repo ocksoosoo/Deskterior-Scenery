@@ -10,6 +10,14 @@ export const ProductsSection = styled.section(({theme, isBest}) => ({
     [theme.media.tablet]: {
         padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
     },
+
+    [theme.media.mobile]: {
+        padding: `${theme.spacing["2xl"]} ${theme.spacing.lg}`,
+    },
+
+    [theme.media.smallMobile]: {
+        padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
+    }
 }));
 
 export const ProductTitle = styled.h2(({theme}) => ({
@@ -22,6 +30,15 @@ export const ProductTitle = styled.h2(({theme}) => ({
         fontSize: theme.fontSize["3xl"],
         marginBottom: theme.spacing.lg,
     },
+
+    [theme.media.mobile]: {
+        fontSize: theme.fontSize["3xl"],
+        marginBottom: theme.spacing.lg,
+    },
+
+    [theme.media.smallMobile]: {
+        fontSize: theme.fontSize["2xl"],
+    }
 }));
 
 // 화면에 보여줄 상품 카드 범위를 제한
@@ -51,7 +68,7 @@ export const SliderTrack = styled(motion.div)(({theme}) => ({
         alignItems: "stretch",
 
         "& > div": {
-            width: "min(260px, calc((100vw -160px) / 3))",
+            width: "min(260px, calc((100vw - 160px) / 3))",
             height: "auto",
             minHeight: "350px",
         },
@@ -146,4 +163,82 @@ export const IndicatorButton = styled.button(({theme}) => ({
         width: "32px",
         backgroundColor: theme.colors.textMain,
     }
-}))
+}));
+
+// mobile
+
+export const MobileProductGrid = styled.div(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+  columnGap: theme.spacing.md,
+  rowGap: theme.spacing.lg,
+
+  [theme.media.smallMobile]: {
+    columnGap: theme.spacing.sm,
+  },
+}));
+
+export const MobileCardSlot = styled.div(({ theme }) => ({
+  minWidth: 0,
+
+  // 이 영역 안의 상품 카드만 고정 너비 해제
+  "& > div": {
+    width: "100%",
+    minWidth: 0,
+    height: "100%",
+    boxSizing: "border-box",
+  },
+
+  // 상품 정보 영역
+  "& > div > div:last-child": {
+    minWidth: 0,
+    boxSizing: "border-box",
+    padding: `0 ${theme.spacing.xs}`,
+    overflowWrap: "anywhere",
+  },
+
+  // 상품명
+  "& strong": {
+    width: "100%",
+    fontSize: theme.fontSize.lg,
+    lineHeight: 1.4,
+    minHeight: "2.8em",
+  },
+
+  // 카테고리명
+  "& > div > div:last-child > span": {
+    fontSize: theme.fontSize.sm,
+  },
+
+  // 가격
+  "& > div > div:last-child > p:first-of-type": {
+    fontSize: theme.fontSize.md,
+  },
+
+  // 리뷰
+  "& > div > div:last-child > p:last-of-type": {
+    marginTop: "auto",
+    fontSize: theme.fontSize.sm,
+  },
+}));
+
+export const MobileMoreButton = styled.button(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "44px",
+  height: "44px",
+  margin: `${theme.spacing.xl} auto 0`,
+  padding: 0,
+  border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+  borderRadius: theme.radius.full,
+  backgroundColor: theme.colors.cards,
+  color: theme.colors.textMain,
+  fontSize: theme.fontSize["2xl"],
+  cursor: "pointer",
+
+  "&:focus-visible": {
+    outline: `${theme.borderWidth.focus} solid ${theme.colors.emphasis}`,
+    outlineOffset: theme.spacing["2xs"],
+  },
+}));

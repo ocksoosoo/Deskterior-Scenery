@@ -200,11 +200,11 @@ export const ProductArea = styled.div(({ theme }) => ({
   [theme.media.mobile]: {
     position: "relative",
     flex: "none",
-    width: "80%",
+    width: "100%",
     maxWidth: "none",
     minWidth: 0,
     height: "auto",
-    padding: theme.spacing.md,
+    padding: `${theme.spacing.md} ${theme.spacing.xl}`,
     overflow: "visible",
   },
 }))
@@ -421,6 +421,9 @@ export const ViewMoreButton = styled.button(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+
+  // 호버
+
 }));
 
 // ProductPagination
@@ -449,6 +452,11 @@ export const PaginationButton = styled.button(({ theme }) => ({
   backgroundColor: "transparent",
   color: theme.colors.textMain,
   cursor: "pointer",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+
+  "&:hover": {
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
+  },
 
   "&:disabled": {
     opacity: 0.3,
