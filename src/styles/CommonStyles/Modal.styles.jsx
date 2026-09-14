@@ -48,6 +48,8 @@ export const ModalDescription = styled.p(({ theme }) => ({
   margin: "0 0 20px 0",
   color: theme.colors.secondText,
   fontSize: theme.fontSize.sm,
+  whiteSpace: "pre-line",
+  textAlign: "center",
 }));
 
 // 버튼
