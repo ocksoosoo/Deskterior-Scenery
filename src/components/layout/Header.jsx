@@ -24,7 +24,8 @@ import {
   NavItem,
   NavButton,
   IconContainer,
-  IconButton,
+  AuthIconButton,
+  CartIconButton,
   MenuButton,
   CartIconWrapper,
   CartBadge,
@@ -35,7 +36,7 @@ import {
   MobileMenuCloseButton,
   MobileMenuAuthRow,
   MobileMenuAuthButton,
-  MobileMenuCartButton,
+  MobileMenuPersonButton,
   MobileMenuDivider,
   MobileMenuCategoryList,
   MobileMenuCategoryLink,
@@ -178,27 +179,27 @@ const Header = () => {
 
       <IconContainer>
         {user ? (
-          <IconButton
+          <AuthIconButton
             type="button"
             aria-label="로그아웃 버튼"
             onClick={handleLogout}
           >
             <LogoutIcon />
-          </IconButton>
+          </AuthIconButton>
         ) : (
-          <IconButton as={Link} to="/login" aria-label="로그인 버튼">
+          <AuthIconButton as={Link} to="/login" aria-label="로그인 버튼">
             <LoginIcon />
-          </IconButton>
+          </AuthIconButton>
         )}
 
-        <IconButton as={Link} to="/cartpage" aria-label="장바구니 버튼">
+        <CartIconButton as={Link} to="/cartpage" aria-label="장바구니 버튼">
           <CartIconWrapper>
             <BasketIcon width={30} height={30} />
             {cartCount > 0 && <CartBadge>{cartCount}</CartBadge>}
           </CartIconWrapper>
-        </IconButton>
+        </CartIconButton>
 
-        <IconButton
+        <AuthIconButton
           as={Link}
           to={user ? "/mypage" : "/login"}
           aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
@@ -207,7 +208,7 @@ const Header = () => {
             <PersonIcon width={30} height={30} />
             {likedCount > 0 && <CartBadge>{likedCount}</CartBadge>}
           </CartIconWrapper>
-        </IconButton>
+        </AuthIconButton>
       </IconContainer>
 
       {isMenuRendered &&
@@ -249,13 +250,13 @@ const Header = () => {
                     </MobileMenuAuthButton>
                   </>
                 )}
-                <MobileMenuCartButton
-                  to="/cartpage"
-                  aria-label="장바구니 버튼"
+                <MobileMenuPersonButton
+                  to={user ? "/mypage" : "/login"}
+                  aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
                   onClick={closeMenu}
                 >
-                  <BasketIcon width={20} height={20} />
-                </MobileMenuCartButton>
+                  <PersonIcon width={20} height={20} />
+                </MobileMenuPersonButton>
               </MobileMenuAuthRow>
 
               <MobileMenuDivider />
