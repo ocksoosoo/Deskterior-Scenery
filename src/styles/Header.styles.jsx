@@ -118,13 +118,6 @@ export const IconContainer = styled.div(({ theme }) => ({
     height: "44px",
     justifyContent: "center",
     gap: theme.spacing.xs,
-    // 아이콘마다 JSX에서 width/height 30px를 개별로 넘기고 있어서, 여기서
-    // svg 자체를 24x24로 강제해 스펙과 맞춤 (30px면 컨테이너가 88px가 아닌
-    // 106px로 벌어져 헤더 그리드 중앙 정렬이 어긋남)
-    "& svg": {
-      width: "24px",
-      height: "24px",
-    },
   },
 }));
 
@@ -135,11 +128,25 @@ export const IconButton = styled.button({
   cursor: "pointer",
 });
 
-// 로그인/로그아웃 버튼 - 모바일은 햄버거 메뉴 안에 로그인/로그아웃이 이미 있어서
-// 헤더에 중복으로 노출할 필요가 없어 숨김
+// 로그인/로그아웃, 마이페이지 버튼 - 모바일은 햄버거 메뉴 안에 로그인/로그아웃/
+// 마이페이지가 이미 있어서 헤더에 중복으로 노출할 필요가 없어 숨김
 export const AuthIconButton = styled(IconButton)(({ theme }) => ({
   [theme.media.mobile]: {
     display: "none",
+  },
+}));
+
+// 장바구니 버튼 - 모바일에서는 로그인/마이페이지 버튼이 빠지고 이것만 남으므로,
+// 왼쪽 햄버거 메뉴 버튼(44x44)과 클릭 영역은 맞추되, 바구니 아이콘은 실선(선 굵기)이
+// 아니라 채워진 도형이라 44px 그대로 두면 햄버거보다 훨씬 커 보여서 아이콘만 살짝 줄임
+export const CartIconButton = styled(IconButton)(({ theme }) => ({
+  [theme.media.mobile]: {
+    width: "44px",
+    height: "44px",
+    "& svg": {
+      width: "32px",
+      height: "32px",
+    },
   },
 }));
 
@@ -283,7 +290,8 @@ export const MobileMenuAuthButton = styled(Link)(({ theme }) => ({
   cursor: "pointer",
 }));
 
-export const MobileMenuCartButton = styled(Link)(({ theme }) => ({
+// 원형 아이콘 링크 버튼 (마이페이지 등 - 장바구니는 헤더에 항상 보이므로 여기선 뺌)
+export const MobileMenuIconLinkButton = styled(Link)(({ theme }) => ({
   display: "flex",
   flexShrink: 0,
   alignItems: "center",
@@ -295,6 +303,8 @@ export const MobileMenuCartButton = styled(Link)(({ theme }) => ({
   background: theme.colors.cards,
   color: theme.colors.textMain,
 }));
+
+export const MobileMenuPersonButton = styled(MobileMenuIconLinkButton)({});
 
 export const MobileMenuDivider = styled.hr(({ theme }) => ({
   width: "100%",
