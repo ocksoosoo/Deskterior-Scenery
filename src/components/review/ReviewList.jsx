@@ -23,8 +23,17 @@ const ReviewList = ({ reviews = [], isLoggedIn = false, onEdit, onDelete }) => {
     );
   }
 
+  // 서버가 리뷰를 작성일 오름차순(오래된 순)으로 내려줘서, 정렬 없이 그대로
+  // 앞에서 3개만 자르면 항상 가장 오래된 리뷰만 보이고 방금 쓴 리뷰는 늘 맨 끝에
+  // 묻혀 "+"를 눌러야만 보였다 - 최신순으로 정렬해서 새 리뷰가 바로 보이게 함
+  const sortedReviews = [...reviews].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+  );
+
   // 4개 이상일 때만 처음엔 3개만 보여주고, + 를 누르면 나머지 전부 노출
-  const shown = expanded ? reviews : reviews.slice(0, INITIAL_COUNT);
+  const shown = expanded
+    ? sortedReviews
+    : sortedReviews.slice(0, INITIAL_COUNT);
   const showMoreButton = !expanded && reviews.length > INITIAL_COUNT;
 
   return (

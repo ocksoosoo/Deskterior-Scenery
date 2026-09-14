@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useSearchParams } from "react-router";
-import { getCategories } from "../../api/categoriesApi";
-import staticCategories from "../../data/categories";
 import { getProducts, deriveBadgeFields } from "../../api/productsApi";
 import useCartStore from "../../store/cartStore";
 import {
@@ -12,6 +10,7 @@ import ProductCard from "../../components/product/ProductCard";
 import ProductToolbar from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
 import useLoadingStore from "../../store/UseLoadingStore";
+import useCategoriesStore from "../../store/categoriesStore";
 import { preloadingImages } from "../../utils/preloadingImages";
 import { EmptyBoxIcon } from "../../components/icons/Icons";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
@@ -42,33 +41,18 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   }, []);
   const rowSize = isMobile ? 2 : 3;
 
-  const [categories, setCategories] = useState(null);
-  const [categoriesFailed, setCategoriesFailed] = useState(false);
-
-  const [categoriesReady, setCategoriesReady] = useState(false);
+  // 스토어가 앱 전체에서 딱 한 번만 요청/캐시하므로, 다른 페이지에서 이미
+  // 불러왔다면 여기선 다시 요청하지 않고 캐시된 값을 그대로 씀
+  // (실패 시 정적 목록 대체와 실패 토스트도 스토어 안에서 한 번만 처리됨)
+  const categories = useCategoriesStore((state) => state.categories);
+  const categoriesStatus = useCategoriesStore((state) => state.status);
+  const categoriesFailed = categoriesStatus === "error";
+  const categoriesReady =
+    categoriesStatus === "success" || categoriesStatus === "error";
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   useEffect(() => {
-    let alive = true;
-    getCategories()
-      .then((data) => {
-        if (alive) setCategories(data);
-      })
-      .catch((err) => {
-        console.error("카테고리 로딩 실패:", err);
-        if (!alive) return;
-        setCategoriesFailed(true);
-        // API가 실패해도 이름/경로는 항상 같은 정적 목록으로 대체해서 slug 대신 정상 표기되게 함
-        setCategories(staticCategories);
-        showFailToast("페이지 정보를 불러오지 못했습니다.");
-      })
-      .finally(() => {
-        if (alive) {
-          setCategoriesReady(true);
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
+    fetchCategories();
+  }, [fetchCategories]);
 
   const category = categories?.find((c) => c.id === categoryId);
   // 카테고리 이름을 못 가져와도(로딩 실패) 상품목록 자체는 볼 수 있도록 categoryId로 폴백
