@@ -22,6 +22,10 @@ export const Button = styled.button(({ theme }) => ({
     bottom: "calc(81px + env(safe-area-inset-bottom, 0px))",
     padding: theme.spacing.xs,
   },
+
+  [theme.media.wide]: {
+    padding: theme.spacing.xs,
+  },
 }));
 
 export const Icon = styled.svg({

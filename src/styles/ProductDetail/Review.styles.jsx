@@ -19,16 +19,11 @@ export const Section = styled.section(({ theme }) => ({
 export const Header = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing["2xs"],
+  gap: theme.spacing.xs,
 
   [theme.media.tablet]: {
     alignSelf: "stretch",
     alignItems: "flex-start",
-    gap: theme.spacing.xs,
-  },
-
-  [theme.media.mobile]: {
-    gap: theme.spacing.xs,
   },
 }));
 
@@ -66,7 +61,6 @@ export const Subtitle = styled.p(({ theme }) => ({
   },
 }));
 
-//리뷰 작성 폼
 export const Form = styled.form(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -189,7 +183,7 @@ export const SubmitButton = styled.button(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
 
-  "&:hover": { filter: "brightness(1.2)" }, // 팀 공통 버튼 호버
+  "&:hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 }));
 
@@ -215,12 +209,11 @@ export const Summary = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "baseline",
   justifyContent: "center",
-  gap: theme.spacing.xs,
+  gap: theme.spacing.md,
 
   [theme.media.mobile]: {
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: theme.spacing.md,
     alignSelf: "stretch",
   },
 }));
