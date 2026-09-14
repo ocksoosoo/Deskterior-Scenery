@@ -106,7 +106,6 @@ const Header = () => {
   const clearUser = useAuthStore((state) => state.clearUser);
   // 뱃지 갯수 계산
   const cartCount = cartItems.length;
-  const likedCount = useWishlistStore((state) => state.likedIds.size);
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
   // 스토어가 앱 전체에서 딱 한 번만 요청/캐시하므로, 다른 페이지에서 이미
@@ -206,7 +205,6 @@ const Header = () => {
         >
           <CartIconWrapper>
             <PersonIcon width={30} height={30} />
-            {likedCount > 0 && <CartBadge>{likedCount}</CartBadge>}
           </CartIconWrapper>
         </AuthIconButton>
       </IconContainer>
