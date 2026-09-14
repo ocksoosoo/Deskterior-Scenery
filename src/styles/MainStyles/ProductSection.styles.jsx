@@ -195,19 +195,20 @@ export const MobileCardSlot = styled.div(({ theme }) => ({
     boxSizing: "border-box",
     padding: `0 ${theme.spacing.xs}`,
     overflowWrap: "anywhere",
+    fontSize: "14px",
   },
 
   // 상품명
   "& strong": {
     width: "100%",
-    fontSize: theme.fontSize.lg,
+    fontSize: theme.fontSize.md,
     lineHeight: 1.4,
     minHeight: "2.8em",
   },
 
   // 카테고리명
   "& > div > div:last-child > span": {
-    fontSize: theme.fontSize.sm,
+    fontSize: theme.fontSize.xs,
   },
 
   // 가격

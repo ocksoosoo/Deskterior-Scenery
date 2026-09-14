@@ -236,7 +236,7 @@ export const PenTrayLabel = styled(motion.div)(({theme}) => ({
 export const DiaryLabel = styled(motion.div)(({theme}) => ({
   position: "absolute",
   left: "5%",
-  top: "60%",
+  top: "50%",
   color: theme.colors.textMain,
 
   [theme.media.tablet]: {
@@ -247,7 +247,7 @@ export const DiaryLabel = styled(motion.div)(({theme}) => ({
 export const FlowerVaseLabel = styled(motion.div)(({theme}) => ({
   position: "absolute",
   left: "52%",
-  top: "77%",
+  top: "64%",
   color: theme.colors.textMain,
 
   [theme.media.tablet]: {
@@ -275,7 +275,7 @@ export const CollectionLabel = styled.p(({theme}) => ({
 
 export const GuideText = styled(motion.span)(({theme}) => ({
   position: "absolute",
-  left: "55%",
+  left: "58%",
   top: "30%",
   transform: "translateX(-50%)",
   fontSize: `clamp(${theme.fontSize.xs}, 1.2vw, ${theme.fontSize.sm})`,
@@ -291,9 +291,17 @@ export const GuideText = styled(motion.span)(({theme}) => ({
   }
 }));
 
-export const MobileHeroVideo = styled.video({
+export const MobileHeroVideo = styled.video(({theme}) => ({
+
   display: "block",
   width: "100%",
   height: "100%",
-  objectFit: "contain",
-});
+  objectFit: "cover",
+  
+  [theme.media.smallMobile]: {
+    display: "block",
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  },
+}));
