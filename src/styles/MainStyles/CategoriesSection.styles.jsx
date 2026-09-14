@@ -4,11 +4,11 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
   width: "100%",
   padding: theme.spacing["3xl"],
   backgroundColor: theme.colors.cards,
+  boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  gap: theme.spacing.xl, //32
 
   // tablet(768-1023)
   [theme.media.tablet] : {
@@ -17,13 +17,27 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
 
   [theme.media.mobile]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.lg}`,
-    gap: theme.spacing.lg,
   },
 
   [theme.media.smallMobile]: {
   padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
   }
 }));
+
+export const CategoriesInner = styled.div(({theme}) => ({
+  width: "100%",
+  maxWidth: "896px",
+  marginInline: "auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: theme.spacing.xl,
+
+  [theme.media.mobile]: {
+    gap: theme.spacing.lg,
+  },
+}))
+
 
 export const SectionTitle = styled.h2(({ theme }) => ({
   alignSelf: "flex-start",
@@ -44,6 +58,7 @@ export const SectionTitle = styled.h2(({ theme }) => ({
 export const CategoryList = styled.div(({ theme }) => ({
   display: "flex",
   gap: theme.spacing["3xl"], // 64px
+  width: "100%",
 
   // tablet(768-1023)
   [theme.media.tablet]: {

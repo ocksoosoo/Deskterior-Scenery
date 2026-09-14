@@ -6,6 +6,7 @@ import {
   CategoryItem,
   CategoryName,
   CategoryImage,
+  CategoriesInner,
 } from "../../styles/MainStyles/CategoriesSection.styles";
 
 function CategoriesSection({ items = [], categories = [] }) {
@@ -13,6 +14,8 @@ function CategoriesSection({ items = [], categories = [] }) {
 
   return (
     <CategoriesContainer>
+      <CategoriesInner>
+
       <SectionTitle>CATEGORIES</SectionTitle>
 
       <CategoryList>
@@ -38,6 +41,8 @@ function CategoriesSection({ items = [], categories = [] }) {
           );
         })}
       </CategoryList>
+
+      </CategoriesInner>
     </CategoriesContainer>
   );
 }
