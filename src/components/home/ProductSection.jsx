@@ -25,6 +25,8 @@ import { useTheme } from "@emotion/react";
 
 // 페이지별 상품 표시 개수
 const ITEMS_PER_PAGE = 3;
+// 새로고침 전까지만 모바일 표시 개수 기억
+const mobileVisibleCounts = new Map();
 
 // 카드 이동(트랙)과 확대/축소(가운데 카드 강조)를 같은 스프링 설정으로 움직여서
 // 서로 다른 애니메이션 엔진(타이밍/이징 곡선)을 쓸 때 생기던 어긋남을 없앤다.
@@ -406,30 +408,16 @@ function MobileProductGroup({
   onAddToCart,
 }) {
   const theme = useTheme();
-  const storageKey = `homeMobileProductCount:${title}`;
-
+  
   const [visibleCount, setVisibleCount] = useState(() => {
-    try {
-      const savedCount = Number(sessionStorage.getItem(storageKey));
-
-      return Number.isInteger(savedCount) && savedCount >= 2
-        ? savedCount
-        : 2;
-    } catch {
-      return 2;
-    }
+    return mobileVisibleCounts.get(title) ?? 2;
   });
 
   useEffect(() => {
-    try {
-      sessionStorage.setItem(storageKey, String(visibleCount));
-    } catch {
-      // 저장이 불가능해도 더보기 기능은 유지
-    }
-  }, [storageKey, visibleCount]);
-
-  const visibleProducts = items.slice(0, visibleCount);
-  const hasMore = visibleCount < items.length;
+    mobileVisibleCounts.set(title, visibleCount);
+  }, [title, visibleCount]);
+    const visibleProducts = items.slice(0, visibleCount);
+    const hasMore = visibleCount < items.length;
 
   return (
     <ProductsSection isBest={isBest}>
