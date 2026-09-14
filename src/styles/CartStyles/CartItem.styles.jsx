@@ -94,6 +94,13 @@ export const BadgeGroup = styled.div(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing["2xs"],
   zIndex: 10,
+  [theme.media.mobile]: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    transform: "scale(0.75)",
+    transformOrigin: "top left",
+    gap: "4px",
+  },
 }));
 
 // 솔드아웃 이미지 블러
@@ -240,9 +247,6 @@ export const TotalPrice = styled.div(({ theme }) => ({
   width: "120px",
   textAlign: "right",
   paddingTop: "4px", // 정렬 1
-  [theme.media.mobile]: {
-    paddingTop: 0,
-  },
 }));
 
 // 총합 텍스트

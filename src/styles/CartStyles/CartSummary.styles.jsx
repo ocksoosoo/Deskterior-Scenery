@@ -112,4 +112,7 @@ export const CheckoutButton = styled.button(({ theme }) => ({
     opacity: 0.5,
     cursor: "not-allowed",
   },
+  "&:hover": {
+    filter: "brightness(1.3)",
+  },
 }));

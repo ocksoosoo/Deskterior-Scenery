@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router";
 
 // 메인박스
 export const CartContainer = styled.div(({ theme }) => ({
@@ -29,10 +28,13 @@ export const TitleWrapper = styled.div(({ theme }) => ({
 
 // 경로 박스
 export const Course = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.xs,
+  fontSize: theme.fontSize.md,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.secondText,
   marginBottom: theme.spacing.xs,
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.xs,
+  },
 }));
 
 // 경로 태그 - 클릭 가능한 링크임을 알 수 있게 기본 상태에서도 밑줄 표시
@@ -71,17 +73,23 @@ export const SelectAllLabel = styled.label(({ theme }) => ({
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.blue,
   cursor: "pointer",
-  [theme.media.mobile]: {
+  [theme.media.tablet]: {
     fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
   },
 }));
 
 // 왼쪽 버튼 두개
-export const LeftActionGroup = styled.div({
+export const LeftActionGroup = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: "20px",
-});
+  [theme.media.mobile]: {
+    display: "contents",
+  },
+}));
 
 // 전체 선택 체크박스
 export const SelectAllCheckbox = styled.input(({ theme }) => ({
@@ -100,8 +108,11 @@ export const SelectedDeleteButton = styled.button(({ theme }) => ({
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.secondText,
-  [theme.media.mobile]: {
+  [theme.media.tablet]: {
     fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
   },
 }));
 
@@ -114,8 +125,11 @@ export const ClearAllButton = styled.button(({ theme }) => ({
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.error,
-  [theme.media.mobile]: {
+  [theme.media.tablet]: {
     fontSize: `clamp(${theme.fontSize.md}, 2.5vw, ${theme.fontSize.lg})`,
+  },
+  [theme.media.mobile]: {
+    fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
   },
 }));
 
