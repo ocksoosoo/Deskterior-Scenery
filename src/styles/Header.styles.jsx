@@ -268,7 +268,11 @@ export const MobileMenuAuthRow = styled.div(({ theme }) => ({
   alignSelf: "stretch",
 }));
 
-export const MobileMenuAuthButton = styled(Link)(({ theme }) => ({
+// emotion의 as prop은 styled(Link)처럼 컴포넌트를 감싼 경우 런타임에 다른
+// 태그로 바꿔치기가 안 먹혀서(ProductCard.styles.jsx에서도 같은 문제로 컴포넌트를
+// 나눴었음), Logout처럼 실제로는 링크가 아니라 버튼이어야 하는 곳에 as="button"을
+// 줘도 여전히 <a>로 렌더링돼버린다. 스타일만 공유하고 컴포넌트 자체를 둘로 나눔
+const mobileMenuAuthButtonStyle = (theme) => ({
   display: "flex",
   flex: 1,
   height: "40px",
@@ -288,7 +292,16 @@ export const MobileMenuAuthButton = styled(Link)(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.14px",
   cursor: "pointer",
-}));
+});
+
+// Login/Sign Up처럼 실제 페이지로 이동하는 링크
+export const MobileMenuAuthButton = styled(Link)(({ theme }) =>
+  mobileMenuAuthButtonStyle(theme),
+);
+// Logout처럼 이동 없이 동작만 하는, 진짜 <button>이어야 하는 경우
+export const MobileMenuAuthActionButton = styled.button(({ theme }) =>
+  mobileMenuAuthButtonStyle(theme),
+);
 
 // 원형 아이콘 링크 버튼 (마이페이지 등 - 장바구니는 헤더에 항상 보이므로 여기선 뺌)
 export const MobileMenuIconLinkButton = styled(Link)(({ theme }) => ({
