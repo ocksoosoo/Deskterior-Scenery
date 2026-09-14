@@ -2,8 +2,6 @@ import useAuthStore from "../../store/UseAuthStore";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router";
-import { getCategories } from "../../api/categoriesApi";
-import staticCategories from "../../data/categories";
 import { logout } from "../../api/authApi";
 import {
   BasketIcon,
@@ -15,6 +13,7 @@ import {
 } from "../icons/Icons";
 import useCartStore from "../../store/cartStore";
 import useWishlistStore from "../../store/wishlistStore";
+import useCategoriesStore from "../../store/categoriesStore";
 import { showFailToast, showSuccessToast } from "../common/ShowToast";
 import { useNavigate } from "react-router";
 import {
@@ -109,16 +108,13 @@ const Header = () => {
   const likedCount = useWishlistStore((state) => state.likedIds.size);
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
-  const [categories, setCategories] = useState([]);
+  // 스토어가 앱 전체에서 딱 한 번만 요청/캐시하므로, 다른 페이지에서 이미
+  // 불러왔다면 여기선 다시 요청하지 않고 캐시된 값을 그대로 씀
+  const categories = useCategoriesStore((state) => state.categories) ?? [];
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   useEffect(() => {
-    getCategories()
-      .then(setCategories)
-      .catch((err) => {
-        console.error("카테고리 로딩 실패:", err);
-        // API가 실패해도 페이지 라우트 자체는 항상 존재하니, 메뉴가 통째로 사라지지 않게 정적 목록으로 대체
-        setCategories(staticCategories);
-      });
-  }, []);
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleLogout = async () => {
     try {
