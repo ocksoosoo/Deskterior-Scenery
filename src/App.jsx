@@ -19,6 +19,7 @@ import Loading from "./components/common/Loading";
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const LoginForm = lazy(() => import("./pages/LoginForm"));
 const SignupForm = lazy(() => import("./pages/SignupForm"));
+const MyPage = lazy(() => import("./pages/MyPage"));
 const CategoryPage = lazy(() => import("./pages/Category/CategoryPage"));
 const ProductDetailPage = lazy(
   () => import("./pages/Product/ProductDetailPage"),
@@ -84,6 +85,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignupForm />} />
+            <Route path="/mypage" element={<MyPage />} />
             {categories.map((category) => (
               <Route
                 key={category.id}

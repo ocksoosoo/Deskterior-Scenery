@@ -194,7 +194,11 @@ const Header = () => {
           </CartIconWrapper>
         </IconButton>
 
-        <IconButton as={Link} to="/mypage" aria-label="마이페이지 버튼">
+        <IconButton
+          as={Link}
+          to={user ? "/mypage" : "/login"}
+          aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
+        >
           <CartIconWrapper>
             <PersonIcon width={30} height={30} />
             {likedCount > 0 && <CartBadge>{likedCount}</CartBadge>}
