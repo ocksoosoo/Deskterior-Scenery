@@ -30,7 +30,6 @@ export const Card = styled.div(({ theme, useListBackground }) => ({
   [theme.media.tablet]: {
     width: "100%",
   },
-  paddingBottom: theme.spacing.md,
 }));
 
 export const ImageWrapper = styled.div(({ theme }) => ({
@@ -143,9 +142,9 @@ export const LikeButton = styled.button(({ theme }) => ({
 
 const cartShake = keyframes`
   0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1) rotate(-12deg); }
-  50% { transform: scale(1) rotate(12deg); }
-  75% { transform: scale(1) rotate(-6deg); }
+  25% { transform: scale(1) rotate(-6deg); }
+  50% { transform: scale(1) rotate(6deg); }
+  75% { transform: scale(1) rotate(-3deg); }
   100% { transform: scale(1) rotate(0deg); }
 `;
 

@@ -147,7 +147,7 @@ const ProductCard = ({
                   <S.CartWaterGroup clipPath={`url(#${clipId})`}>
                     <path
                       d="M-12,10.15 Q-9,9.45 -6,10.15 T0,10.15 T6,10.15 T12,10.15 T18,10.15 T24,10.15 T30,10.15 T36,10.15 V17 H-12 Z"
-                      fill={theme.colors.emphasis}
+                      fill="#fff"
                       opacity={0.85}
                     >
                       <animateTransform
@@ -161,7 +161,7 @@ const ProductCard = ({
                     </path>
                     <path
                       d="M-12,10.55 Q-9,9.95 -6,10.55 T0,10.55 T6,10.55 T12,10.55 T18,10.55 T24,10.55 T30,10.55 T36,10.55 V17 H-12 Z"
-                      fill={theme.colors.emphasis}
+                      fill="#fff"
                       opacity={0.45}
                     >
                       <animateTransform
