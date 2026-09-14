@@ -30,26 +30,21 @@ export const Header = styled.div(({ theme }) => ({
 export const Title = styled.h2(({ theme }) => ({
   margin: 0,
   fontFamily: theme.fontFamily.display,
-  fontSize: theme.fontSize.dpMd, // 3rem
+  fontSize: theme.fontSize["5xl"], // 2.5rem (40px)
   fontWeight: theme.fontWeight.regular, // 400
   fontStyle: "normal",
   lineHeight: "normal",
   letterSpacing: "-0.01em",
   color: theme.colors.textMain,
 
-  [theme.media.tablet]: {
-    fontSize: theme.fontSize["4xl"],
-  },
-
   [theme.media.mobile]: {
-    fontSize: theme.fontSize["4xl"], // 32px
     letterSpacing: "normal",
   },
 }));
 
 export const Subtitle = styled.p(({ theme }) => ({
   margin: 0,
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -107,7 +102,7 @@ export const RatingBox = styled.div(({ theme }) => ({
 }));
 
 export const RatingLabel = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.lg, // 1.125rem
+  fontSize: theme.fontSize.xl, // 1.25rem (20px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.semiBold, // 600
   lineHeight: "normal",
@@ -116,7 +111,7 @@ export const RatingLabel = styled.span(({ theme }) => ({
 }));
 
 export const RatingHint = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.xs, // 0.75rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -132,7 +127,7 @@ export const Textarea = styled.textarea(({ theme }) => ({
   border: "none",
   background: theme.colors.background,
   resize: "none",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -177,7 +172,7 @@ export const SubmitButton = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
   color: "#FFF",
   textAlign: "center",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
@@ -198,7 +193,7 @@ export const CancelButton = styled.button(({ theme }) => ({
   border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
   background: "#fff",
   color: theme.colors.textMain,
-  fontSize: theme.fontSize.sm,
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontWeight: theme.fontWeight.medium,
   letterSpacing: "-0.00875rem",
 
@@ -229,7 +224,7 @@ export const SummaryTitle = styled.h3(({ theme }) => ({
 }));
 
 export const SummaryMeta = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
@@ -311,7 +306,7 @@ export const ItemHeader = styled.div(({ theme }) => ({
 }));
 
 export const Author = styled.span(({ theme, $mine }) => ({
-  fontSize: theme.fontSize.md, // 1rem
+  fontSize: theme.fontSize.lg, // 1.125rem (18px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
@@ -324,7 +319,7 @@ export const Stars = styled.span({
 });
 
 export const Score = styled.span(({ theme }) => ({
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
@@ -357,7 +352,7 @@ export const ActionButton = styled.button(({ theme }) => ({
 export const Content = styled.p(({ theme }) => ({
   margin: 0,
   alignSelf: "stretch",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -369,7 +364,7 @@ export const Content = styled.p(({ theme }) => ({
 
 export const DateText = styled.time(({ theme }) => ({
   alignSelf: "flex-end",
-  fontSize: theme.fontSize.xs, // 0.75rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",

@@ -49,7 +49,7 @@ export const Inner = styled.div(({ theme }) => ({
 export const Title = styled.h2(({ theme }) => ({
   margin: "0 0 24px",
   fontFamily: theme.fontFamily.display,
-  fontSize: theme.fontSize["4xl"], // 32px
+  fontSize: theme.fontSize["5xl"], // 2.5rem (40px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -81,7 +81,7 @@ export const Article = styled.article(({ theme }) => ({
 
 export const SectionTitle = styled.h3(({ theme }) => ({
   margin: "20px 0 8px",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.lg, // 1.125rem (18px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.medium, // 500 — Label/MD
   lineHeight: "normal",
@@ -91,7 +91,7 @@ export const SectionTitle = styled.h3(({ theme }) => ({
 
 export const SectionBody = styled.p(({ theme }) => ({
   margin: 0,
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.lg, // 1.125rem (18px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400 — Body/MD
   lineHeight: "normal",
