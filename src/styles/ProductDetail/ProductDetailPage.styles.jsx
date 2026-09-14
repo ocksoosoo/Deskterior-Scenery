@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
 
-// full-bleed(100vw) 요소가 만드는 가로 스크롤을 이 페이지 범위에서만 잘라냄.
-// overflow-x: clip 은 스크롤 컨테이너를 만들지 않아 조상 sticky 를 깨지 않음.
 export const Wrapper = styled.div({
   overflowX: "clip",
 });
@@ -18,6 +16,8 @@ export const Page = styled.div(({ theme }) => ({
 
   [theme.media.mobile]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
+    // MobileCtaBar가 스크롤 중엔 화면 하단에 붙어(sticky) 콘텐츠 위에
+    // 겹쳐 보이므로, 마지막 콘텐츠가 가리지 않게 여유 공간 확보
     paddingBottom: `calc(${theme.spacing["2xl"]} + 81px + env(safe-area-inset-bottom, 0px))`,
   },
 }));

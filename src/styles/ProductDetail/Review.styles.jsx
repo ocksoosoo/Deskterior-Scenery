@@ -38,6 +38,7 @@ export const Title = styled.h2(({ theme }) => ({
   color: theme.colors.textMain,
 
   [theme.media.mobile]: {
+    fontSize: theme.fontSize["4xl"], // 32px
     letterSpacing: "normal",
   },
 }));

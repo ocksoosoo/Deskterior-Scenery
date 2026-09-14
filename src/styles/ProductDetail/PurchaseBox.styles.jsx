@@ -48,24 +48,20 @@ export const Qty = styled.span(({ theme }) => ({
   minWidth: "18px",
   textAlign: "center",
   fontSize: theme.fontSize.xl, // 1.25rem (20px)
+  color: theme.colors.textMain,
+  fontWeight: theme.fontWeight.semiBold, // 600
+  lineHeight: "normal",
+  letterSpacing: "-0.0125rem",
 
   [theme.media.tablet]: {
     width: "1.75rem",
     flexShrink: 0,
-    color: theme.colors.textMain,
-    fontWeight: theme.fontWeight.semiBold, // 600
-    lineHeight: "normal",
-    letterSpacing: "-0.0125rem",
   },
 
   // 모바일: 태블릿과 동일
   [theme.media.mobile]: {
     width: "1.75rem",
     flexShrink: 0,
-    color: theme.colors.textMain,
-    fontWeight: theme.fontWeight.semiBold, // 600
-    lineHeight: "normal",
-    letterSpacing: "-0.0125rem",
   },
 }));
 

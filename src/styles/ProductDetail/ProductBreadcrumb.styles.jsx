@@ -46,6 +46,10 @@ export const BackButton = styled.button(({ theme }) => ({
     outlineOffset: "2px",
     borderRadius: theme.radius.sm,
   },
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.md, // 1rem (16px)
+  },
 }));
 
 export const Trail = styled.ol(({ theme }) => ({
@@ -62,6 +66,7 @@ export const Trail = styled.ol(({ theme }) => ({
   [theme.media.mobile]: {
     flex: "1 1 auto",
     flexWrap: "nowrap",
+    fontSize: theme.fontSize.sm, // 0.875rem (14px)
   },
 }));
 
@@ -71,14 +76,17 @@ export const Crumb = styled.li(({ theme }) => ({
     margin: `0 ${theme.spacing["2xs"]}`,
   },
 
-  // 모바일: 마지막(상품명) 크럼만 넘치면 줄임표(...) 처리
+  // 모바일: 모든 크럼 줄바꿈 없이 한 줄로, 마지막(상품명)만 넘치면 줄임표(...) 처리
   [theme.media.mobile]: {
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+
     '&[aria-current="page"]': {
       display: "block",
       flex: "1 1 auto",
+      flexShrink: 1,
       minWidth: 0,
       overflow: "hidden",
-      whiteSpace: "nowrap",
       textOverflow: "ellipsis",
     },
   },

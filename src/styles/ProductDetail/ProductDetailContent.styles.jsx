@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import SafeImage from "../../components/common/SafeImage";
 
 export const Section = styled.section(({ theme }) => ({
   width: "100vw",
@@ -58,11 +59,28 @@ export const Title = styled.h2(({ theme }) => ({
 
   [theme.media.mobile]: {
     margin: 0,
+    fontSize: theme.fontSize["4xl"], // 32px
     letterSpacing: "normal",
   },
 
   [theme.media.wide]: {
     letterSpacing: "normal",
+  },
+}));
+
+export const DetailImage = styled(SafeImage)(({ theme }) => ({
+  display: "block",
+  maxWidth: "100%",
+  height: "auto",
+  margin: "0 auto",
+  borderRadius: 8,
+
+  [theme.media.mobile]: {
+    maxWidth: "85%",
+    width: "85%",
+    height: "auto",
+    aspectRatio: "1 / 1",
+    objectFit: "cover",
   },
 }));
 
@@ -87,6 +105,16 @@ export const SectionTitle = styled.h3(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
   color: theme.colors.textMain, // #1F211F
+
+  [theme.media.mobile]: {
+    width: "85%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize.md, // 1rem (16px)
+  },
 }));
 
 export const SectionBody = styled.p(({ theme }) => ({
@@ -97,4 +125,14 @@ export const SectionBody = styled.p(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
   color: theme.colors.secondText, // #74766F
+
+  [theme.media.mobile]: {
+    width: "85%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize.md, // 1rem (16px)
+  },
 }));
