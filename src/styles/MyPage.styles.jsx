@@ -116,6 +116,13 @@ export const AddressField = styled.div({
   gridColumn: "1 / -1",
 });
 
+export const ReadonlyText = styled.span({
+  marginLeft: "4px",
+  fontSize: "12px",
+  fontWeight: 400,
+  color: "#999",
+});
+
 export const AccountLabel = styled.label({
   fontSize: "14px",
   fontWeight: 600,

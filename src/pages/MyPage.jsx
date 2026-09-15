@@ -5,7 +5,13 @@ import { signupSchema } from "../schema/AuthSchema";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
-import { logout, getMe, updateMe } from "../api/authApi";
+import {
+  logout,
+  getMe,
+  updateMe,
+  updatePassword,
+  deleteMe,
+} from "../api/authApi";
 import {
   showSuccessToast,
   showFailToast,
@@ -30,6 +36,7 @@ import {
   AccountGrid,
   AccountField,
   AccountLabel,
+  ReadonlyText,
   Required,
   AccountInput,
   AddressField,
@@ -178,10 +185,19 @@ function Mypage() {
     }
   };
 
-  const handleDeleteUser = () => {
-    setIsDeleteUserModalOpen(false);
-    showSuccessToast("회원 탈퇴가 완료되었습니다.");
-    navigate("/");
+  const handleDeleteUser = async () => {
+    try {
+      await deleteMe();
+      localStorage.removeItem("token");
+      clearUser();
+      clearWishlist();
+      showSuccessToast("회원 탈퇴가 완료되었습니다.");
+      navigate("/");
+    } catch (error) {
+      showFailToast("회원 탈퇴에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsDeleteUserModalOpen(false);
+    }
   };
 
   const handlePasswordChange = () => {
@@ -189,7 +205,6 @@ function Mypage() {
     console.log("새 비밀번호:", newPassword);
     setIsPasswordChangeModalOpen(false);
     showSuccessToast("비밀번호가 성공적으로 변경되었습니다.");
-    navigate("/");
   };
 
   const formatPhoneNumber = (phone) => {
@@ -258,7 +273,9 @@ function Mypage() {
                 </AccountField>
 
                 <AccountField>
-                  <AccountLabel>ID</AccountLabel>
+                  <AccountLabel>
+                    ID<ReadonlyText>(readOnly)</ReadonlyText>
+                  </AccountLabel>
 
                   <AccountInput id="userId" type="text" value={id} readOnly />
                 </AccountField>
