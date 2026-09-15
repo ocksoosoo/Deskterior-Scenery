@@ -17,7 +17,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
 import ProductCard from "../product/ProductCard";
 import categories from "../../data/categories";
 import { getProducts, deriveBadgeFields } from "../../api/productsApi";
-//import { preloadingImages } from "../../utils/preloadingImages";
 import { useState, useEffect, useRef } from "react";
 import useCartStore from "../../store/cartStore";
 import { showSuccessToast, showFailToast } from "../common/ShowToast";
@@ -542,10 +541,6 @@ function ProductSection({ onInitialLoadComplete }) {
         const bestItems = bestResult.products || [];
         const newItems = newResult.products || [];
 
-        /*await preloadingImages(
-          [...bestItems, ...newItems].map((product) => product.imageUrl),
-        );*/
-
         if (!alive) return;
 
         setBestProducts(bestItems);
@@ -553,7 +548,6 @@ function ProductSection({ onInitialLoadComplete }) {
       } catch (error) {
         console.error("상품 데이터 조회 실패", error);
       } finally {
-        //finishLoading();
         if (alive) {
           onInitialLoadComplete?.(true);
         }
@@ -564,7 +558,6 @@ function ProductSection({ onInitialLoadComplete }) {
 
     return () => {
       alive = false;
-      //finishLoading();
     };
   }, [onInitialLoadComplete]);
 
