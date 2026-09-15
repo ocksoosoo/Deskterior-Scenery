@@ -1,10 +1,11 @@
 import useAuthStore from "../store/UseAuthStore";
 import useWishlistStore from "../store/wishlistStore";
+import { z } from "zod";
 import { signupSchema } from "../schema/AuthSchema";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
-import { logout } from "../api/authApi";
+import { logout, getMe, updateMe } from "../api/authApi";
 import {
   showSuccessToast,
   showFailToast,
@@ -12,7 +13,6 @@ import {
 import Modal from "../components/common/Modal";
 import { useNavigate } from "react-router";
 import { IconPencil, IconCircleX } from "@tabler/icons-react";
-
 import { WishlistSection } from "./WishListSection";
 
 import {
@@ -33,6 +33,8 @@ import {
   Required,
   AccountInput,
   AddressField,
+  SaveArea,
+  ErrorText,
   SaveButton,
   SettingsCard,
   SettingsTitle,
@@ -62,30 +64,91 @@ function Mypage() {
     useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [errors, setErrors] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [shakingButton, setShakingButton] = useState(false);
 
   useEffect(() => {
     finishPageLoading(pathname);
   }, [pathname, finishPageLoading]);
 
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [savedFirstName, setSavedFirstName] = useState("");
+  const [savedLastName, setSavedLastName] = useState("");
   const [contact, setContact] = useState("");
   const [id, setId] = useState("");
   const [address, setAddress] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const contactRef = useRef(null);
+  const addressRef = useRef(null);
 
-    const updatedUserInfo = {
-      first,
-      last,
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const result = await getMe();
+
+        setFirstName(result.userInfo.firstName);
+        setLastName(result.userInfo.lastName);
+        setSavedFirstName(result.userInfo.firstName);
+        setSavedLastName(result.userInfo.lastName);
+        setContact(result.userInfo.contact);
+        setAddress(result.userInfo.address);
+        setId(result.userInfo.id);
+      } catch (error) {
+        showFailToast(
+          "회원정보를 불러오기 실패하였습니다. 다시 시도 해주세요.",
+        );
+        navigate("/");
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const updatedUserInfo = MyPageSchema.safeParse({
+      firstName,
+      lastName,
       id,
       contact,
       address,
-    };
+    });
 
-    console.log("수정할 회원정보:", updatedUserInfo);
+    if (!updatedUserInfo.success) {
+      const ErrorsMsg = z.flattenError(updatedUserInfo.error).fieldErrors;
+      setErrors(Object.values(ErrorsMsg).flat()[0]);
+      setShakingButton(true);
+
+      const firstErrorField = updatedUserInfo.error.issues[0]?.path[0];
+
+      const inputRefs = {
+        firstName: firstNameRef,
+        lastName: lastNameRef,
+        contact: contactRef,
+        address: addressRef,
+      };
+
+      inputRefs[firstErrorField]?.current?.focus();
+
+      return;
+    }
+
+    try {
+      await updateMe(updatedUserInfo.data);
+      setSavedFirstName(updatedUserInfo.data.firstName);
+      setSavedLastName(updatedUserInfo.data.lastName);
+      showSuccessToast("회원정보 수정 완료!");
+      setShakingButton(false);
+      setErrors("");
+    } catch (error) {
+      setShakingButton(true);
+      showFailToast("회원정보 수정이 실패하였습니다. 다시 시도해주세요.");
+    }
   };
 
   const MyPageSchema = signupSchema.pick({
@@ -95,20 +158,23 @@ function Mypage() {
     address: true,
   });
 
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    setErrors("");
+    setShakingButton(false);
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
-      console.error("로그아웃 API 실패:", error);
-      showFailToast("로그아웃에 실패했습니다.");
-    } finally {
-      // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니·찜)은 항상 정리한다
       localStorage.removeItem("token");
       clearUser();
       clearWishlist();
       setIsLogOutModalOpen(false);
       showSuccessToast("로그아웃되었습니다.");
       navigate("/");
+    } catch (error) {
+      showFailToast("로그아웃에 실패했습니다.");
     }
   };
 
@@ -126,6 +192,14 @@ function Mypage() {
     navigate("/");
   };
 
+  const formatPhoneNumber = (phone) => {
+    const numbers = phone.replace(/\D/g, "");
+
+    if (numbers.length !== 11) return phone;
+
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+  };
+
   return (
     <>
       <MypageBox>
@@ -134,7 +208,10 @@ function Mypage() {
         <CardBox>
           <UserCard>
             <UserHead>
-              <UserName>홍길동</UserName>
+              <UserName>
+                {savedLastName}
+                {savedFirstName}
+              </UserName>
               <UserLogOut
                 type="button"
                 aria-label="로그아웃 버튼"
@@ -143,7 +220,7 @@ function Mypage() {
                 Log out
               </UserLogOut>
             </UserHead>
-            <UserId>hong</UserId>
+            <UserId>{id}</UserId>
           </UserCard>
 
           <AccountCard>
@@ -156,10 +233,12 @@ function Mypage() {
                   </AccountLabel>
 
                   <AccountInput
-                    id="first"
+                    ref={firstNameRef}
+                    id="firstName"
                     type="text"
-                    value={first}
-                    onChange={(e) => setFirst(e.target.value)}
+                    value={firstName}
+                    placeholder="ex)길동"
+                    onChange={handleInputChange(setFirstName)}
                   />
                 </AccountField>
 
@@ -169,10 +248,12 @@ function Mypage() {
                   </AccountLabel>
 
                   <AccountInput
-                    id="last"
+                    ref={lastNameRef}
+                    id="lastName"
+                    placeholder="ex)홍"
                     type="text"
-                    value={last}
-                    onChange={(e) => setLast(e.target.value)}
+                    value={lastName}
+                    onChange={handleInputChange(setLastName)}
                   />
                 </AccountField>
 
@@ -186,10 +267,15 @@ function Mypage() {
                   <AccountLabel>Contact</AccountLabel>
 
                   <AccountInput
+                    ref={contactRef}
                     id="contact"
                     type="tel"
+                    placeholder="ex)010-0000-0000"
                     value={contact}
-                    onChange={(e) => setContact(e.target.value)}
+                    onChange={handleInputChange(setContact)}
+                    onBlur={() => {
+                      setContact(formatPhoneNumber(contact));
+                    }}
                   />
                 </AccountField>
 
@@ -197,15 +283,31 @@ function Mypage() {
                   <AccountLabel>Address</AccountLabel>
 
                   <AccountInput
+                    ref={addressRef}
                     id="address"
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={handleInputChange(setAddress)}
                   />
                 </AddressField>
               </AccountGrid>
 
-              <SaveButton type="submit">Save Changes</SaveButton>
+              <SaveArea>
+                {errors && (
+                  <ErrorText>
+                    <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
+                    {errors}
+                  </ErrorText>
+                )}
+
+                <SaveButton
+                  className={shakingButton ? "shake" : ""}
+                  type="submit"
+                  onAnimationEnd={() => setShakingButton(false)}
+                >
+                  Save Changes
+                </SaveButton>
+              </SaveArea>
             </AccountForm>
           </AccountCard>
 
