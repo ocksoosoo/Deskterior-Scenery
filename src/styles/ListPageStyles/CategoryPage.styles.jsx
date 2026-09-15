@@ -122,15 +122,11 @@ export const Content = styled.div(({ theme }) => ({
   width: "100%",
   maxWidth: fluidContentMaxWidth,
   margin: "0 auto",
-  padding: `${theme.spacing["2xl"]} ${theme.spacing["3xl"]} ${theme.spacing["4xl"]} ${theme.spacing["3xl"]}`,
+  padding: `${theme.spacing["2xl"]} ${theme.spacing["3xl"]} ${theme.spacing["3xl"]} ${theme.spacing["3xl"]}`,
   flexDirection: "column",
   alignItems: "center",
   gap: theme.spacing.xl,
   alignSelf: "stretch",
-
-  [theme.media.wide]: {
-    padding: `${theme.spacing["2xl"]} ${theme.spacing["3xl"]} ${theme.spacing["3xl"]} ${theme.spacing["3xl"]}`,
-  },
 
   [theme.media.tablet]: {
     maxWidth: "100%",

@@ -108,6 +108,12 @@ export const NavButton = styled("a", {
     width: "100%",
   },
 
+  // clamp(12px, 1.1vw, 14px)라 1024px 근처에서는 1.1vw(약 11.3px)가 12px보다
+  // 작아서 최소값(12px)으로 눌려버린다. pc 구간(1024~1439px)에서는 14px 고정
+  [theme.media.pc]: {
+    fontSize: theme.fontSize.sm,
+  },
+
   [theme.media.wide]: {
     fontSize: theme.fontSize.md,
   },
