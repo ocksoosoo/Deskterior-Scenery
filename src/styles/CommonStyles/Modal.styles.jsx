@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
+import { motion } from "motion/react";
 
 // 어두운 배경
-export const ModalOverlay = styled.div({
+export const ModalOverlay = styled(motion.div)({
   position: "fixed",
   top: 0,
   left: 0,
@@ -18,7 +19,7 @@ export const ModalOverlay = styled.div({
 });
 
 // 모달
-export const ModalBox = styled.div(({ theme }) => ({
+export const ModalBox = styled(motion.div)(({ theme }) => ({
   backgroundColor: theme.colors.cards,
   padding: `${theme.spacing.lg} 0`,
   borderRadius: theme.radius.lg,
