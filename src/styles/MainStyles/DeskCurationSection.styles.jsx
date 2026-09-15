@@ -145,6 +145,7 @@ export const DeskArea = styled.div(({ theme }) => ({
   overflow: "hidden",
   backgroundColor: theme.colors.imagePlaceholder,
   borderRadius: theme.radius.md,
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 
   [theme.media.tablet]: {
     flex: "none",
@@ -192,6 +193,7 @@ export const ProductArea = styled.div(({ theme }) => ({
   flex: 1,
   backgroundColor: theme.colors.cards,
   borderRadius: theme.radius.md,
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
   overflow: "hidden",
 
   [theme.media.tablet]: {
@@ -215,6 +217,10 @@ export const ProductArea = styled.div(({ theme }) => ({
     height: "auto",
     padding: `${theme.spacing.md} ${theme.spacing.xl}`,
     overflow: "visible",
+  },
+
+  [theme.media.smallMobile]: {
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
   },
 }))
 
@@ -302,8 +308,12 @@ export const ProductTitle = styled.h3(({ theme }) => ({
   fontWeight: theme.fontWeight.semiBold,
   fontSize: theme.fontSize.xl, // 20px
 
+  [theme.media.tablet]: {
+    fontSize: theme.fontSize.xl,
+  },
+
   [theme.media.mobile]: {
-    fontSize: theme.fontSize.sm,
+    fontSize: theme.fontSize.xl,
   }
 }));
 
@@ -366,8 +376,16 @@ export const ProductName = styled.h4(({ theme }) => ({
   fontWeight: theme.fontWeight.semiBold,
   fontSize: theme.fontSize["2xl"],
 
+  [theme.media.tablet]: {
+    fontSize: theme.fontSize.xl,
+  },
+
   [theme.media.mobile]: {
-    fontSize: theme.fontSize.md,
+    fontSize: theme.fontSize.xl,
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize.lg,
   }
 }));
 
@@ -376,9 +394,17 @@ export const ProductPrice = styled.p(({ theme }) => ({
   fontWeight: theme.fontWeight.semiBold,
   fontSize: theme.fontSize.xl, // 20px
 
+  [theme.media.tablet]: {
+    fontSize: theme.fontSize.lg,
+  },
+
   [theme.media.mobile]: {
-    fontSize: theme.fontSize.sm,
-  }
+    fontSize: theme.fontSize.lg,
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: theme.fontSize.md,
+  },
 }));
 
 export const ProductDescription = styled.p(({ theme }) => ({
@@ -388,7 +414,7 @@ export const ProductDescription = styled.p(({ theme }) => ({
   lineHeight: 1.5,
 
   [theme.media.mobile]: {
-    fontSize: theme.fontSize.xs,
+    fontSize: theme.fontSize.sm,
   }
 }));
 
@@ -415,8 +441,13 @@ export const ProductTag = styled.span(({ theme }) => ({
 
   [theme.media.mobile]: {
   padding: `${theme.spacing["2xs"]} ${theme.spacing.xs}`,
-  fontSize: theme.fontSize.xs,
-  maxWidth: "100%",  }
+  fontSize: theme.fontSize.sm,
+  maxWidth: "100%",
+},
+
+[theme.media.smallMobile]: {
+  fontSize: theme.fontSize.sm,
+}
 }));
 
 export const ProductBottomArea = styled.div(({ theme }) => ({
@@ -478,15 +509,9 @@ export const PaginationButton = styled.button(({ theme }) => ({
   backgroundColor: "transparent",
   color: theme.colors.textMain,
   cursor: "pointer",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
 
   "&:hover": {
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
-  },
-
-  "&:disabled": {
-    opacity: 0.3,
-    cursor: "default",
+    opacity: "0.7",
   },
 
   [theme.media.tablet]: {
