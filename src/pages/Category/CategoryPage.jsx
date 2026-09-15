@@ -130,7 +130,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
         setErroredKey(queryKey);
 
         if (hasLoadedRef.current) {
-          showFailToast("목록을 불러오지 못했어요. 다시 시도해주세요.");
+          showFailToast("목록을 불러오지 못했습니다. 다시 시도해 주세요.");
         }
       } finally {
         if (alive) {
@@ -195,7 +195,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
       if (existingItem) {
         // 2. 이미 있다면? -> 장바구니에서 빼기
         await removeItem(existingItem.cartItemId);
-        showSuccessToast("장바구니에서 제거되었습니다");
+        showSuccessToast("장바구니에서 삭제했습니다.");
       } else {
         // 3. 없다면? -> 장바구니에 담기
         await addToCart({
@@ -205,11 +205,11 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
           imageUrl: product.imageUrl,
           isSoldOut: product.soldOut,
         });
-        showSuccessToast("상품이 장바구니에 담겼습니다");
+        showSuccessToast("장바구니에 담았습니다.");
       }
     } catch (err) {
       console.error("장바구니 업데이트 실패:", err);
-      showFailToast("장바구니 업데이트에 실패했습니다");
+      showFailToast("장바구니 처리에 실패했습니다.");
     }
   };
 
@@ -292,7 +292,9 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
                     aria-current={isCurrent ? "page" : undefined}
                   >
                     {crumb.path && !isCurrent ? (
-                      <S.CrumbLink to={crumb.path}>{crumb.label}</S.CrumbLink>
+                      <S.CrumbLink to={crumb.path} title="홈으로 이동">
+                        {crumb.label}
+                      </S.CrumbLink>
                     ) : (
                       crumb.label
                     )}

@@ -51,6 +51,21 @@ const ProductToolbar = ({
     }, SEARCH_DEBOUNCE_MS);
   };
 
+  // X 버튼: 디바운스 없이 즉시 검색어를 비움
+  const handleClearSearch = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setInputValue("");
+    setLastSent("");
+    onSearchChange?.("");
+  };
+
+  // 돋보기 버튼: 디바운스를 기다리지 않고 지금 입력된 검색어로 바로 검색
+  const handleSubmitSearch = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setLastSent(inputValue);
+    onSearchChange?.(inputValue);
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -115,7 +130,27 @@ const ProductToolbar = ({
           onChange={(e) => handleSearchInputChange(e.target.value)}
           placeholder="search..."
         />
-        <S.StyledSearchIcon />
+        {inputValue && (
+          <>
+            <S.ClearButton
+              type="button"
+              aria-label="검색어 지우기"
+              title="지우기"
+              onClick={handleClearSearch}
+            >
+              <S.ClearIcon />
+            </S.ClearButton>
+            <S.SearchDivider />
+          </>
+        )}
+        <S.SearchSubmitButton
+          type="button"
+          aria-label="검색"
+          title="검색"
+          onClick={handleSubmitSearch}
+        >
+          <S.StyledSearchIcon />
+        </S.SearchSubmitButton>
       </S.SearchBox>
 
       <S.SortBox

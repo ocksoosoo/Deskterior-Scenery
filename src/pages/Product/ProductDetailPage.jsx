@@ -173,10 +173,10 @@ const ProductDetailPage = () => {
         },
         quantity,
       );
-      showSuccessToast("상품이 장바구니에 담겼습니다");
+      showSuccessToast("장바구니에 담았습니다.");
     } catch (err) {
       console.error("장바구니 담기 실패:", err);
-      showFailToast("장바구니 담기에 실패했습니다");
+      showFailToast("장바구니 담기에 실패했습니다.");
     }
   };
 
@@ -199,22 +199,22 @@ const ProductDetailPage = () => {
   const handleCreateReview = async (payload) => {
     await createReview(id, payload);
     await reloadReviews();
-    showSuccessToast("리뷰가 등록되었습니다");
+    showSuccessToast("리뷰가 등록되었습니다.");
   };
 
   const handleUpdateReview = async (reviewId, payload) => {
     await updateReview(reviewId, payload);
     await reloadReviews();
-    showSuccessToast("리뷰가 수정되었습니다");
+    showSuccessToast("리뷰가 수정되었습니다.");
   };
 
   const handleDeleteReview = async (reviewId) => {
     try {
       await deleteReview(reviewId);
       await reloadReviews();
-      showSuccessToast("리뷰가 삭제되었습니다");
+      showSuccessToast("리뷰가 삭제되었습니다.");
     } catch (err) {
-      showFailToast(err.message || "리뷰 삭제에 실패했습니다");
+      showFailToast(err.message || "리뷰 삭제에 실패했습니다.");
     }
   };
 

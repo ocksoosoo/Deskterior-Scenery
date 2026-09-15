@@ -80,8 +80,8 @@ function AuthForm({ mode, onSubmit }) {
 
       resetUser();
 
-      if (mode === "login") showSuccessToast("Login successful");
-      else if (mode === "signup") showSuccessToast("Sign-up successful");
+      if (mode === "login") showSuccessToast("로그인되었습니다.");
+      else if (mode === "signup") showSuccessToast("회원가입이 완료되었습니다.");
 
       navigate("/");
     } catch (error) {

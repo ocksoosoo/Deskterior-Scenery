@@ -266,7 +266,7 @@ const CartPage = () => {
     try {
       await removeItem(id);
       setCheckedItems((prev) => prev.filter((itemId) => itemId !== id));
-      showSuccessToast("상품이 삭제되었습니다.");
+      showSuccessToast("장바구니에서 삭제했습니다.");
     } catch (err) {
       showFailToast(err.message || "삭제에 실패했습니다.");
     }
@@ -281,7 +281,7 @@ const CartPage = () => {
     try {
       await removeSelectedItems(checkedItems);
       setCheckedItems([]);
-      showSuccessToast("선택한 상품이 삭제되었습니다.");
+      showSuccessToast("선택한 상품을 삭제했습니다.");
     } catch (err) {
       showFailToast(err.message || "선택 삭제에 실패했습니다.");
     }
@@ -292,7 +292,7 @@ const CartPage = () => {
     try {
       await clearCart();
       setCheckedItems([]);
-      showSuccessToast("장바구니가 비워졌습니다.");
+      showSuccessToast("장바구니를 비웠습니다.");
     } catch (err) {
       showFailToast(err.message || "전체 삭제에 실패했습니다.");
     } finally {
@@ -349,7 +349,7 @@ const CartPage = () => {
         <TitleWrapper>
           <Course>
             {/* 🌟 2. as={Link} 를 써서 껍데기는 a태그, 기능은 라우터 Link로 합체! */}
-            <BreadcrumbLink as={Link} to="/">
+            <BreadcrumbLink as={Link} to="/" title="홈으로 이동">
               Home
             </BreadcrumbLink>{" "}
             &gt; Cart

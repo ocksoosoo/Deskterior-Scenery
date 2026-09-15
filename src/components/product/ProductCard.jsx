@@ -46,9 +46,7 @@ const ProductCard = ({
     toggleLike(product.id);
     onToggleLike?.(product.id);
     showSuccessToast(
-      next
-        ? "상품이 찜 목록에 추가되었습니다."
-        : "상품이 찜 목록에서 삭제되었습니다.",
+      next ? "찜 목록에 추가되었습니다." : "찜 목록에서 삭제되었습니다.",
     );
   };
 
@@ -101,6 +99,7 @@ const ProductCard = ({
             type="button"
             aria-pressed={liked}
             aria-label="찜하기"
+            title="찜"
             onClick={handleToggleLike}
           >
             <HeartIcon filled={liked} width={28} height={28} />
@@ -108,6 +107,7 @@ const ProductCard = ({
           <S.CartButton
             type="button"
             aria-label="장바구니 담기"
+            title="담기"
             onClick={handleAddToCart}
             data-just-added={justAdded}
             onAnimationEnd={(event) => {
@@ -178,6 +178,7 @@ const ProductCard = ({
           <S.Rating
             to={`/products/${product.id}#review`}
             aria-label={`${product.name} 리뷰 보기`}
+            title="리뷰로 이동"
           >
             <S.Star>
               <StarIcon width={12} height={12} />

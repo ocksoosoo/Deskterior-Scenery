@@ -44,6 +44,15 @@ import {
   MobileMenuCategoryLink,
 } from "../../styles/Header.styles";
 
+// 카테고리 데이터(정적 목록/API 둘 다)에 한글 이름이 없어서, 호버 툴팁용으로만 따로 매핑
+const CATEGORY_NAME_KO = {
+  lighting: "조명",
+  organization: "수납/정리",
+  "digital-electronics": "디지털/전자기기",
+  "desk-accessories": "데스크 액세서리",
+  "objects-stationery": "문구",
+};
+
 const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -158,7 +167,7 @@ const Header = () => {
       await logout();
     } catch (error) {
       console.error("로그아웃 API 실패:", error);
-      showFailToast("Logout Fail");
+      showFailToast("로그아웃에 실패했습니다.");
     } finally {
       // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니·찜)은 항상 정리한다
       localStorage.removeItem("token");
@@ -166,7 +175,7 @@ const Header = () => {
       clearLocalCart();
       clearWishlist();
 
-      showSuccessToast("Logout successful");
+      showSuccessToast("로그아웃되었습니다.");
       navigate("/");
     }
   };
@@ -183,7 +192,7 @@ const Header = () => {
       </MenuButton>
 
       <Logo>
-        <Link to="/" aria-label="타이틀 메인화면 버튼">
+        <Link to="/" aria-label="타이틀 메인화면 버튼" title="SCENERY 홈페이지로 이동">
           SCENERY
         </Link>
       </Logo>
@@ -197,6 +206,7 @@ const Header = () => {
                 to={category.path}
                 isActive={category.path === pathname}
                 aria-label={`${category.name} 버튼`}
+                title={CATEGORY_NAME_KO[category.id]}
               >
                 {category.name}
               </NavButton>
@@ -210,17 +220,28 @@ const Header = () => {
           <AuthIconButton
             type="button"
             aria-label="로그아웃 버튼"
+            title="로그아웃"
             onClick={requestLogout}
           >
             <LogoutIcon />
           </AuthIconButton>
         ) : (
-          <AuthIconButton as={Link} to="/login" aria-label="로그인 버튼">
+          <AuthIconButton
+            as={Link}
+            to="/login"
+            aria-label="로그인 버튼"
+            title="로그인"
+          >
             <LoginIcon />
           </AuthIconButton>
         )}
 
-        <CartIconButton as={Link} to="/cartpage" aria-label="장바구니 버튼">
+        <CartIconButton
+          as={Link}
+          to="/cartpage"
+          aria-label="장바구니 버튼"
+          title="장바구니"
+        >
           <CartIconWrapper>
             <BasketIcon width={30} height={30} />
             {cartCount > 0 && <CartBadge>{cartCount}</CartBadge>}
@@ -231,6 +252,7 @@ const Header = () => {
           as={Link}
           to={user ? "/mypage" : "/login"}
           aria-label={user ? "로그인 시 마이페이지" : "비로그인 시 로그인"}
+          title="마이페이지"
         >
           <CartIconWrapper>
             <PersonIcon width={30} height={30} />
