@@ -125,7 +125,9 @@ const Header = () => {
     };
   }, [isMenuOpen]);
   // 스토어에서 cartiTRem 가져옴
-  const { cartItems, syncCartWithServer, clearLocalCart } = useCartStore();
+  const cartItems = useCartStore((s) => s.cartItems);
+  const syncCartWithServer = useCartStore((s) => s.syncCartWithServer);
+  const clearLocalCart = useCartStore((s) => s.clearLocalCart);
 
   // 로그인 확인
   const user = useAuthStore((state) => state.user);
