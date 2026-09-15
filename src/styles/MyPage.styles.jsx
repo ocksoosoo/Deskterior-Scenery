@@ -159,7 +159,6 @@ export const AccountInput = styled.input({
 export const SaveArea = styled.div({
   display: "flex",
   alignItems: "center",
-
   width: "100%",
   marginTop: "40px",
 });
@@ -168,31 +167,24 @@ export const ErrorText = styled.div({
   display: "flex",
   alignItems: "center",
   gap: "8px",
-
   padding: "10px 14px",
-
   border: "1px solid #f0b49b",
   borderRadius: "5px",
-
   backgroundColor: "#f8d0bb",
   color: "#222",
-
   fontSize: "13px",
 });
 
 export const SaveButton = styled.button({
   marginLeft: "auto",
-
   padding: "14px 24px",
-
   border: "none",
   borderRadius: "8px",
-
   backgroundColor: "#222320",
   color: "#fff",
-
   fontSize: "14px",
   cursor: "pointer",
+
   "@media (prefers-reduced-motion: no-preference)": {
     "&.shake": {
       animation: "shake 0.35s ease-in-out",
@@ -274,6 +266,9 @@ export const SettingsChangeBtn = styled.button({
 });
 
 export const PasswordFormBox = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
   width: "100%",
   padding: "0 32px",
   marginTop: "32px",
@@ -286,10 +281,6 @@ export const PasswordField = styled.div({
   flexDirection: "column",
   gap: "10px",
   width: "100%",
-
-  "& + &": {
-    marginTop: "28px",
-  },
 });
 
 export const PasswordLabel = styled.label({
@@ -298,10 +289,20 @@ export const PasswordLabel = styled.label({
   color: "#222",
 });
 
+export const CurrentPasswordGroup = styled.div({
+  position: "relative",
+  width: "100%",
+});
+
+export const NewPasswordGroup = styled.div({
+  position: "relative",
+  width: "100%",
+});
+
 export const PasswordInput = styled.input({
   width: "100%",
   height: "54px",
-  padding: "0 16px",
+  padding: "0 48px 0 16px",
   boxSizing: "border-box",
   border: "1px solid #e4e1db",
   borderRadius: "5px",
@@ -313,21 +314,53 @@ export const PasswordInput = styled.input({
   "&::placeholder": {
     color: "#888",
   },
+
   "&:focus": {
     borderColor: "#999",
   },
+});
+
+export const CurrentPasswordHidenButton = styled.button({
+  position: "absolute",
+  top: "50%",
+  right: "14px",
+  transform: "translateY(-50%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  border: "none",
+  backgroundColor: "transparent",
+  color: "#777",
+  cursor: "pointer",
+});
+
+export const NewPasswordHidenButton = styled.button({
+  position: "absolute",
+  top: "50%",
+  right: "14px",
+  transform: "translateY(-50%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  border: "none",
+  backgroundColor: "transparent",
+  color: "#777",
+  cursor: "pointer",
 });
 
 export const PasswordError = styled.p({
   display: "flex",
   alignItems: "center",
   gap: "8px",
+  marginTop: "12px",
   width: "100%",
-  margin: 0,
-  padding: "10px 14px",
+  padding: "10px 12px",
+  boxSizing: "border-box",
+  border: "1px solid #f0b49b",
   borderRadius: "5px",
   backgroundColor: "#f8d0bb",
   color: "#222",
   fontSize: "13px",
-  lineHeight: 1.4,
 });
