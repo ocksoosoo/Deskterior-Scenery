@@ -11,7 +11,7 @@ import {
 } from "../components/common/ShowToast";
 import Modal from "../components/common/Modal";
 import { useNavigate } from "react-router";
-import { IconPencil } from "@tabler/icons-react";
+import { IconPencil, IconCircleX } from "@tabler/icons-react";
 
 import {
   MypageBox,
@@ -40,6 +40,11 @@ import {
   SettingsBtnGroup,
   SettingsDeleteBtn,
   SettingsChangeBtn,
+  PasswordFormBox,
+  PasswordField,
+  PasswordLabel,
+  PasswordInput,
+  PasswordError,
 } from "../styles/MyPage.styles";
 
 function Mypage() {
@@ -55,6 +60,9 @@ function Mypage() {
   const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
   const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
     useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     finishPageLoading(pathname);
@@ -111,6 +119,8 @@ function Mypage() {
   };
 
   const handlePasswordChange = () => {
+    console.log("현재 비밀번호:", currentPassword);
+    console.log("새 비밀번호:", newPassword);
     setIsPasswordChangeModalOpen(false);
     showSuccessToast("비밀번호가 성공적으로 변경되었습니다.");
     navigate("/");
@@ -244,12 +254,49 @@ function Mypage() {
           {isPasswordChangeModalOpen && (
             <Modal
               title="Change Password"
-              icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
               description="현재 비밀번호와 변경할 비밀번호를 입력해 주세요."
               confirmText="Save"
+              icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
               onClose={() => setIsPasswordChangeModalOpen(false)}
               onConfirm={handlePasswordChange}
-            />
+            >
+              <PasswordFormBox>
+                <PasswordField>
+                  <PasswordLabel htmlFor="currentPassword">
+                    Current Password
+                  </PasswordLabel>
+
+                  <PasswordInput
+                    id="currentPassword"
+                    type="password"
+                    placeholder="Current Password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                </PasswordField>
+
+                <PasswordField>
+                  <PasswordLabel htmlFor="newPassword">
+                    New Password
+                  </PasswordLabel>
+
+                  <PasswordInput
+                    id="newPassword"
+                    type="password"
+                    placeholder="New Password (4자 이상)"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+
+                  {passwordError && (
+                    <PasswordError>
+                      <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
+                      {passwordError}
+                    </PasswordError>
+                  )}
+                </PasswordField>
+              </PasswordFormBox>
+            </Modal>
           )}
         </CardBox>
       </MypageBox>

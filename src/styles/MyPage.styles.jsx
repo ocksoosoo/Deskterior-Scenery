@@ -222,3 +222,62 @@ export const SettingsChangeBtn = styled.button({
   fontSize: "14px",
   cursor: "pointer",
 });
+
+export const PasswordFormBox = styled.div({
+  width: "100%",
+  padding: "0 32px",
+  marginTop: "32px",
+  marginBottom: "36px",
+  boxSizing: "border-box",
+});
+
+export const PasswordField = styled.div({
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+  width: "100%",
+
+  "& + &": {
+    marginTop: "28px",
+  },
+});
+
+export const PasswordLabel = styled.label({
+  fontSize: "16px",
+  fontWeight: 500,
+  color: "#222",
+});
+
+export const PasswordInput = styled.input({
+  width: "100%",
+  height: "54px",
+  padding: "0 16px",
+  boxSizing: "border-box",
+  border: "1px solid #e4e1db",
+  borderRadius: "5px",
+  outline: "none",
+  backgroundColor: "#fff",
+  fontSize: "14px",
+  color: "#222",
+
+  "&::placeholder": {
+    color: "#888",
+  },
+  "&:focus": {
+    borderColor: "#999",
+  },
+});
+
+export const PasswordError = styled.p({
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+  width: "100%",
+  margin: 0,
+  padding: "10px 14px",
+  borderRadius: "5px",
+  backgroundColor: "#f8d0bb",
+  color: "#222",
+  fontSize: "13px",
+  lineHeight: 1.4,
+});
