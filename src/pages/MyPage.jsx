@@ -323,7 +323,7 @@ function Mypage() {
             <AccountForm onSubmit={handleSubmit}>
               <AccountGrid>
                 <AccountField>
-                  <AccountLabel>
+                  <AccountLabel htmlFor="firstName">
                     First Name<Required>*</Required>
                   </AccountLabel>
 
@@ -338,7 +338,7 @@ function Mypage() {
                 </AccountField>
 
                 <AccountField>
-                  <AccountLabel>
+                  <AccountLabel htmlFor="lastName">
                     Last Name<Required>*</Required>
                   </AccountLabel>
 
@@ -353,7 +353,7 @@ function Mypage() {
                 </AccountField>
 
                 <AccountField>
-                  <AccountLabel>
+                  <AccountLabel htmlFor="userId">
                     ID<ReadonlyText>(readOnly)</ReadonlyText>
                   </AccountLabel>
 
@@ -361,7 +361,7 @@ function Mypage() {
                 </AccountField>
 
                 <AccountField>
-                  <AccountLabel>Contact</AccountLabel>
+                  <AccountLabel htmlFor="contact">Contact</AccountLabel>
 
                   <AccountInput
                     ref={contactRef}
@@ -377,7 +377,7 @@ function Mypage() {
                 </AccountField>
 
                 <AddressField>
-                  <AccountLabel>Address</AccountLabel>
+                  <AccountLabel htmlFor="address">Address</AccountLabel>
 
                   <AccountInput
                     ref={addressRef}
