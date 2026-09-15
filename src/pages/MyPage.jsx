@@ -1,5 +1,6 @@
 import useAuthStore from "../store/UseAuthStore";
 import useWishlistStore from "../store/wishlistStore";
+import { signupSchema } from "../schema/AuthSchema";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
@@ -10,6 +11,7 @@ import {
 } from "../components/common/ShowToast";
 import Modal from "../components/common/Modal";
 import { useNavigate } from "react-router";
+import { IconPencil } from "@tabler/icons-react";
 
 import {
   MypageBox,
@@ -51,6 +53,8 @@ function Mypage() {
 
   const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
+    useState(false);
 
   useEffect(() => {
     finishPageLoading(pathname);
@@ -58,7 +62,7 @@ function Mypage() {
 
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
-  const [phone, setPhone] = useState("");
+  const [contact, setContact] = useState("");
   const [id, setId] = useState("");
   const [address, setAddress] = useState("");
 
@@ -68,13 +72,20 @@ function Mypage() {
     const updatedUserInfo = {
       first,
       last,
-      phone,
       id,
+      contact,
       address,
     };
 
     console.log("수정할 회원정보:", updatedUserInfo);
   };
+
+  const MyPageSchema = signupSchema.pick({
+    firstName: true,
+    lastName: true,
+    contact: true,
+    address: true,
+  });
 
   const handleLogout = async () => {
     try {
@@ -96,6 +107,12 @@ function Mypage() {
   const handleDeleteUser = () => {
     setIsDeleteUserModalOpen(false);
     showSuccessToast("계정이 성공적으로 탈퇴하였습니다.");
+    navigate("/");
+  };
+
+  const handlePasswordChange = () => {
+    setIsPasswordChangeModalOpen(false);
+    showSuccessToast("비밀번호가 성공적으로 변경되었습니다.");
     navigate("/");
   };
 
@@ -156,13 +173,13 @@ function Mypage() {
                 </AccountField>
 
                 <AccountField>
-                  <AccountLabel>Phone</AccountLabel>
+                  <AccountLabel>Contact</AccountLabel>
 
                   <AccountInput
-                    id="phone"
+                    id="contact"
                     type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
                   />
                 </AccountField>
 
@@ -197,12 +214,16 @@ function Mypage() {
               <SettingsDeleteBtn onClick={() => setIsDeleteUserModalOpen(true)}>
                 Delete account
               </SettingsDeleteBtn>
-              <SettingsChangeBtn>Change Password</SettingsChangeBtn>
+              <SettingsChangeBtn
+                onClick={() => setIsPasswordChangeModalOpen(true)}
+              >
+                Change Password
+              </SettingsChangeBtn>
             </SettingsBtnGroup>
           </SettingsCard>
           {isLogOutModalOpen && (
             <Modal
-              title="Are you sure?"
+              title="Logout?"
               description="정말 로그아웃 하시겠습니까?"
               confirmText="Log out"
               onClose={() => setIsLogOutModalOpen(false)}
@@ -218,6 +239,16 @@ function Mypage() {
               confirmText="Confirm"
               onClose={() => setIsDeleteUserModalOpen(false)}
               onConfirm={handleDeleteUser}
+            />
+          )}
+          {isPasswordChangeModalOpen && (
+            <Modal
+              title="Change Password"
+              icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
+              description="현재 비밀번호와 변경할 비밀번호를 입력해 주세요."
+              confirmText="Save"
+              onClose={() => setIsPasswordChangeModalOpen(false)}
+              onConfirm={handlePasswordChange}
             />
           )}
         </CardBox>

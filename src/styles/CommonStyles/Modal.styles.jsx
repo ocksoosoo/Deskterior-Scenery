@@ -111,4 +111,7 @@ export const ConfirmButton = styled.button(({ theme }) => ({
     padding: `${theme.spacing.md} ${theme.spacing.lg}`,
     fontSize: theme.fontSize.md,
   },
+  "&:hover": {
+    filter: "brightness(1.5)",
+  },
 }));
