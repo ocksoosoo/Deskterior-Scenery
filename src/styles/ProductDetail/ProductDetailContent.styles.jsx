@@ -70,17 +70,16 @@ export const Title = styled.h2(({ theme }) => ({
 
 export const DetailImage = styled(SafeImage)(({ theme }) => ({
   display: "block",
+  width: "100%",
   maxWidth: "100%",
-  height: "auto",
+  aspectRatio: "1 / 1",
+  objectFit: "cover",
   margin: "0 auto",
   borderRadius: 8,
 
   [theme.media.mobile]: {
-    maxWidth: "85%",
     width: "85%",
-    height: "auto",
-    aspectRatio: "1 / 1",
-    objectFit: "cover",
+    maxWidth: "85%",
   },
 }));
 

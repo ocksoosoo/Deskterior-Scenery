@@ -4,11 +4,12 @@ import ReviewStars from "./ReviewStars";
 import Modal from "../common/Modal";
 import * as S from "../../styles/ProductDetail/Review.styles";
 
-/**
- * defaultValue 를 주면 "수정" 모드, 없으면 "작성" 모드.
- * 수정 대상이 바뀔 때는 부모에서 key 를 바꿔 remount 시킨다.
- */
-const ReviewForm = ({ isLoggedIn = false, defaultValue, onSubmit, onCancel }) => {
+const ReviewForm = ({
+  isLoggedIn = false,
+  defaultValue,
+  onSubmit,
+  onCancel,
+}) => {
   const navigate = useNavigate();
   const isEditing = Boolean(defaultValue);
 
@@ -55,11 +56,18 @@ const ReviewForm = ({ isLoggedIn = false, defaultValue, onSubmit, onCancel }) =>
     }
   };
 
+  const promptLogin = () => {
+    if (!isLoggedIn) setLoginModalOpen(true);
+  };
+
   return (
     <>
       <S.Form onSubmit={handleSubmit}>
         <S.FormRow>
-          <S.RatingBox>
+          <S.RatingBox
+            onClick={promptLogin}
+            style={{ cursor: isLoggedIn ? "default" : "pointer" }}
+          >
             <S.RatingLabel>{rating.toFixed(1)}</S.RatingLabel>
             <ReviewStars
               value={rating}
@@ -77,12 +85,16 @@ const ReviewForm = ({ isLoggedIn = false, defaultValue, onSubmit, onCancel }) =>
 
           <S.Textarea
             value={content}
-            disabled={!isLoggedIn || submitting}
+            readOnly={!isLoggedIn}
+            disabled={submitting}
+            onClick={promptLogin}
+            onFocus={promptLogin}
             placeholder={
               isLoggedIn
                 ? "리뷰를 작성해 주세요"
                 : "로그인 후 리뷰를 작성할 수 있어요"
             }
+            style={{ cursor: isLoggedIn ? "text" : "pointer" }}
             onChange={(event) => {
               setContent(event.target.value);
               setError("");

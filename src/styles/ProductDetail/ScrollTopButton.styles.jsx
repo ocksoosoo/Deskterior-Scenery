@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Button = styled.button(({ theme }) => ({
+export const Button = styled.button(({ theme, $withCtaBar }) => ({
   position: "fixed",
   right: "20px",
   bottom: "calc(20px + env(safe-area-inset-bottom, 0px))",
@@ -19,7 +19,9 @@ export const Button = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
 
   [theme.media.mobile]: {
-    bottom: "calc(81px + env(safe-area-inset-bottom, 0px))",
+    bottom: $withCtaBar
+      ? "calc(81px + env(safe-area-inset-bottom, 0px))"
+      : "calc(20px + env(safe-area-inset-bottom, 0px))",
     padding: theme.spacing.xs,
   },
 
