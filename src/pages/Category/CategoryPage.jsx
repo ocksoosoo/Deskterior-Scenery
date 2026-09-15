@@ -23,7 +23,9 @@ const MOBILE_BREAKPOINT = 768;
 const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
 const CategoryPage = ({ categoryId = "lighting" }) => {
+  const cartItems = useCartStore((s) => s.cartItems);
   const addToCart = useCartStore((s) => s.addToCart);
+  const removeItem = useCartStore((s) => s.removeItem);
 
   const finishPageLoading = useLoadingStore((state) => state.finishPageLoading);
 
@@ -181,17 +183,29 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     if (!product) return;
 
     try {
-      await addToCart({
-        productId: product.id,
-        name: product.name,
-        price: product.discountPrice || product.price,
-        imageUrl: product.imageUrl,
-        isSoldOut: product.soldOut,
-      });
-      showSuccessToast("상품이 장바구니에 담겼습니다");
+      // 1. 장바구니에 해당 상품이 이미 있는지 찾기
+      const existingItem = cartItems.find(
+        (item) => item.productId === product.id,
+      );
+
+      if (existingItem) {
+        // 2. 이미 있다면? -> 장바구니에서 빼기
+        await removeItem(existingItem.cartItemId);
+        showSuccessToast("장바구니에서 제거되었습니다");
+      } else {
+        // 3. 없다면? -> 장바구니에 담기
+        await addToCart({
+          productId: product.id,
+          name: product.name,
+          price: product.discountPrice || product.price,
+          imageUrl: product.imageUrl,
+          isSoldOut: product.soldOut,
+        });
+        showSuccessToast("상품이 장바구니에 담겼습니다");
+      }
     } catch (err) {
-      console.error("장바구니 담기 실패:", err);
-      showFailToast("장바구니 담기에 실패했습니다");
+      console.error("장바구니 업데이트 실패:", err);
+      showFailToast("장바구니 업데이트에 실패했습니다");
     }
   };
 
