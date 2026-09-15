@@ -140,22 +140,82 @@ export const AccountInput = styled.input({
   "&:focus": {
     borderBottomColor: "#222320",
   },
+  "&:placeholder": {
+    color: "#d4d4d4",
+  },
   "&[readonly]": {
     color: "#777",
     cursor: "default",
   },
 });
 
-export const SaveButton = styled.button({
-  alignSelf: "flex-end",
+export const SaveArea = styled.div({
+  display: "flex",
+  alignItems: "center",
+
+  width: "100%",
   marginTop: "40px",
-  padding: "12px 22px",
+});
+
+export const ErrorText = styled.div({
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+
+  padding: "10px 14px",
+
+  border: "1px solid #f0b49b",
+  borderRadius: "5px",
+
+  backgroundColor: "#f8d0bb",
+  color: "#222",
+
+  fontSize: "13px",
+});
+
+export const SaveButton = styled.button({
+  marginLeft: "auto",
+
+  padding: "14px 24px",
+
   border: "none",
   borderRadius: "8px",
+
   backgroundColor: "#222320",
   color: "#fff",
+
   fontSize: "14px",
   cursor: "pointer",
+  "@media (prefers-reduced-motion: no-preference)": {
+    "&.shake": {
+      animation: "shake 0.35s ease-in-out",
+    },
+  },
+  "@media (prefers-reduced-motion: reduce)": {
+    "&.shake": {
+      animation: "none",
+    },
+  },
+  "@keyframes shake": {
+    "0%": {
+      transform: "translateX(0)",
+    },
+    "20%": {
+      transform: "translateX(-6px)",
+    },
+    "40%": {
+      transform: "translateX(6px)",
+    },
+    "60%": {
+      transform: "translateX(-4px)",
+    },
+    "80%": {
+      transform: "translateX(4px)",
+    },
+    "100%": {
+      transform: "translateX(0)",
+    },
+  },
 });
 
 export const SettingsCard = styled.section({

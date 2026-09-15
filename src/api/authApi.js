@@ -35,3 +35,23 @@ export function logout() {
 export function getMe() {
   return clientApi("/auth/me");
 }
+
+export function updateMe(data) {
+  return clientApi("/auth/me", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export function updatePassword(data) {
+  return clientApi("/auth/password", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteMe() {
+  return clientApi("/auth/me", {
+    method: "DELETE",
+  });
+}
