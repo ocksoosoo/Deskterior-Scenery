@@ -46,9 +46,7 @@ const ProductCard = ({
     toggleLike(product.id);
     onToggleLike?.(product.id);
     showSuccessToast(
-      next
-        ? "상품이 찜 목록에 추가되었습니다."
-        : "상품이 찜 목록에서 삭제되었습니다.",
+      next ? "찜 목록에 추가되었습니다." : "찜 목록에서 삭제되었습니다.",
     );
   };
 

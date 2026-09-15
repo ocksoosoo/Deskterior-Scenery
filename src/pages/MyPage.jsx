@@ -92,21 +92,21 @@ function Mypage() {
       await logout();
     } catch (error) {
       console.error("로그아웃 API 실패:", error);
-      showFailToast("Logout Fail");
+      showFailToast("로그아웃에 실패했습니다.");
     } finally {
       // 서버 요청 성공/실패와 상관없이 로컬(토큰·유저·장바구니·찜)은 항상 정리한다
       localStorage.removeItem("token");
       clearUser();
       clearWishlist();
       setIsLogOutModalOpen(false);
-      showSuccessToast("Logout successful");
+      showSuccessToast("로그아웃되었습니다.");
       navigate("/");
     }
   };
 
   const handleDeleteUser = () => {
     setIsDeleteUserModalOpen(false);
-    showSuccessToast("계정이 성공적으로 탈퇴하였습니다.");
+    showSuccessToast("회원 탈퇴가 완료되었습니다.");
     navigate("/");
   };
 

@@ -584,7 +584,7 @@ function ProductSection({ onInitialLoadComplete }) {
       if (existingItem) {
         // 이미 담겨있으면 삭제
         await removeItem(existingItem.cartItemId);
-        showSuccessToast("장바구니에서 제거되었습니다");
+        showSuccessToast("장바구니에서 삭제했습니다.");
       } else {
         // 안 담겨있으면 추가
         await addToCart({
@@ -594,11 +594,11 @@ function ProductSection({ onInitialLoadComplete }) {
           imageUrl: product.imageUrl,
           isSoldOut: product.soldOut,
         });
-        showSuccessToast("상품이 장바구니에 담겼습니다");
+        showSuccessToast("장바구니에 담았습니다.");
       }
     } catch (err) {
       console.error("장바구니 업데이트 실패:", err);
-      showFailToast("장바구니 업데이트에 실패했습니다");
+      showFailToast("장바구니 처리에 실패했습니다.");
     }
   };
 
