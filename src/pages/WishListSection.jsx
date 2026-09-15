@@ -12,37 +12,157 @@ import {
     EmptyText,
     ExploreButton,
 } from "../styles/WishListSection.styles";
-import products from "../data/products";
 import ProductCard from "../components/product/ProductCard";
+import Loading from "../components/common/Loading";
 import Modal from "../components/common/Modal";
+import { showFailToast, showSuccessToast } from "../components/common/ShowToast";
+import { wishlistApi } from "../api/wishlistApi";
 
-import { useState } from "react";
+import useWishlistStore from "../store/wishlistStore";
+import useCartStore from "../store/cartStore";
 
-// 임시 Mock Data
-const MOCK_WISHLIST = products.slice(0, 12);
+import { useState, useEffect } from "react";
 
 // 보여줄 최대 카드 수
 const INITIAL_PAGE_SIZE = 6;
 const MORE_PAGE_SIZE = 3;
 
 function WishlistSection() {
-    const [items, setItems] = useState(products.slice(0, INITIAL_PAGE_SIZE));
+    const [items, setItems] = useState([]);
+    const [visibleCount, setVisiblecount] = useState(INITIAL_PAGE_SIZE);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [retryCount, setRetryCount] = useState(0);
+
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    const hasItems = MOCK_WISHLIST.length > 0;
-    const hasMore = items.length < products.length;
+    const visibleItems = items.slice(0, visibleCount);
+    const hasItems = items.length > 0;
+    const hasMore = visibleCount < items.length;
 
-    // 전체 삭제 확인 모달 open
-    function handleConfirmDeleteAll() {
-        setItems([]);
-        setIsDeleteModalOpen(false);
+    const setLikedIds = useWishlistStore((state) => state.setLikedIds);
+    const addToCart = useCartStore((state) => state.addToCart);
+
+    // 위시리스트 조회
+    useEffect(() => {
+        let ignore = false;
+
+        async function fetchWishlist() {
+            setIsLoading(true);
+            setErrorMessage("");
+
+            try {
+                const response = await wishlistApi.getWishlist();
+                
+                if (!response.success) {
+                    throw new Error(
+                        response.message || "위시리스트를 불러오지 못했습니다.",
+                    );
+                }
+                
+                // 언마운트 시에만 조기 리턴하도록 수정
+                if (ignore) return;
+
+                // 응답 형태(response.data.products)에 맞춰 안전하게 추출
+                const rawProducts = response.data?.products || response.data || [];
+
+                const wishlistProducts = rawProducts.map((item) => ({
+                    ...item,
+                    id: item.id ?? item.productId,
+                    rating: item.rating ?? item.averageRating,
+                    reviewCount: item.reviewCount ?? item.totalCount,
+                    // DB 데이터의 soldOut 또는 stock === 0 반영
+                    soldOut: Boolean(item.soldOut ?? (item.stock === 0)),
+                }));
+
+                setItems(wishlistProducts);
+
+                // 조회 성공 시 store에 id 저장
+                setLikedIds(
+                    wishlistProducts.map((item) => item.id),
+                );
+
+            } catch (error) {
+                if (ignore) return;
+                console.error("위시리스트 조회 실패:", error);
+                setErrorMessage(error.message || "위시리스트를 불러오지 못했습니다.");
+            } finally {
+                if (!ignore) {
+                    setIsLoading(false);
+                }
+            }
+        }
+        fetchWishlist();
+
+        return () => {
+            ignore = true;
+        };
+    }, [setLikedIds, retryCount]);
+    // handleConfirmDeleteAll(): 전체 삭제
+    async function handleConfirmDeleteAll() {
+        if(isDeleting) return;
+
+        setIsDeleting(true);
+
+        try {
+            // 서버 삭제 요청
+            const response = await wishlistApi.clearWishlist();
+
+            if(!response.success) {
+                throw new Error(response.message || "전체 삭제에 실패했습니다.");
+            }
+            
+            setItems([]);
+            setLikedIds([]); // 로컬 상태 변경
+            setVisiblecount(INITIAL_PAGE_SIZE);
+            setIsDeleteModalOpen(false);
+
+            showSuccessToast("위시리스트가 모두 삭제되었습니다.");
+        } catch(error) {
+            console.error("위시리스트 전체 삭제 실패:", error);
+            showFailToast(error.message || "위시리스트 전체 삭제에 실패했습니다.")
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
-    // '+' 버튼 클릭 시 다음 6개 보이기
+    // handleLoadMore(): '+' 버튼 클릭 시 다음 6개 보이기
     function handleLoadMore() {
-        const nextItems = products.slice(0, items.length + MORE_PAGE_SIZE);
-        setItems(nextItems);
+        setVisiblecount((previousCount) => previousCount + MORE_PAGE_SIZE);
     };
+
+    // handleWishlistRemove(): 위시 리스트를 화면 목록에서 제거
+    function handleWishlistRemove(productId) {
+        setItems((previousItems) =>
+            previousItems.filter((item) => item.id !== productId),
+        );
+    }
+
+    // handleAddToCart(): 장바구니 추가
+    async function handleAddToCart(productId) {
+        const product = items.find((item) => item.id === productId);
+
+        if(!product) return;
+
+        try {
+            await addToCart(
+                {
+                    productId: product.id,
+                    name: product.name,
+                    categoryId: product.categoryId,
+                    price: product.price,
+                    imageUrl: product.imageUrl,
+                },
+                1,
+            );
+
+            showSuccessToast("장바구니에 담았습니다.");
+        } catch(error) {
+            console.error("장바구니 담기 실패:", error);
+            showFailToast(error.message || "장바구니에 담지 못했습니다.");
+        }
+    }
 
   return (
     <WishlistContainer>
@@ -51,7 +171,7 @@ function WishlistSection() {
             <WishlistTitle>Wish List</WishlistTitle>
             <DeleteAllButton
             type="button"
-            disabled={!hasItems}
+            disabled={isLoading || Boolean(errorMessage) || !hasItems || isDeleting}
             onClick={() => setIsDeleteModalOpen(true)}
             >
                 Delete All
@@ -59,12 +179,34 @@ function WishlistSection() {
         </WishlistHeader>
 
         {/* 위시 카드 영역 */}
-        {hasItems ?(
+        {/* 로딩 상태일 때 로딩 문구를 보여주고, 로딩이 완료되고 리스트에 담긴 상품이 있으면 보여준다. */}
+        {isLoading ?(
+            <EmptyState role="status" aria-live="polite">
+                <Loading />
+                <EmptyText>위시리스트를 불러오는 중입니다...</EmptyText>
+            </EmptyState>
+        ) : errorMessage ? (
+            <EmptyState>
+                <EmptyText role="alert">{errorMessage}</EmptyText>
+            
+                <ExploreButton
+                as="button"
+                type="button"
+                onClick={() => setRetryCount((count) => count + 1)}
+                >
+                    Retry
+                </ExploreButton>
+            </EmptyState>
+        ) : hasItems ? (
             <>
                 <WishlistList>
-                    {items.map((item) => (
+                    {visibleItems.map((item) => (
                         <WishlistItem key={item.id}>
-                        <ProductCard product={item} />
+                            <ProductCard
+                            product={item}
+                            onWishlistRemove={handleWishlistRemove}
+                            onAddToCart={handleAddToCart}
+                            />
                         </WishlistItem>
                     ))}
                 </WishlistList>
@@ -94,8 +236,8 @@ function WishlistSection() {
                         fill="#E8E6DF"/>
                     </svg>                
                 </EmptyIconWrapper>
-                <EmptyText>위시 리스트가 비어 있습니다.</EmptyText>
-                <ExploreButton to="/lightingpage">Explore Items</ExploreButton>
+                <EmptyText>위시리스트가 비어 있습니다.</EmptyText>
+                <ExploreButton to="/">Explore Items</ExploreButton>
             </EmptyState>
         )}
 
