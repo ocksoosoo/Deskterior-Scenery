@@ -58,9 +58,6 @@ const CartPage = () => {
   const [initialChecksReady, setInitialChecksReady] = useState(false);
 
   // 최초 서버에서 장바구니 조회
-  /*useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);*/
   useEffect(() => {
     let alive = true;
 
@@ -104,20 +101,6 @@ const CartPage = () => {
     .sort()
     .join(",");
 
-  /*useEffect(() => {
-    if (!productIdsKey) return;
-    const productIds = productIdsKey.split(",").map(Number);
-
-    Promise.all(
-      productIds.map((id) =>
-        getProduct(id)
-          .then((product) => [id, product])
-          .catch(() => [id, null]),
-      ),
-    ).then((results) => {
-      setProductInfoMap(Object.fromEntries(results));
-    });
-  }, [productIdsKey]);*/
   useEffect(() => {
     if (!cartLoaded) return;
 

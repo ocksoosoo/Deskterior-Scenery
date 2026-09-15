@@ -96,10 +96,6 @@ function Mypage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  /*useEffect(() => {
-    finishPageLoading(pathname);
-  }, [pathname, finishPageLoading]);*/
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [savedFirstName, setSavedFirstName] = useState("");
