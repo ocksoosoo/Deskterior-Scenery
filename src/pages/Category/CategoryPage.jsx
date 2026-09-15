@@ -292,7 +292,9 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
                     aria-current={isCurrent ? "page" : undefined}
                   >
                     {crumb.path && !isCurrent ? (
-                      <S.CrumbLink to={crumb.path}>{crumb.label}</S.CrumbLink>
+                      <S.CrumbLink to={crumb.path} title="홈으로 이동">
+                        {crumb.label}
+                      </S.CrumbLink>
                     ) : (
                       crumb.label
                     )}

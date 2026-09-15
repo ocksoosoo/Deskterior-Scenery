@@ -349,7 +349,7 @@ const CartPage = () => {
         <TitleWrapper>
           <Course>
             {/* 🌟 2. as={Link} 를 써서 껍데기는 a태그, 기능은 라우터 Link로 합체! */}
-            <BreadcrumbLink as={Link} to="/">
+            <BreadcrumbLink as={Link} to="/" title="홈으로 이동">
               Home
             </BreadcrumbLink>{" "}
             &gt; Cart

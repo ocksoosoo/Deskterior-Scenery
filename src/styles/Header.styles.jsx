@@ -115,7 +115,8 @@ export const NavButton = styled("a", {
     bottom: `-${theme.spacing["2xs"]}`,
     height: "1.5px",
     background: theme.colors.textMain,
-    width: "0%",
+    // 지금 보고 있는 카테고리는 굵기 효과처럼 밑줄도 항상 보이게 함
+    width: isActive ? "100%" : "0%",
     transform: "translateX(-50%)",
     transition: "width 0.25s ease",
   },

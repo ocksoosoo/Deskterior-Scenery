@@ -34,7 +34,16 @@ const ProductBreadcrumb = ({ category, categoryPath, productName }) => {
           return (
             <S.Crumb key={index} aria-current={isLast ? "page" : undefined}>
               {item.to ? (
-                <S.CrumbLink to={item.to}>{item.label}</S.CrumbLink>
+                <S.CrumbLink
+                  to={item.to}
+                  title={
+                    item.label === "Home"
+                      ? "홈으로 이동"
+                      : `${item.label} 카테고리로 이동`
+                  }
+                >
+                  {item.label}
+                </S.CrumbLink>
               ) : (
                 item.label
               )}

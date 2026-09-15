@@ -52,6 +52,7 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         tabIndex={currentPage <= 1 ? -1 : 0}
         aria-disabled={currentPage <= 1}
         aria-label="이전 페이지"
+        title="이전 페이지"
         $disabled={currentPage <= 1}
         onClick={goToPrev}
         onKeyDown={handleKeyDown(goToPrev)}
@@ -65,6 +66,7 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
             key={page}
             $active={page === currentPage}
             aria-current={page === currentPage ? "page" : undefined}
+            title={page === currentPage ? "현재 페이지" : `${page}페이지로 이동`}
             onClick={() => onPageChange?.(page)}
           >
             {page}
@@ -77,6 +79,7 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         tabIndex={currentPage >= totalPages ? -1 : 0}
         aria-disabled={currentPage >= totalPages}
         aria-label="다음 페이지"
+        title="다음 페이지"
         $disabled={currentPage >= totalPages}
         onClick={goToNext}
         onKeyDown={handleKeyDown(goToNext)}
