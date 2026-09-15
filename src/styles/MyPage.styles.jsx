@@ -158,23 +158,6 @@ export const SaveButton = styled.button({
   cursor: "pointer",
 });
 
-export const WishlistCard = styled.section({
-  width: "100%",
-  minHeight: "380px",
-  padding: "32px 28px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
-});
-
-export const WishlistTitle = styled.h3({
-  margin: "0 0 28px",
-  paddingBottom: "16px",
-  borderBottom: "3px solid #e5e5e5",
-  fontSize: "28px",
-  fontWeight: 700,
-  lineHeight: 1.2,
-});
-
 export const SettingsCard = styled.section({
   width: "100%",
   minHeight: "240px",

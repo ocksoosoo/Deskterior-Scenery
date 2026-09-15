@@ -1,0 +1,115 @@
+import {
+    WishlistContainer,
+    WishlistHeader,
+    WishlistTitle,
+    DeleteAllButton,
+    WishlistList,
+    WishlistItem,
+    MoreButtonWrapper,
+    MoreButton,
+    EmptyState,
+    EmptyIconWrapper,
+    EmptyText,
+    ExploreButton,
+} from "../styles/WishListSection.styles";
+import products from "../data/products";
+import ProductCard from "../components/product/ProductCard";
+import Modal from "../components/common/Modal";
+
+import { useState } from "react";
+
+// 임시 Mock Data
+const MOCK_WISHLIST = products.slice(0, 12);
+
+// 보여줄 최대 카드 수
+const INITIAL_PAGE_SIZE = 6;
+const MORE_PAGE_SIZE = 3;
+
+function WishlistSection() {
+    const [items, setItems] = useState(products.slice(0, INITIAL_PAGE_SIZE));
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const hasItems = MOCK_WISHLIST.length > 0;
+    const hasMore = items.length < products.length;
+
+    // 전체 삭제 확인 모달 open
+    function handleConfirmDeleteAll() {
+        setItems([]);
+        setIsDeleteModalOpen(false);
+    };
+
+    // '+' 버튼 클릭 시 다음 6개 보이기
+    function handleLoadMore() {
+        const nextItems = products.slice(0, items.length + MORE_PAGE_SIZE);
+        setItems(nextItems);
+    };
+
+  return (
+    <WishlistContainer>
+        {/* wishlist title 영역 */}
+        <WishlistHeader>
+            <WishlistTitle>Wish List</WishlistTitle>
+            <DeleteAllButton
+            type="button"
+            disabled={!hasItems}
+            onClick={() => setIsDeleteModalOpen(true)}
+            >
+                Delete All
+            </DeleteAllButton>
+        </WishlistHeader>
+
+        {/* 위시 카드 영역 */}
+        {hasItems ?(
+            <>
+                <WishlistList>
+                    {items.map((item) => (
+                        <WishlistItem key={item.id}>
+                        <ProductCard product={item} />
+                        </WishlistItem>
+                    ))}
+                </WishlistList>
+
+                {/* 하단 더보기(+) */}
+                {hasMore && (
+                <MoreButtonWrapper>
+                    <MoreButton
+                    type="button"
+                    aria-label="상품 더보기"
+                    onClick={handleLoadMore}
+                    >
+                        +
+                    </MoreButton>
+                </MoreButtonWrapper>
+                )}
+            </>
+        ) : (
+            <EmptyState>
+                <EmptyIconWrapper>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        width="120"
+                        height="96"
+                        viewBox="0 0 120 96"
+                        fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M101.903 6.10913C106.762 6.10926 111.004 9.13348 112.211 13.4565L119.6 39.9194C119.957 41.1975 120.029 42.53 119.81 43.8342L115.518 69.4565C114.719 74.2246 110.252 77.7446 104.999 77.7448H40.9914C37.8143 84.8705 30.1885 89.8907 21.286 89.8909C9.53041 89.8909 6.2693e-05 81.1381 0 70.3416C0.000219422 61.0006 7.13417 53.1895 16.6711 51.2535L15.4847 43.792C15.2812 42.5116 15.3562 41.2063 15.706 39.9528L23.1042 13.4565C24.3113 9.13339 28.5542 6.10913 33.4138 6.10913H101.903ZM21.286 53.5853C11.2099 53.5853 3.0413 61.0877 3.04105 70.3416C3.04111 79.5958 11.2098 87.098 21.286 87.098C31.362 87.0977 39.5295 79.5956 39.5296 70.3416C39.5294 61.0878 31.3618 53.5856 21.286 53.5853ZM21.286 75.9275C23.3848 75.9278 25.0867 77.4908 25.087 79.4184C25.0866 81.3459 23.3848 82.909 21.286 82.9092C19.187 82.9092 17.4854 81.3461 17.485 79.4184C17.4853 77.4906 19.1869 75.9275 21.286 75.9275ZM21.286 78.7192C20.8663 78.7192 20.525 79.033 20.5247 79.4184C20.5251 79.8037 20.8664 80.1163 21.286 80.1163C21.7054 80.116 22.0456 79.8035 22.0459 79.4184C22.0457 79.0331 21.7054 78.7195 21.286 78.7192ZM18.4933 43.3892L19.6798 50.8469C20.2098 50.8106 20.7459 50.7924 21.286 50.7924C33.0412 50.7926 42.5704 59.5455 42.5707 70.3416C42.5706 71.9296 42.3645 73.4737 41.9754 74.9519H104.999C108.751 74.9517 111.941 72.438 112.512 69.0326L116.804 43.409L116.814 43.3557L116.818 43.3222H94.1457L87.7194 51.5857C85.7216 54.1544 82.4963 55.6791 79.0592 55.6791H57.2158C53.7787 55.6791 50.5533 54.1544 48.5556 51.5857L42.1293 43.3222H18.4839L18.4933 43.3892ZM21.286 57.7741C23.3847 57.7743 25.0865 59.3375 25.087 61.2649V69.6437C25.0868 71.5713 23.3848 73.1343 21.286 73.1346C19.1869 73.1346 17.4852 71.5715 17.485 69.6437V61.2649C17.4855 59.3373 19.1871 57.7741 21.286 57.7741ZM21.286 60.567C20.8664 60.567 20.5252 60.8797 20.5247 61.2649V69.6437C20.5249 70.0291 20.8663 70.3416 21.286 70.3416C21.7055 70.3414 22.0457 70.029 22.0459 69.6437V61.2649C22.0455 60.8799 21.7053 60.5673 21.286 60.567ZM36.2591 35.3798C34.1607 35.3798 32.3933 36.6822 31.8615 38.4541C31.8363 38.5914 31.8146 38.7305 31.7981 38.8706L31.6982 39.7235V40.5305H42.9108C43.4016 40.5305 43.8631 40.7477 44.1485 41.1144L51.0297 49.963C52.4567 51.7977 54.7608 52.8861 57.2158 52.8861H79.0592C81.5142 52.8861 83.8183 51.7977 85.2452 49.963L92.1264 41.1144C92.4118 40.7477 92.8734 40.5305 93.3642 40.5305H103.616V39.7805L103.309 38.3115C103.271 38.1254 103.224 37.9412 103.17 37.7611C102.435 36.353 100.868 35.38 99.0548 35.3798H36.2591ZM33.4138 8.90206C29.9428 8.90206 26.9118 11.0618 26.0494 14.1495L18.685 40.5305H28.6571V21.9172C28.6574 18.0615 32.0609 14.9355 36.2591 14.9354H99.0548C103.253 14.9358 106.657 18.0617 106.657 21.9172V40.5305H116.632L109.266 14.1495C108.403 11.0619 105.374 8.90219 101.903 8.90206H33.4138ZM36.2591 17.7271C33.7402 17.7272 31.6984 19.6038 31.6982 21.9172V25.1576C32.9687 24.2813 34.5479 23.7618 36.2591 23.7618H99.0548C100.766 23.7619 102.345 24.2813 103.616 25.1576V21.9172C103.615 19.604 101.573 17.7275 99.0548 17.7271H36.2591Z"
+                        fill="#E8E6DF"/>
+                    </svg>                
+                </EmptyIconWrapper>
+                <EmptyText>위시 리스트가 비어 있습니다.</EmptyText>
+                <ExploreButton to="/lightingpage">Explore Items</ExploreButton>
+            </EmptyState>
+        )}
+
+            {isDeleteModalOpen && (
+            <Modal
+            title="All Delete?"
+            description="위시리스트의 모든 상품을 삭제하시겠습니까?"
+            confirmText="Delete"
+            onClose={() => setIsDeleteModalOpen(false)}
+            onConfirm={handleConfirmDeleteAll}
+            />
+            )}
+        </WishlistContainer>
+     );
+    }
+
+export { WishlistSection };

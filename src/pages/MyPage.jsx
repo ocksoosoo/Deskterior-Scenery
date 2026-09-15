@@ -13,6 +13,8 @@ import Modal from "../components/common/Modal";
 import { useNavigate } from "react-router";
 import { IconPencil, IconCircleX } from "@tabler/icons-react";
 
+import { WishlistSection } from "./WishListSection";
+
 import {
   MypageBox,
   MypageTitle,
@@ -32,8 +34,6 @@ import {
   AccountInput,
   AddressField,
   SaveButton,
-  WishlistCard,
-  WishlistTitle,
   SettingsCard,
   SettingsTitle,
   Settingstext,
@@ -209,9 +209,7 @@ function Mypage() {
             </AccountForm>
           </AccountCard>
 
-          <WishlistCard>
-            <WishlistTitle>Wish List</WishlistTitle>
-          </WishlistCard>
+          <WishlistSection />
 
           <SettingsCard>
             <SettingsTitle>Account Settings</SettingsTitle>
