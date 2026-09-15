@@ -14,7 +14,7 @@ import useLoadingStore from "./store/UseLoadingStore";
 import categories from "./data/categories";
 //import HomePage from "./pages/Home/HomePage";
 import Toast from "./components/common/Toast";
-import CommonLayout from "./pages/CommonLayout";
+import CommonLayout from "./pages/commonLayout";
 import Loading from "./components/common/Loading";
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const LoginForm = lazy(() => import("./pages/LoginForm"));
