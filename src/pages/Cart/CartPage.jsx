@@ -84,8 +84,19 @@ const CartPage = () => {
   }, [fetchCart]);
   // 결제 모달
   const confirmPayment = async () => {
-    setIsPaymentModalOpen(false); // 모달 닫기
-    showSuccessToast("결제가 완료되었습니다."); // 초록색 토스트 띄우기
+    try {
+      if (checkedItems.length > 0) {
+        await removeSelectedItems(checkedItems);
+        setCheckedItems([]);
+      }
+
+      setIsPaymentModalOpen(false);
+      showSuccessToast("결제가 완료되었습니다.");
+    } catch (err) {
+      showFailToast(
+        err.message || "결제는 완료되었으나 장바구니 비우기에 실패했습니다.",
+      );
+    }
   };
 
   // 장바구니 상품들의 최신 품절/뱃지 상태를 상품 상세 API로 조회
