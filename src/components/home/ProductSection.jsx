@@ -401,14 +401,9 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
 }
 
 // mobile
-function MobileProductGroup({
-  title,
-  items,
-  isBest = false,
-  onAddToCart,
-}) {
+function MobileProductGroup({ title, items, isBest = false, onAddToCart }) {
   const theme = useTheme();
-  
+
   const [visibleCount, setVisibleCount] = useState(() => {
     return mobileVisibleCounts.get(title) ?? 2;
   });
@@ -416,8 +411,8 @@ function MobileProductGroup({
   useEffect(() => {
     mobileVisibleCounts.set(title, visibleCount);
   }, [title, visibleCount]);
-    const visibleProducts = items.slice(0, visibleCount);
-    const hasMore = visibleCount < items.length;
+  const visibleProducts = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
 
   return (
     <ProductsSection isBest={isBest}>
@@ -455,9 +450,7 @@ function MobileProductGroup({
               type="button"
               aria-label={`${title} 상품 더 보기`}
               onClick={() => {
-                setVisibleCount((count) =>
-                  Math.min(count + 2, items.length)
-                );
+                setVisibleCount((count) => Math.min(count + 2, items.length));
               }}
             >
               <span aria-hidden="true">+</span>
@@ -469,17 +462,12 @@ function MobileProductGroup({
   );
 }
 
-function ProductGroup({
-  title,
-  items,
-  isBest = false,
-  onAddToCart,
-}) {
+function ProductGroup({ title, items, isBest = false, onAddToCart }) {
   const theme = useTheme();
   const mobileQuery = theme.media.mobile.replace("@media", "").trim();
 
-  const [isMobile, setIsMobile] = useState(() =>
-    window.matchMedia(mobileQuery).matches
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia(mobileQuery).matches,
   );
 
   useEffect(() => {
@@ -523,7 +511,9 @@ function ProductSection({ onInitialLoadComplete }) {
   const [bestProducts, setBestProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
 
+  const cartItems = useCartStore((s) => s.cartItems);
   const addToCart = useCartStore((s) => s.addToCart);
+  const removeItem = useCartStore((s) => s.removeItem);
 
   // 서버 API 호출 및 상태 업데이트
   useEffect(() => {
@@ -586,17 +576,29 @@ function ProductSection({ onInitialLoadComplete }) {
     if (!product) return;
 
     try {
-      await addToCart({
-        productId: product.id,
-        name: product.name,
-        price: product.discountPrice || product.price,
-        imageUrl: product.imageUrl,
-        isSoldOut: product.soldOut,
-      });
-      showSuccessToast("상품이 장바구니에 담겼습니다");
+      // 장바구니에 해당 상품이 이미 있는지 검사
+      const existingItem = cartItems.find(
+        (item) => item.productId === product.id,
+      );
+
+      if (existingItem) {
+        // 이미 담겨있으면 삭제
+        await removeItem(existingItem.cartItemId);
+        showSuccessToast("장바구니에서 제거되었습니다");
+      } else {
+        // 안 담겨있으면 추가
+        await addToCart({
+          productId: product.id,
+          name: product.name,
+          price: product.discountPrice || product.price,
+          imageUrl: product.imageUrl,
+          isSoldOut: product.soldOut,
+        });
+        showSuccessToast("상품이 장바구니에 담겼습니다");
+      }
     } catch (err) {
-      console.error("장바구니 담기 실패:", err);
-      showFailToast("장바구니 담기에 실패했습니다");
+      console.error("장바구니 업데이트 실패:", err);
+      showFailToast("장바구니 업데이트에 실패했습니다");
     }
   };
 

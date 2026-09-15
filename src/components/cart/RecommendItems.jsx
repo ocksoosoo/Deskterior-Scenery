@@ -16,7 +16,7 @@ const RecommendItems = () => {
   const theme = useTheme();
   const [recommendList, setRecommendList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { addToCart } = useCartStore();
+  const addToCart = useCartStore((s) => s.addToCart);
 
   useEffect(() => {
     const fetchRecommend = async () => {
