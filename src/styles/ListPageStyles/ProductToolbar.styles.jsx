@@ -129,7 +129,7 @@ export const SortMenu = styled.ul(({ theme }) => ({
   background: theme.colors.cards,
   border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
   borderRadius: theme.radius.md,
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.12)",
   listStyle: "none",
   margin: 0,
   padding: theme.spacing["2xs"],

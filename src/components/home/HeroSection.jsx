@@ -132,7 +132,7 @@ function AnimateHeroSection() {
         }}
         transition={{ duration: 0.45, ease: "easeOut" }}
         >
-          Click to arrange your SCENE
+          ↙ Click to arrange your SCENE
         </GuideText>
 
         <HeroTitle

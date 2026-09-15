@@ -1,3 +1,4 @@
+import { FadeLoader } from "react-spinners";
 import { useNavigate } from "react-router";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons/Icons";
 import {
@@ -42,7 +43,10 @@ function SelectedProductCard({
   return (
     <ProductArea>
       {isProductLoading ? (
-        <ProductLoading>상품을 불러오는 중...</ProductLoading>
+        <ProductLoading>
+          <FadeLoader />
+          <span>상품을 불러오는 중...</span>
+          </ProductLoading>
       ) : productError ? (
         <ProductLoading>{productError}</ProductLoading>
       ) : (

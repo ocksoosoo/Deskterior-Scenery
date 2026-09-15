@@ -21,6 +21,7 @@ import categories from "../../data/categories";
 import { preloadingImages } from "../../utils/preloadingImages";
 import { SelectedProductCard } from "./SelectedProductCard";
 import { DeskProductMap } from "./DeskProductMap";
+import { ChevronDownIcon } from "../icons/Icons";
 
 function readCurationSelection() {
   try {
@@ -241,7 +242,7 @@ function DeskCurationSection({ items = [] }) {
             }}
           >
             <strong>{selectedStyle?.name ?? "스타일 선택"}</strong>
-            <span aria-hidden="true">⌄</span>
+          <ChevronDownIcon width={14} height={14} />
           </KeywordTrigger>
 
           {isKeywordOpen && (

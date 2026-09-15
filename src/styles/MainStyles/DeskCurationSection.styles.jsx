@@ -85,17 +85,6 @@ export const MoodKeywordBox = styled.div(({ theme }) => ({
   },
 }));
 
-export const MoodKeywordText = styled.p(({ theme }) => ({
-  fontFamily: theme.fontFamily.base,
-  fontSize: theme.fontSize.md, // 16px
-  fontWeight: theme.fontWeight.regular,
-  color: theme.colors.secondText,
-
-  [theme.media.mobile]: {
-    fontSize: theme.fontSize.sm,
-  },
-}));
-
 export const KeywordChipContainer = styled.div(({ theme }) => ({
   margin: `${theme.spacing.md} 0 ${theme.spacing["2xl"]}`, // 16px 0 48px
   width: "100%",
@@ -109,6 +98,17 @@ export const KeywordChipContainer = styled.div(({ theme }) => ({
   }
 }));
 
+export const MoodKeywordText = styled.p(({ theme }) => ({
+  fontFamily: theme.fontFamily.base,
+  fontSize: theme.fontSize.md, // 16px
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.secondText,
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.sm,
+  },
+}));
+
 export const KeywordButton = styled.button(({ theme, isSelected }) => ({
   padding: `${theme.spacing.sm} ${theme.spacing.md}`, // 12px 16px
   borderRadius: theme.radius.full,
@@ -117,7 +117,7 @@ export const KeywordButton = styled.button(({ theme, isSelected }) => ({
     : `${theme.colors.subtle}80`, // secondText color에 opacity 50%
   color: theme.colors.textMain,
   fontWeight: isSelected ? theme.fontWeight.semiBold : theme.fontWeight.regular,
-  fontSize: theme.fontSize.xs,
+  fontSize: theme.fontSize.sm,
 }));
 
 export const ClickableProductMap = styled.div(({ theme }) => ({
@@ -241,16 +241,31 @@ export const ProductContent = styled.div(({theme}) => ({
     },
 }));
 
-export const ProductLoading = styled.p({
+export const ProductLoading = styled.div(({ theme }) => ({
   width: "100%",
+  height: "100%",
   minHeight: "100%",
   display: "flex",
+  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  fontSize: "16px",
-  fontWeight: 500,
+  gap: theme.spacing.md, // 스피너와 텍스트 사이 간격
+  color: theme.colors.secondText,
+  fontFamily: theme.fontFamily.base,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.medium,
   textAlign: "center",
-});
+  boxSizing: "border-box",
+
+  [theme.media.tablet]: {
+    minHeight: "280px",
+  },
+
+  [theme.media.mobile]: {
+    minHeight: "220px",
+    padding: `${theme.spacing.xl} 0`,
+  },
+}));
 
 export const ProductTitleBox = styled.div(({ theme }) => ({
   display: "flex",
@@ -544,8 +559,8 @@ export const KeywordTrigger = styled.button(({ theme }) => ({
   justifyContent: "center",
   gap: theme.spacing.xs,
   minWidth: "118px",
-  height: "41px",
-  padding: `0 ${theme.spacing.sm}`,
+  height: "40px",
+  padding: theme.spacing.xs,
   border: "none",
   borderRadius: theme.radius.md,
   backgroundColor: theme.colors.cards,
@@ -555,8 +570,11 @@ export const KeywordTrigger = styled.button(({ theme }) => ({
   cursor: "pointer",
 
   "& strong": {
-    whiteSpace: "nowrap",
     fontWeight: theme.fontWeight.medium,
+    whiteSpace: "nowrap",
+    display: "inline-flex",
+    alignItems: "center",
+    lineHeight: 1,
   },
 }));
 
@@ -568,7 +586,7 @@ export const KeywordMenu = styled.ul(({ theme }) => ({
   backgroundColor: theme.colors.cards,
   border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
   borderRadius: theme.radius.md,
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12)",
   listStyle: "none",
   margin: 0,
   padding: theme.spacing["2xs"],
