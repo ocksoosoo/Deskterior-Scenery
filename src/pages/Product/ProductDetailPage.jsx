@@ -9,6 +9,7 @@ import PurchaseBox from "../../components/product/PurchaseBox";
 import MobileCtaBar from "../../components/product/MobileCtaBar";
 import ProductDetailContent from "../../components/product/ProductDetailContent";
 import ReviewSection from "../../components/review/ReviewSection";
+import PaymentModal from "../../components/common/PaymentModal";
 import useLoadingStore from "../../store/UseLoadingStore";
 import { preloadingImages } from "../../utils/preloadingImages";
 import {
@@ -39,15 +40,15 @@ const ProductDetailPage = () => {
   }, [id]);
 
   const [quantity, setQuantity] = useState(1);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const addToCart = useCartStore((s) => s.addToCart);
 
   const [product, setProduct] = useState(null);
   const [productError, setProductError] = useState(false);
 
-  // ProductCard와 동일한 전역 스토어를 사용 - 예전엔 이 페이지만 useState(false)로 된
-  // 가짜 로컬 상태를 써서, 이미 찜한 상품이어도 상세페이지에선 항상 하트가 빈 채로
-  // 보이고 여기서 누른 찜도 실제로 저장되지 않아 목록 페이지와 동기화가 안 됐었다
+  // ProductCard와 동일한 전역 스토어를 사용
+
   const isWished = useWishlistStore((state) => state.likedIds.has(product?.id));
   const toggleWish = useWishlistStore((state) => state.toggleLike);
 
@@ -185,7 +186,13 @@ const ProductDetailPage = () => {
   };
 
   const handleCheckout = () => {
-    console.log("결제하기", { productId: id, quantity });
+    if (!product || product.soldOut) return;
+    setIsPaymentModalOpen(true);
+  };
+
+  const confirmPayment = async () => {
+    setIsPaymentModalOpen(false);
+    showSuccessToast("결제가 완료되었습니다.");
   };
 
   //리뷰 CRUD — 서버 연동. 작성/수정은 실패 시 throw 하여 폼이 에러 표시
@@ -302,6 +309,13 @@ const ProductDetailPage = () => {
           />
         </S.Page>
       </S.Wrapper>
+
+      {isPaymentModalOpen && (
+        <PaymentModal
+          onClose={() => setIsPaymentModalOpen(false)}
+          onConfirm={confirmPayment}
+        />
+      )}
     </>
   );
 };
