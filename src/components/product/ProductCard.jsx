@@ -5,6 +5,7 @@ import Badge from "../common/Badge";
 import { showSuccessToast } from "../common/ShowToast";
 import useWishlistStore from "../../store/wishlistStore";
 import useCartStore from "../../store/cartStore";
+import PRODUCT_NAME_KO from "../../data/productNamesKo";
 import * as S from "../../styles/ListPageStyles/ProductCard.styles";
 
 // 바구니 아이콘 안쪽 창(구멍) 영역 - 아이콘 자체 path의 안쪽 사각형 좌표와 동일
@@ -167,6 +168,7 @@ const ProductCard = ({
           <S.ProductName
             to={`/products/${product.id}`}
             aria-label={`${product.name} 상세 보기`}
+            title={PRODUCT_NAME_KO[product.id]}
           >
             {product.name}
           </S.ProductName>

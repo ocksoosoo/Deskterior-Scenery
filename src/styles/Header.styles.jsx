@@ -101,7 +101,9 @@ export const NavButton = styled("a", {
 })(({ theme, isActive }) => ({
   position: "relative",
   fontSize: `clamp(12px, 1.1vw, ${theme.fontSize.sm})`,
-  fontWeight: isActive ? theme.fontWeight.semiBold : theme.fontWeight.regular,
+  // 호버 시 굵기는 안 바뀌고 색만 바뀌므로, 활성 상태도 같은 굵기(regular)로
+  // 맞추고 밑줄로만 구분함
+  fontWeight: theme.fontWeight.regular,
   color: isActive ? theme.colors.textMain : theme.colors.secondText,
   cursor: "pointer",
   whiteSpace: "nowrap",
