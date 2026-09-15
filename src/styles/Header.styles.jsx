@@ -15,6 +15,15 @@ export const HeaderSection = styled.header(({ theme }) => ({
   backdropFilter: "blur(8px)",
   WebkitBackdropFilter: "blur(8px)", // 사파리 호환용
 
+  // 768px 근처는 로고(96px 고정)+아이콘(96px 고정)+양쪽 padding(64px씩)을 빼면
+  // 카테고리 5개가 들어갈 공간이 얼마 안 남아서, 네비게이션이 로고/아이콘에
+  // 거의 붙어버렸다. padding을 줄이고, 세 영역(로고/네비/아이콘) 사이 최소
+  // 간격을 gap으로 보장해서 아무리 좁아도 서로 붙지 않게 함
+  [theme.media.tablet]: {
+    padding: `0 ${theme.spacing.lg}`,
+    gap: theme.spacing.md,
+  },
+
   "@media ((min-width: 320px) and (width < 768px))": {
     // 모바일도 햄버거 메뉴·아이콘을 스크롤 중에 계속 눌러야 하므로 sticky 유지
     position: "sticky",
@@ -77,6 +86,12 @@ export const NavList = styled.ul(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: theme.spacing.lg,
+
+  // 768px 근처는 카테고리 5개가 다 들어갈 폭이 빠듯해서, 항목 사이 간격을
+  // 살짝 줄여 전체적으로 덜 답답해 보이게 함
+  [theme.media.tablet]: {
+    gap: theme.spacing.md,
+  },
 }));
 
 export const NavItem = styled.li({});
