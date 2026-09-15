@@ -14,7 +14,13 @@ import {
   CheckoutButton,
 } from "../../styles/CartStyles/CartSummary.styles";
 
-const CartSummary = ({ subtotal, deliveryFee, total, isAllSoldOut }) => {
+const CartSummary = ({
+  subtotal,
+  deliveryFee,
+  total,
+  isAllSoldOut,
+  onCheckout,
+}) => {
   return (
     <SummaryContainer>
       <SummaryInfoBox>
@@ -75,7 +81,7 @@ const CartSummary = ({ subtotal, deliveryFee, total, isAllSoldOut }) => {
       </SummaryInfoBox>
 
       {/* 결제 버튼 */}
-      <CheckoutButton disabled={isAllSoldOut}>
+      <CheckoutButton disabled={isAllSoldOut} onClick={onCheckout}>
         {isAllSoldOut ? "Sold Out" : "Checkout"}
       </CheckoutButton>
     </SummaryContainer>

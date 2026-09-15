@@ -8,6 +8,7 @@ import CartSummary from "../../components/cart/CartSummary";
 import EmptyCart from "../../components/cart/EmptyCart";
 import RecommendItems from "../../components/cart/RecommendItems";
 import Modal from "../../components/common/Modal";
+import PaymentModal from "../../components/common/PaymentModal";
 import FailToast from "../../components/common/FailToast";
 import SuccessToast from "../../components/common/SuccessToast";
 import useLoadingStore from "../../store/UseLoadingStore";
@@ -44,6 +45,7 @@ const CartPage = () => {
 
   const [checkedItems, setCheckedItems] = useState([]);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [productInfoMap, setProductInfoMap] = useState({});
 
   // 최초 장바구니 조회 완료 여부
@@ -80,6 +82,11 @@ const CartPage = () => {
       alive = false;
     };
   }, [fetchCart]);
+  // 결제 모달
+  const confirmPayment = async () => {
+    setIsPaymentModalOpen(false); // 모달 닫기
+    showSuccessToast("결제가 완료되었습니다."); // 초록색 토스트 띄우기
+  };
 
   // 장바구니 상품들의 최신 품절/뱃지 상태를 상품 상세 API로 조회
   const productIdsKey = [...new Set(cartItems.map((item) => item.productId))]
@@ -388,6 +395,7 @@ const CartPage = () => {
               deliveryFee={deliveryFee}
               total={total}
               isAllSoldOut={isAllSoldOut}
+              onCheckout={() => setIsPaymentModalOpen(true)}
             />
           </div>
         )}
@@ -400,6 +408,12 @@ const CartPage = () => {
           confirmText="Delete"
           onClose={() => setIsClearModalOpen(false)}
           onConfirm={confirmClearAll}
+        />
+      )}
+      {isPaymentModalOpen && (
+        <PaymentModal
+          onClose={() => setIsPaymentModalOpen(false)}
+          onConfirm={confirmPayment}
         />
       )}
     </>
