@@ -22,10 +22,20 @@ export const ModalBox = styled.div(({ theme }) => ({
   backgroundColor: theme.colors.cards,
   padding: `${theme.spacing.lg} 0`,
   borderRadius: theme.radius.lg,
-  width: "420px",
+  // 420px 고정폭이면 그보다 좁은 화면(320px 등)에서 좌우 여백 없이 넘쳐버려서,
+  // 뷰포트 폭의 90%를 쓰되 420px보다 커지지는 않게 함 (좁은 화면에서 자동으로
+  // 양쪽 여백이 생기고, 420px 이상인 화면에서는 그대로 420px 고정폭처럼 동작)
+  width: "90%",
+  maxWidth: "420px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+
+  // 와이드 화면에서 상대적으로 작아 보여서 전체적으로 살짝 키움
+  [theme.media.wide]: {
+    maxWidth: "480px",
+    padding: `${theme.spacing.xl} 0`,
+  },
 }));
 
 // 아이콘
@@ -41,6 +51,10 @@ export const ModalTitle = styled.h3(({ theme }) => ({
   color: theme.colors.textMain,
   fontSize: theme.fontSize.xl,
   fontWeight: theme.fontWeight.semiBold,
+
+  [theme.media.wide]: {
+    fontSize: theme.fontSize["2xl"],
+  },
 }));
 
 // 설명
@@ -50,6 +64,10 @@ export const ModalDescription = styled.p(({ theme }) => ({
   fontSize: theme.fontSize.sm,
   whiteSpace: "pre-line",
   textAlign: "center",
+
+  [theme.media.wide]: {
+    fontSize: theme.fontSize.md,
+  },
 }));
 
 // 버튼
@@ -69,6 +87,12 @@ export const CancelButton = styled.button(({ theme }) => ({
   backgroundColor: theme.colors.cards,
   fontSize: theme.fontSize.sm,
   fontWeight: theme.fontWeight.medium,
+
+  [theme.media.wide]: {
+    minWidth: "96px",
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    fontSize: theme.fontSize.md,
+  },
 }));
 
 // 확인 버튼
@@ -81,4 +105,10 @@ export const ConfirmButton = styled.button(({ theme }) => ({
   border: "none",
   fontSize: theme.fontSize.sm,
   fontWeight: theme.fontWeight.medium,
+
+  [theme.media.wide]: {
+    minWidth: "96px",
+    padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+    fontSize: theme.fontSize.md,
+  },
 }));

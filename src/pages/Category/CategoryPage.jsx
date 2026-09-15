@@ -11,7 +11,7 @@ import ProductToolbar from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
 import useLoadingStore from "../../store/UseLoadingStore";
 import useCategoriesStore from "../../store/categoriesStore";
-import { preloadingImages } from "../../utils/preloadingImages";
+//import { preloadingImages } from "../../utils/preloadingImages";
 import { EmptyBoxIcon } from "../../components/icons/Icons";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
@@ -107,7 +107,11 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
           ...deriveBadgeFields(product),
         }));
 
-        await preloadingImages(products.map((product) => product.imageUrl));
+        // 이미지가 전부 로드될 때까지 기다렸다가 스피너를 끄면, 캐시가 없는
+        // 상태(시크릿 모드 등)에서 이미지 호스트가 느릴 때 전체 화면이 오래
+        // 덮여있게 된다. 홈페이지와 같은 방식으로 데이터만 오면 바로 렌더하고
+        // 이미지는 ProductCard의 lazy loading으로 각자 채워지게 둔다
+        //await preloadingImages(products.map((product) => product.imageUrl));
 
         if (!alive) return;
 

@@ -268,7 +268,7 @@ const ratingStyle = (theme) => ({
   zIndex: 2,
   // <a>는 기본이 inline이라 위아래 padding이 클릭 영역을 못 넓히므로 block 계열로 지정
   display: "inline-block",
-  fontSize: theme.fontSize.xs,
+  fontSize: theme.fontSize.sm,
   color: theme.colors.secondText,
   textDecoration: "none",
   width: "fit-content",

@@ -15,6 +15,15 @@ export const HeaderSection = styled.header(({ theme }) => ({
   backdropFilter: "blur(8px)",
   WebkitBackdropFilter: "blur(8px)", // 사파리 호환용
 
+  // 768px 근처는 로고(96px 고정)+아이콘(96px 고정)+양쪽 padding(64px씩)을 빼면
+  // 카테고리 5개가 들어갈 공간이 얼마 안 남아서, 네비게이션이 로고/아이콘에
+  // 거의 붙어버렸다. padding을 줄이고, 세 영역(로고/네비/아이콘) 사이 최소
+  // 간격을 gap으로 보장해서 아무리 좁아도 서로 붙지 않게 함
+  [theme.media.tablet]: {
+    padding: `0 ${theme.spacing.lg}`,
+    gap: theme.spacing.md,
+  },
+
   "@media ((min-width: 320px) and (width < 768px))": {
     // 모바일도 햄버거 메뉴·아이콘을 스크롤 중에 계속 눌러야 하므로 sticky 유지
     position: "sticky",
@@ -77,6 +86,12 @@ export const NavList = styled.ul(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: theme.spacing.lg,
+
+  // 768px 근처는 카테고리 5개가 다 들어갈 폭이 빠듯해서, 항목 사이 간격을
+  // 살짝 줄여 전체적으로 덜 답답해 보이게 함
+  [theme.media.tablet]: {
+    gap: theme.spacing.md,
+  },
 }));
 
 export const NavItem = styled.li({});
@@ -106,6 +121,12 @@ export const NavButton = styled("a", {
   },
   "&:hover::after": {
     width: "100%",
+  },
+
+  // clamp(12px, 1.1vw, 14px)라 1024px 근처에서는 1.1vw(약 11.3px)가 12px보다
+  // 작아서 최소값(12px)으로 눌려버린다. pc 구간(1024~1439px)에서는 14px 고정
+  [theme.media.pc]: {
+    fontSize: theme.fontSize.sm,
   },
 
   [theme.media.wide]: {
@@ -260,6 +281,10 @@ export const MobileMenuCloseButton = styled.button({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  // 아이콘 자체는 24x24로 작아서 정교하게 눌러야 하는 불편함이 있어, 버튼
+  // 터치 영역만 44x44(햄버거 버튼과 동일)로 넓힘 - 아이콘은 가운데 정렬 유지
+  width: "44px",
+  height: "44px",
   padding: 0,
   border: "none",
   background: "none",
@@ -342,12 +367,33 @@ export const MobileMenuCategoryList = styled.nav(({ theme }) => ({
   alignSelf: "stretch",
 }));
 
-export const MobileMenuCategoryLink = styled(Link)(({ theme }) => ({
+export const MobileMenuCategoryLink = styled(Link, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})(({ theme, isActive }) => ({
   display: "flex",
   width: "100%",
   height: "40px",
   alignItems: "center",
+  position: "relative",
+  // 활성 표시 막대가 들어갈 자리를 항상 비워둬서, 어떤 카테고리가 활성화되든
+  // 텍스트 시작 위치가 흔들리지 않게 함
+  paddingLeft: theme.spacing.md,
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.textMain,
+
+  // 메뉴를 다시 열었을 때 지금 보고 있는 카테고리를 텍스트 왼쪽 막대로 표시
+  ...(isActive && {
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: "3px",
+      height: "1em",
+      borderRadius: 0,
+      backgroundColor: theme.colors.emphasis,
+    },
+  }),
 }));
