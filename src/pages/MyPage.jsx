@@ -5,6 +5,7 @@ import { signupSchema } from "../schema/AuthSchema";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
+import useCartStore from "../store/cartStore";
 import {
   logout,
   getMe,
@@ -64,6 +65,7 @@ function Mypage() {
 
   const clearUser = useAuthStore((state) => state.clearUser);
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
+  const clearLocalCart = useCartStore((s) => s.clearLocalCart);
 
   const [isLogOutModalOpen, setIsLogOutModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
@@ -177,6 +179,7 @@ function Mypage() {
       localStorage.removeItem("token");
       clearUser();
       clearWishlist();
+      clearLocalCart();
       setIsLogOutModalOpen(false);
       showSuccessToast("로그아웃되었습니다.");
       navigate("/");
@@ -191,6 +194,7 @@ function Mypage() {
       localStorage.removeItem("token");
       clearUser();
       clearWishlist();
+      clearLocalCart();
       showSuccessToast("회원 탈퇴가 완료되었습니다.");
       navigate("/");
     } catch (error) {
