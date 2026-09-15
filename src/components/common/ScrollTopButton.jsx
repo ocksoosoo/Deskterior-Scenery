@@ -1,10 +1,12 @@
+import { useLocation } from "react-router";
 import * as S from "../../styles/ProductDetail/ScrollTopButton.styles";
 
-/**
- * 스크롤을 맨 위로 올리는 플로팅 버튼. 항상 화면에 표시된다.
- * 긴 페이지 어디서든 <ScrollTopButton /> 한 줄로 사용한다.
- */
+//플로팅 버튼
 const ScrollTopButton = () => {
+  const { pathname } = useLocation();
+  // 상세페이지는 모바일 하단에 MobileCtaBar가 붙어있어서 그만큼 띄워야 함
+  const withCtaBar = pathname.startsWith("/products/");
+
   const handleClick = () => {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -13,7 +15,12 @@ const ScrollTopButton = () => {
   };
 
   return (
-    <S.Button type="button" aria-label="맨 위로" onClick={handleClick}>
+    <S.Button
+      type="button"
+      aria-label="맨 위로"
+      onClick={handleClick}
+      $withCtaBar={withCtaBar}
+    >
       <S.Icon
         viewBox="0 0 36 36"
         fill="none"

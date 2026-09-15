@@ -5,21 +5,17 @@ export const MainImageFrame = styled.div(({ theme }) => ({
   position: "relative",
   width: "100%",
   maxWidth: "31.25rem", // 500
-  aspectRatio: "25 / 27", // 500 : 540
+  aspectRatio: "1 / 1",
   borderRadius: theme.radius.md,
   overflow: "hidden",
   background: theme.colors.imagePlaceholder,
 
   [theme.media.tablet]: {
     maxWidth: "none",
-    aspectRatio: "auto",
-    height: "22.41rem",
   },
 
   [theme.media.mobile]: {
     maxWidth: "none",
-    aspectRatio: "auto",
-    height: "22.625rem",
   },
 }));
 
@@ -76,7 +72,7 @@ export const ThumbButton = styled.button(({ theme, $active }) => ({
 
   [theme.media.mobile]: {
     width: "4.8125rem",
-    height: "4.375rem",
+    height: "4.8125rem",
   },
 }));
 

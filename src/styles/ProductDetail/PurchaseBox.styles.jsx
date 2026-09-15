@@ -1,4 +1,10 @@
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
+
+const pulseRing = keyframes`
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+`;
 
 export const Wrapper = styled.div(({ theme }) => ({
   display: "flex",
@@ -58,7 +64,6 @@ export const Qty = styled.span(({ theme }) => ({
     flexShrink: 0,
   },
 
-  // 모바일: 태블릿과 동일
   [theme.media.mobile]: {
     width: "1.75rem",
     flexShrink: 0,
@@ -100,20 +105,53 @@ export const CartButton = styled.button(({ theme }) => ({
 }));
 
 export const WishButton = styled.button(({ theme }) => ({
+  position: "relative",
   display: "grid",
   placeItems: "center",
   width: "2.5rem", // 40×40
   height: "2.5rem",
+  border: "none",
   borderRadius: theme.radius.md,
-  background: theme.colors.subtle, // #EBEAE4
+  background: "rgba(253, 253, 253, 0.75)",
   color: theme.colors.textMain,
+  cursor: "pointer",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12)",
+
+  transition:
+    "transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease",
+
+  "&:hover": {
+    transform: "scale(1.05)",
+    background: "rgba(253, 253, 253, 0.95)",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.24)",
+  },
+
+  "&:active": {
+    transform: "scale(0.95)",
+  },
+
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    borderRadius: "inherit",
+    border: `2px solid ${theme.colors.error}`,
+    opacity: 0,
+    pointerEvents: "none",
+  },
+
+  '&[aria-pressed="true"]::after': {
+    animation: `${pulseRing} 0.5s ease-out`,
+  },
 
   [theme.media.tablet]: {
     width: "2.4375rem",
+    height: "2.4375rem",
   },
 
   [theme.media.wide]: {
     width: "2.4375rem",
+    height: "2.4375rem",
   },
 }));
 
