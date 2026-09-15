@@ -15,6 +15,11 @@ const useWishlistStore = create(
     (set) => ({
       likedIds: new Set(),
 
+      setLikedIds: (productIds) =>
+        set({
+          likedIds: new Set(productIds),
+        }),
+
       toggleLike: (productId) =>
         set((state) => {
           const next = new Set(state.likedIds);

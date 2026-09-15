@@ -2,7 +2,8 @@ import { useId, useState } from "react";
 import { useTheme } from "@emotion/react";
 import { BasketIcon, HeartIcon, StarIcon } from "../icons/Icons";
 import Badge from "../common/Badge";
-import { showSuccessToast } from "../common/ShowToast";
+import { showSuccessToast, showFailToast } from "../common/ShowToast";
+import { wishlistApi } from "../../api/wishlistApi";
 import useWishlistStore from "../../store/wishlistStore";
 import useCartStore from "../../store/cartStore";
 import PRODUCT_NAME_KO from "../../data/productNamesKo";
@@ -14,7 +15,8 @@ const BASKET_WINDOW_POINTS = "19.04,8.25 7.44,8.25 8.62,14.75 17.41,14.75";
 const ProductCard = ({
   product,
   onAddToCart,
-  onToggleLike,
+  // onToggleLike,
+  onWishlistRemove,
   showCategory = false,
   isBest = false,
   isNew = false,
@@ -27,6 +29,7 @@ const ProductCard = ({
   const theme = useTheme();
   const liked = useWishlistStore((state) => state.likedIds.has(product.id));
   const toggleLike = useWishlistStore((state) => state.toggleLike);
+  const [isWishlistPending, setIsWishlitPending] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
   const clipId = useId();
   const inCart = useCartStore((state) =>
@@ -42,16 +45,57 @@ const ProductCard = ({
   // 빈(placeholder) 카드는 링크 없음
   const isClickable = Boolean(product?.id) && product.id !== "placeholder";
 
-  const handleToggleLike = () => {
-    const next = !liked;
-    toggleLike(product.id);
-    onToggleLike?.(product.id);
-    showSuccessToast(
-      next ? "찜 목록에 추가되었습니다." : "찜 목록에서 삭제되었습니다.",
-    );
+  // const handleToggleLike = () => {
+  //   const next = !liked;
+  //   toggleLike(product.id);
+  //   onToggleLike?.(product.id);
+  //   showSuccessToast(
+  //     next ? "찜 목록에 추가되었습니다." : "찜 목록에서 삭제되었습니다.",
+  //   );
+  // };
+
+  // 위시리스트 토글 함수
+  const handleToggleLike = async () => {
+    // 연속 클릭으로 요청이 중복되는 것을 방지
+    if(isWishlistPending) return;
+
+    setIsWishlitPending(true);
+
+    try {
+      const response = liked
+      ? await wishlistApi.removeWishlistItem(product.id)
+      : await wishlistApi.addWishlistItem(product.id);
+
+      if(!response.success) {
+        throw new Error(response.message || "위시리스트 등록에 실패했습니다.");
+      }
+      
+      toggleLike(product.id);
+
+      if(liked) {
+        onWishlistRemove?.(product.id);
+      }
+
+      showSuccessToast(
+        liked
+        ? "위시리스트에서 삭제되었습니다."
+        : "위시리스트에 추가되었습니다.",
+      );
+    } catch(error) {
+      console.log("위시리스트 변경 실패:", error);
+      showFailToast(error.message || "위시리스트 변경에 실패했습니다.");
+    } finally {
+      setIsWishlitPending(false);
+    }
   };
 
   const handleAddToCart = () => {
+    // 품절 상품은 장바구니에 담을 수 없게 실패 토스트 알림을 띄움
+    if(product.soldOut) {
+      showFailToast("품절된 상품은 장바구니에 담을 수 없습니다.");
+      return;
+    }
+
     onAddToCart?.(product.id);
     setJustAdded(true);
   };
@@ -99,9 +143,10 @@ const ProductCard = ({
           <S.LikeButton
             type="button"
             aria-pressed={liked}
-            aria-label="찜하기"
+            aria-label={liked ? "위시리스트 등록 해제" : "위시리스트 등록"}
             title="찜"
             onClick={handleToggleLike}
+            disabled={isWishlistPending}
           >
             <HeartIcon filled={liked} width={28} height={28} />
           </S.LikeButton>
