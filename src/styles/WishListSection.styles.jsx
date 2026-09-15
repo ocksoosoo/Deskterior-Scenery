@@ -6,12 +6,17 @@ export const WishlistContainer = styled.section(({ theme }) => ({
     padding: theme.spacing.xl,
     backgroundColor: theme.colors.cards,
     borderRadius: theme.radius.md,
+
+    [theme.media.mobile]: {
+        padding: theme.spacing.md,
+    }
 }));
 
 export const WishlistTitle = styled.h2(({ theme }) => ({
     fontFamily: theme.fontFamily.display,
     fontSize: theme.fontSize["4xl"], // 32
     color: theme.colors.textMain,
+
 }));
 
 export const WishlistHeader = styled.div(({ theme }) => ({
@@ -22,6 +27,10 @@ export const WishlistHeader = styled.div(({ theme }) => ({
     marginBottom: theme.spacing.lg,
     paddingBottom: theme.spacing.md,
     borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+
+    [theme.media.mobile]: {
+        marginBottom: theme.spacing.md,
+    }
 }));
 
 export const DeleteAllButton = styled.button(({ theme }) => ({
@@ -37,24 +46,30 @@ export const WishlistList = styled.div(({ theme }) => ({
     width: "100%",
     display: "flex",
     flexWrap: "wrap",
-    columnGap: theme.spacing.sm, //16
-    rowGap: theme.spacing.md, //48
+    gap: theme.spacing.md,
+
+    [theme.media.mobile]: {
+        gap: theme.spacing.xs,
+    }
 }));
 
 // 카드들을 감싸는 3열 Wrapper
 export const WishlistItem = styled.div(({ theme }) => ({
     // 전체 폭 - (간격 16px * 2)를 3으로 나눔
-    width: `calc((100% - ${theme.spacing.md} * 2) / 3)`,
-    flexShrink: 0,
+    flex: `0 0 calc((100% - ${theme.spacing.md} * 2) / 3)`,
+    maxWidth: `calc((100% - ${theme.spacing.md} * 2) / 3)`,
+    boxSizing: "border-box",
     display: "flex",
-    gap: theme.spacing.xl,
-    alignItems: "center",
-    justifyContent: "center",
 
     "& > *": {
     width: "100%",
+    maxWidth: "100%",
     minWidth: 0,
   },
+
+  [theme.media.mobile]: {
+    flex: `0 0 calc((100% - ${theme.spacing.xs}) / 2)`,
+    maxWidth: `calc((100% - ${theme.spacing.xs}) / 2)`,  }
 }));
 
 // 하단 '+' 더보기 버튼 영역
