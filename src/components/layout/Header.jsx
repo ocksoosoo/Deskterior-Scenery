@@ -192,7 +192,11 @@ const Header = () => {
       </MenuButton>
 
       <Logo>
-        <Link to="/" aria-label="타이틀 메인화면 버튼" title="SCENERY 홈페이지로 이동">
+        <Link
+          to="/"
+          aria-label="타이틀 메인화면 버튼"
+          title="SCENERY 홈페이지로 이동"
+        >
           SCENERY
         </Link>
       </Logo>
