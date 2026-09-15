@@ -26,7 +26,7 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
 
 export const CategoriesInner = styled.div(({theme}) => ({
   width: "100%",
-  maxWidth: "896px",
+  maxWidth: "1024px",
   marginInline: "auto",
   display: "flex",
   flexDirection: "column",
@@ -57,7 +57,7 @@ export const SectionTitle = styled.h2(({ theme }) => ({
 
 export const CategoryList = styled.div(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing["3xl"], // 64px
+  gap: theme.spacing["2xl"], 
   width: "100%",
 
   // tablet(768-1023)
@@ -100,8 +100,8 @@ export const CategoryItem = styled.div(({ theme }) => ({
 }));
 
 export const CategoryImage = styled.img(({ theme }) => ({
-  width: "150px",
-  height: "150px",
+  width: "145px",
+  height: "145px",
   borderRadius: theme.radius.full,
   objectFit: "cover",
   // 사진 배경이 페이지 배경과 비슷해 경계가 안 보이는 경우를 대비해
