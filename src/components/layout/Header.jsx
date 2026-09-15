@@ -291,6 +291,7 @@ const Header = () => {
                   <MobileMenuCategoryLink
                     key={category.id}
                     to={category.path}
+                    isActive={category.path === pathname}
                     onClick={closeMenu}
                   >
                     {category.name}

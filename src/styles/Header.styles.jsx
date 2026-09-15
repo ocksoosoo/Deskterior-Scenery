@@ -281,6 +281,10 @@ export const MobileMenuCloseButton = styled.button({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  // 아이콘 자체는 24x24로 작아서 정교하게 눌러야 하는 불편함이 있어, 버튼
+  // 터치 영역만 44x44(햄버거 버튼과 동일)로 넓힘 - 아이콘은 가운데 정렬 유지
+  width: "44px",
+  height: "44px",
   padding: 0,
   border: "none",
   background: "none",
@@ -363,12 +367,33 @@ export const MobileMenuCategoryList = styled.nav(({ theme }) => ({
   alignSelf: "stretch",
 }));
 
-export const MobileMenuCategoryLink = styled(Link)(({ theme }) => ({
+export const MobileMenuCategoryLink = styled(Link, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})(({ theme, isActive }) => ({
   display: "flex",
   width: "100%",
   height: "40px",
   alignItems: "center",
+  position: "relative",
+  // 활성 표시 막대가 들어갈 자리를 항상 비워둬서, 어떤 카테고리가 활성화되든
+  // 텍스트 시작 위치가 흔들리지 않게 함
+  paddingLeft: theme.spacing.md,
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.textMain,
+
+  // 메뉴를 다시 열었을 때 지금 보고 있는 카테고리를 텍스트 왼쪽 막대로 표시
+  ...(isActive && {
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: "3px",
+      height: "1em",
+      borderRadius: 0,
+      backgroundColor: theme.colors.emphasis,
+    },
+  }),
 }));

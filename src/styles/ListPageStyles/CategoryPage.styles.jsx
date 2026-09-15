@@ -93,7 +93,9 @@ export const PageTitle = styled.h2(({ theme }) => ({
   margin: 0,
 
   [theme.media.mobile]: {
-    fontSize: "40px",
+    // 767px에서 768px(데스크탑 48px)로 넘어갈 때 뚝 끊기지 않도록, 34px(320px
+    // 기준)~44px(767px 기준)까지 뷰포트 폭에 비례해 자연스럽게 커지게 함
+    fontSize: "clamp(34px, 2.2vw + 27px, 44px)",
     fontWeight: theme.fontWeight.regular,
     letterSpacing: "normal",
     lineHeight: "normal",
@@ -247,9 +249,9 @@ export const Row = styled.div(({ theme }) => ({
     },
 
     "&& button[aria-label='찜하기'], && button[aria-label='장바구니 담기']": {
-      width: "28px",
-      height: "28px",
-      borderRadius: "15px",
+      width: "34px",
+      height: "34px",
+      borderRadius: theme.radius.full,
     },
   },
 }));
