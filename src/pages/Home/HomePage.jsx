@@ -7,7 +7,6 @@ import { useLocation } from "react-router";
 import { getMain } from "../../api/mainApi";
 import useLoadingStore from "../../store/UseLoadingStore";
 import useCategoriesStore from "../../store/categoriesStore";
-//import { preloadingImages } from "../../utils/preloadingImages";
 
 export default function HomePage() {
   const location = useLocation();
@@ -39,8 +38,6 @@ export default function HomePage() {
         ]);
 
         const images = mainResponse.data.images;
-
-        //await preloadingImages(images.map((item) => item.imageUrl));
 
         if (!alive) return;
 
