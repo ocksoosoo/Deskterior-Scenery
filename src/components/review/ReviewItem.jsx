@@ -14,7 +14,13 @@ const formatDate = (raw) => {
 };
 
 const ReviewItem = ({ review, isMine = false, onEdit, onDelete }) => {
-  const authorName = isMine ? "Me" : review.author;
+  // 탈퇴한 회원이 쓴 리뷰는 백엔드가 authorDeleted 플래그로 알려줌 —
+  // 리뷰 자체는 남기고 작성자 표시만 익명 처리
+  const authorName = review.authorDeleted
+    ? "알수없는 회원"
+    : isMine
+      ? "Me"
+      : review.author;
   const rating = review.rating ?? 0;
 
   const isEdited =

@@ -43,9 +43,10 @@ const ReviewList = ({ reviews = [], isLoggedIn = false, onEdit, onDelete }) => {
           <ReviewItem
             key={review.id}
             review={review}
-            // 서버가 비로그인 요청에도 isAuthor:true 를 잘못 주는 버그가 있어서,
-            // 로그인 상태가 아니면 무조건 false로 덮어써서 방어한다 (백엔드 수정 요청함)
-            isMine={isLoggedIn && Boolean(review.isAuthor)}
+            // 로그인 상태가 아니면 무조건 false로 덮어써서 방어한다
+            isMine={
+              isLoggedIn && Boolean(review.isAuthor) && !review.authorDeleted
+            }
             onEdit={onEdit}
             onDelete={onDelete}
           />
