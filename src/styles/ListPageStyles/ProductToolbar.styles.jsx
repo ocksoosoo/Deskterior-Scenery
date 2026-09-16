@@ -1,9 +1,20 @@
 import styled from "@emotion/styled";
-import { SearchIcon, CloseIcon } from "../../components/icons/Icons";
+import {
+  SearchIcon,
+  CloseIcon,
+  ChevronDownIcon,
+} from "../../components/icons/Icons";
 
 export const StyledSearchIcon = styled(SearchIcon)({
   flexShrink: 0,
 });
+
+export const SortChevronIcon = styled(ChevronDownIcon, {
+  shouldForwardProp: (prop) => !prop.startsWith("$"),
+})(({ $open }) => ({
+  transform: $open ? "rotate(180deg)" : "rotate(0deg)",
+  transition: "transform 0.15s ease",
+}));
 
 // 돋보기를 버튼으로 감싸서 클릭 시 즉시 검색 실행 (색은 버튼→아이콘 currentColor 상속)
 export const SearchSubmitButton = styled.button(({ theme }) => ({
@@ -100,6 +111,7 @@ export const SearchBox = styled.div(({ theme }) => ({
   // X버튼 유무로 박스 높이가 미세하게 흔들리는 것 방지
   height: "46px",
   boxSizing: "border-box",
+  transition: "box-shadow 0.15s ease",
 
   [theme.media.tablet]: {
     width: "100%",
@@ -107,6 +119,10 @@ export const SearchBox = styled.div(({ theme }) => ({
 
   [theme.media.mobile]: {
     width: "100%",
+  },
+
+  "&:hover": {
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12)",
   },
 
   // input의 outline을 지웠으므로 박스 테두리 색으로 포커스 여부를 대신 드러낸다
@@ -134,8 +150,11 @@ export const SearchInput = styled.input(({ theme }) => ({
   },
 }));
 
-export const SortBox = styled.div(({ theme }) => ({
+export const SortBox = styled.div(({ theme, $open }) => ({
   position: "relative",
+  // 상품 카드의 배지(zIndex: 10)보다 항상 위에서 그려지도록 고정 (SortMenu는 이
+  // 컨텍스트 안에서만 비교되므로 자체 zIndex는 낮은 값으로 충분함)
+  zIndex: 20,
   display: "flex",
   alignItems: "center",
   gap: theme.spacing.xs,
@@ -145,6 +164,12 @@ export const SortBox = styled.div(({ theme }) => ({
   padding: `${theme.spacing.sm} ${theme.spacing.md}`,
   fontSize: theme.fontSize.sm,
   cursor: "pointer",
+  transition: "box-shadow 0.15s ease",
+
+  // 펼쳐진 상태에서는 목록에 호버해도 효과가 없어야 함
+  "&:hover": {
+    boxShadow: $open ? "none" : "0 2px 8px rgba(0, 0, 0, 0.12)",
+  },
 
   [theme.media.tablet]: {
     minWidth: "118px",
@@ -181,7 +206,7 @@ export const SortLabel = styled.span(({ theme }) => ({
   color: theme.colors.secondText,
 }));
 
-export const SortMenu = styled.ul(({ theme }) => ({
+export const SortMenu = styled.ul(({ theme, $open }) => ({
   position: "absolute",
   top: "calc(100% + 4px)",
   right: 0,
@@ -193,7 +218,16 @@ export const SortMenu = styled.ul(({ theme }) => ({
   listStyle: "none",
   margin: 0,
   padding: theme.spacing["2xs"],
-  zIndex: 10,
+  // SortBox가 이미 zIndex: 20으로 별도 스태킹 컨텍스트를 만들어서, 여기서는
+  // 그 안의 형제 요소(라벨/화살표)보다만 위에 있으면 되므로 낮은 값으로 충분
+  // (100은 모바일 메뉴 오버레이가 쓰는 값이라 겹치지 않게 피함)
+  zIndex: 1,
+
+  opacity: $open ? 1 : 0,
+  transform: $open ? "scaleY(1)" : "scaleY(0.9)",
+  transformOrigin: "top",
+  pointerEvents: $open ? "auto" : "none",
+  transition: "opacity 0.15s ease, transform 0.15s ease",
 }));
 
 export const SortMenuItem = styled.li(({ theme, $active }) => ({

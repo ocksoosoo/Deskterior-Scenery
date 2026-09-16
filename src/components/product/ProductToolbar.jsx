@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDownIcon } from "../icons/Icons";
 import { SORT_OPTIONS } from "../../data/sortOptions";
 import * as S from "../../styles/ListPageStyles/ProductToolbar.styles";
 
@@ -64,6 +63,10 @@ const ProductToolbar = ({
 
     const handleClickOutside = (event) => {
       if (sortBoxRef.current && !sortBoxRef.current.contains(event.target)) {
+        // 메뉴 안의 옵션에 가 있던 포커스가 aria-hidden 처리된 채로 남지 않도록 해제
+        if (sortBoxRef.current.contains(document.activeElement)) {
+          document.activeElement.blur();
+        }
         setIsOpen(false);
       }
     };
@@ -148,6 +151,7 @@ const ProductToolbar = ({
 
       <S.SortBox
         ref={sortBoxRef}
+        $open={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
         onKeyDown={handleSortBoxKeyDown}
         onBlur={handleSortBoxBlur}
@@ -158,25 +162,23 @@ const ProductToolbar = ({
       >
         <S.SortLabel>정렬</S.SortLabel>
         <strong>{currentOption.label}</strong>
-        <ChevronDownIcon width={14} height={14} />
+        <S.SortChevronIcon width={14} height={14} $open={isOpen} />
 
-        {isOpen && (
-          <S.SortMenu role="listbox">
-            {SORT_OPTIONS.map((option) => (
-              <S.SortMenuItem
-                key={option.value}
-                $active={option.value === sortBy}
-                onClick={(event) => handleSelect(event, option.value)}
-                onKeyDown={(event) => handleOptionKeyDown(event, option.value)}
-                role="option"
-                aria-selected={option.value === sortBy}
-                tabIndex={0}
-              >
-                {option.label}
-              </S.SortMenuItem>
-            ))}
-          </S.SortMenu>
-        )}
+        <S.SortMenu role="listbox" $open={isOpen} aria-hidden={!isOpen}>
+          {SORT_OPTIONS.map((option) => (
+            <S.SortMenuItem
+              key={option.value}
+              $active={option.value === sortBy}
+              onClick={(event) => handleSelect(event, option.value)}
+              onKeyDown={(event) => handleOptionKeyDown(event, option.value)}
+              role="option"
+              aria-selected={option.value === sortBy}
+              tabIndex={isOpen ? 0 : -1}
+            >
+              {option.label}
+            </S.SortMenuItem>
+          ))}
+        </S.SortMenu>
       </S.SortBox>
     </S.ToolbarWrapper>
   );

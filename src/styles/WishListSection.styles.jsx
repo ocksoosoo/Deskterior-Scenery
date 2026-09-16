@@ -87,9 +87,12 @@ export const WishlistItem = styled.div(({ theme }) => ({
     boxSizing: "border-box",
     display: "flex",
 
+    // ProductCard의 Card 자체가 고정 width: 280px를 갖고 있어 동일 우선순위의
+    // 일반 자손 선택자로는 덮어쓰기가 불안정하므로, !important로 이 래퍼 폭에
+    // 맞춰 늘어나도록 강제한다
     "& > *": {
-    width: "100%",
-    maxWidth: "100%",
+    width: "100% !important",
+    maxWidth: "100% !important",
     minWidth: 0,
   },
 

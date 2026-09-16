@@ -18,14 +18,32 @@ const chevronStyle = ({ theme, $disabled }) => ({
   pointerEvents: $disabled ? "none" : "auto",
   color: $disabled ? theme.colors.secondText : theme.colors.textMain,
   padding: theme.spacing["2xs"],
+  transition: "transform 0.15s ease",
+
+  // 마우스 클릭 시엔 테두리(포커스 아웃라인) 없이, 키보드 탐색일 때만 보이게
+  "&:focus": {
+    outline: "none",
+  },
+  "&:focus-visible": {
+    outline: `2px solid ${theme.colors.emphasis}`,
+    outlineOffset: "2px",
+  },
 });
 
 export const StyledChevronLeftIcon = styled(ChevronLeftIcon, {
   shouldForwardProp: forwardNonTransientProp,
-})(chevronStyle);
+})(chevronStyle, ({ $disabled }) => ({
+  "&:hover": {
+    transform: $disabled ? "none" : "translateX(-2px)",
+  },
+}));
 export const StyledChevronRightIcon = styled(ChevronRightIcon, {
   shouldForwardProp: forwardNonTransientProp,
-})(chevronStyle);
+})(chevronStyle, ({ $disabled }) => ({
+  "&:hover": {
+    transform: $disabled ? "none" : "translateX(2px)",
+  },
+}));
 
 export const Ellipsis = styled.span(({ theme }) => ({
   color: theme.colors.secondText,
@@ -40,9 +58,10 @@ export const PageButton = styled.button(({ theme, $active }) => ({
   fontSize: theme.fontSize.sm,
   background: $active ? theme.colors.textMain : "transparent",
   color: $active ? "#fff" : theme.colors.textMain,
-  transition: "background 0.15s ease",
+  transition: "background 0.15s ease, transform 0.15s ease",
 
   "&:hover": {
     background: $active ? theme.colors.textMain : theme.colors.subtle,
+    transform: $active ? "none" : "translateY(-2px)",
   },
 }));

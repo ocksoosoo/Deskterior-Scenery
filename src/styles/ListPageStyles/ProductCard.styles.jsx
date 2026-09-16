@@ -18,8 +18,14 @@ export const Card = styled.div(({ theme, background }) => ({
   background: background || theme.colors.cards,
   borderRadius: theme.radius.md,
   overflow: "hidden",
-  // 카드가 배경 위에 살짝 떠 있는 느낌을 주는 은은한 그림자
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+  // overflow: hidden인 요소는 자신의 box-shadow도 테두리에서 잘려버리므로,
+  // 클리핑의 영향을 받지 않는 filter: drop-shadow로 카드 그림자를 표현
+  filter: "drop-shadow(0 2px 8px rgba(0, 0, 0, 0.06))",
+  transition: "filter 0.15s ease",
+
+  "&:hover": {
+    filter: "drop-shadow(0 10px 24px rgba(0, 0, 0, 0.2))",
+  },
 
   [theme.media.mobile]: {
     paddingBottom: theme.spacing.xs,
