@@ -21,6 +21,38 @@ const MOBILE_BREAKPOINT = 768;
 
 const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
+// 카테고리별로 마지막에 보던 페이지 - 다른 카테고리를 봤다가 다시 이 카테고리로
+// 돌아왔을 때(URL에 page가 없는 첫 진입) 1페이지가 아니라 보던 페이지부터
+// 이어서 볼 수 있게 하기 위함. 지금 보고 있지 않은 카테고리의 기억까지 새로고침
+// 한 번에 다 날아가지 않도록, 메모리 변수가 아니라 sessionStorage에 저장한다
+const LAST_PAGE_STORAGE_KEY = "categoryLastPage";
+
+function readLastPageMap() {
+  try {
+    const saved = sessionStorage.getItem(LAST_PAGE_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeLastPage(categoryId, page) {
+  try {
+    const map = readLastPageMap();
+    map[categoryId] = page;
+    sessionStorage.setItem(LAST_PAGE_STORAGE_KEY, JSON.stringify(map));
+  } catch {
+    // sessionStorage 접근 불가(프라이빗 모드 등)면 다음 방문 때 1페이지로 시작됨
+  }
+}
+
+// URL의 page 값을 신뢰하지 않고 검증한다 - 숫자가 아니거나("abc"), 정수가
+// 아니거나(2.5), 1보다 작으면(-5, 0) 전부 1페이지로 취급한다
+function parsePageParam(value) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
 const CategoryPage = ({ categoryId = "lighting" }) => {
   const cartItems = useCartStore((s) => s.cartItems);
   const addToCart = useCartStore((s) => s.addToCart);
@@ -61,7 +93,13 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("q") ?? "";
-  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageParam = searchParams.get("page");
+  // URL에 page가 명시돼 있으면 그 값을 그대로 쓰고(뒤로가기, 공유된 링크 등),
+  // 없으면(카테고리 메뉴를 새로 눌러 들어온 경우) 이 카테고리에서 마지막으로
+  // 보던 페이지로 이어서 시작한다
+  const currentPage = pageParam
+    ? parsePageParam(pageParam)
+    : (readLastPageMap()[categoryId] ?? 1);
   const sortBy = searchParams.get("sort") ?? "name";
 
   const updateSearchParams = (updates, options) => {
@@ -77,6 +115,23 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
       return next;
     }, options);
   };
+
+  // 기억해둔 페이지로 시작했다면(URL엔 page가 없었던 상태) 주소창에도 반영해서
+  // 새로고침·뒤로가기·링크 공유 시에도 지금 보고 있는 페이지가 유지되게 한다
+  useEffect(() => {
+    if (!pageParam && currentPage > 1) {
+      updateSearchParams({ page: currentPage }, { replace: true });
+    }
+    // 카테고리에 새로 진입했을 때(마운트 시) 한 번만 확인하면 되는 동작이라
+    // categoryId만 의존성으로 둔다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId]);
+
+  // 페이지가 바뀔 때마다(직접 이동, URL 직접 접근 등 경로 무관하게) 이 카테고리의
+  // "마지막으로 보던 페이지"를 최신 상태로 기록
+  useEffect(() => {
+    writeLastPage(categoryId, currentPage);
+  }, [categoryId, currentPage]);
 
   const [pageProducts, setPageProducts] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
@@ -101,6 +156,18 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
           q: search,
         });
 
+        if (!alive) return;
+
+        const totalPagesFromServer = Math.max(1, data.pagination.totalPages);
+
+        // 기억해둔(또는 URL에 직접 입력된) 페이지가 실제 총 페이지 수보다 크면
+        // (그 사이 상품이 줄어든 경우 등) 빈 결과를 검색-실패 화면으로 보여주는
+        // 대신, 실제로 존재하는 마지막 페이지로 조용히 보정한다
+        if (currentPage > totalPagesFromServer) {
+          updateSearchParams({ page: totalPagesFromServer }, { replace: true });
+          return;
+        }
+
         const products = data.products.map((product) => ({
           ...product,
           ...deriveBadgeFields(product),
@@ -111,11 +178,9 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
         // 덮여있게 된다. 홈페이지와 같은 방식으로 데이터만 오면 바로 렌더하고
         // 이미지는 ProductCard의 lazy loading으로 각자 채워지게 둔다
 
-        if (!alive) return;
-
         setPageProducts(products);
 
-        setTotalPages(Math.max(1, data.pagination.totalPages));
+        setTotalPages(totalPagesFromServer);
 
         setErroredKey(null);
 
@@ -142,6 +207,10 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     return () => {
       alive = false;
     };
+    // updateSearchParams는 매 렌더 새로 만들어지는 함수라 의존성에 넣으면 이
+    // effect가 원치 않게 매번 다시 실행된다. 실제로 재요청이 필요한 시점은
+    // 아래 값들이 바뀔 때뿐이라 queryKey로 충분히 표현된다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, currentPage, sortBy, search, queryKey]);
 
   const productsReady = loadedProductsForCategoryId === categoryId;
