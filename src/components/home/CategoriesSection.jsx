@@ -8,6 +8,7 @@ import {
   CategoryImage,
   CategoriesInner,
 } from "../../styles/MainStyles/CategoriesSection.styles";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 
 function CategoriesSection({ items = [], categories = [] }) {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function CategoriesSection({ items = [], categories = [] }) {
               }}
             >
               <CategoryImage
-                src={item.imageUrl}
+                src={toResizedImageUrl(item.imageUrl, 200)}
                 alt={`${category?.name ?? ""} 카테고리`}
               />
               <CategoryName>{category?.name}</CategoryName>

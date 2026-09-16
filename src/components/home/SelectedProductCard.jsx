@@ -21,6 +21,11 @@ import {
   ProductBottomArea,
   ProductContent,
 } from "../../styles/MainStyles/DeskCurationSection.styles";
+import { toResizedImageUrl } from "../../utils/imageProxy";
+
+// 이 카드에서 상품 이미지가 차지하는 실제 표시 폭보다 넉넉하게 - DeskCurationSection.jsx의
+// 미리 불러오기(preload)도 이 값을 그대로 써서 실제 <img>와 같은 주소를 미리 받아두게 한다
+export const PRODUCT_SHOWCASE_WIDTH = 600;
 
 function SelectedProductCard({
   selectedProduct,
@@ -62,7 +67,10 @@ function SelectedProductCard({
 
             <ProductContent>
               <ProductImage
-                src={selectedProduct.imageUrl}
+                src={toResizedImageUrl(
+                  selectedProduct.imageUrl,
+                  PRODUCT_SHOWCASE_WIDTH,
+                )}
                 alt={selectedProduct.name}
               />
 

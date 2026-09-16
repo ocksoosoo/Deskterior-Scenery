@@ -9,6 +9,7 @@ import {
 import ProductCard from "../../components/product/ProductCard";
 import ProductToolbar from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
+import { FadeLoader } from "react-spinners";
 import useLoadingStore from "../../store/UseLoadingStore";
 import useCategoriesStore from "../../store/categoriesStore";
 import { EmptyBoxIcon } from "../../components/icons/Icons";
@@ -79,7 +80,6 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   // (실패 시 정적 목록 대체와 실패 토스트도 스토어 안에서 한 번만 처리됨)
   const categories = useCategoriesStore((state) => state.categories);
   const categoriesStatus = useCategoriesStore((state) => state.status);
-  const categoriesFailed = categoriesStatus === "error";
   const categoriesReady =
     categoriesStatus === "success" || categoriesStatus === "error";
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
@@ -228,12 +228,9 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   const hasLoadedOnce = pageProducts !== null;
   const isCurrentError = erroredKey === queryKey;
 
-  // 카테고리 목록이 아직 로딩 중(실패도 아직 안 함)이면 유효한 categoryId인지도 아직 알 수 없으니 대기
-  if (categories === null && !categoriesFailed) {
-    return null;
-  }
-
-  // 카테고리 목록을 정상적으로 받아왔는데 그 안에 없는 id면 진짜 잘못된 페이지
+  // 카테고리 목록을 정상적으로 받아왔는데 그 안에 없는 id면 진짜 잘못된 페이지.
+  // (아직 로딩 중이라 categories가 null이면 category도 항상 undefined라 이
+  // 조건에 안 걸리고, 로딩이 끝난 뒤에만 진짜 없는 카테고리인지 판단된다)
   if (categories !== null && !category) {
     return null;
   }
@@ -242,11 +239,6 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     { label: "Home", path: "/" },
     { label: categoryName },
   ];
-
-  // 진짜 첫 로딩(에러도 데이터도 아직 없음)일 때만 전체 화면 스피너
-  if (!hasLoadedOnce && !isCurrentError) {
-    return null;
-  }
 
   const handleAddToCart = async (productId) => {
     if (!pageProducts) return;
@@ -282,7 +274,20 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   let resultsContent;
 
-  if (isCurrentError && !hasLoadedOnce) {
+  if (!hasLoadedOnce && !isCurrentError) {
+    // 데이터가 도착하기 전에도 실제 그리드와 비슷한 높이를 미리 잡아둔다.
+    // 예전엔 이 시점에 페이지 전체를 null로 그려서, 데이터가 도착하는 순간
+    // 상품 그리드가 통째로 생겨나며 그 아래(footer 등)가 한 번에 크게
+    // 밀려버렸다 - 그게 큰 레이아웃 시프트(CLS)의 원인이었다.
+    // 공용 <Loading/>은 화면 전체를 덮는 고정 오버레이라 여기 쓰면 헤더까지
+    // 같이 가려버리므로, 이 자리 안에서만 도는 인라인 스피너를 직접 둔다
+    resultsContent = (
+      <S.EmptyState role="status" aria-live="polite">
+        <FadeLoader color="#222320" size={40} speedMultiplier={1} />
+        <S.EmptySubtitle>상품을 불러오는 중입니다...</S.EmptySubtitle>
+      </S.EmptyState>
+    );
+  } else if (isCurrentError && !hasLoadedOnce) {
     resultsContent = (
       <S.EmptyState>
         <EmptyBoxIcon width={96} height={96} aria-hidden="true" />
@@ -324,7 +329,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
       <S.ProductGrid>
         {rows.map((row, rowIndex) => (
           <S.Row key={`row-${rowIndex}`}>
-            {row.map((item) =>
+            {row.map((item, itemIndex) =>
               item.isPlaceholder ? (
                 <S.GridPlaceholder key={item.key} aria-hidden="true">
                   <ProductCard product={item.product} />
@@ -336,6 +341,10 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
                   onAddToCart={handleAddToCart}
                   isBest={item.product.isBest}
                   isNew={item.product.isNew}
+                  // LCP(가장 큰 콘텐츠) 후보는 보통 맨 왼쪽 위 카드 하나라서, 그
+                  // 하나만 최우선으로 걸어서 다른 이미지들과 대역폭을 안 나누게
+                  // 한다. 첫 줄의 나머지 카드는 lazy로 둬도 LCP엔 영향 없다
+                  imagePriority={rowIndex === 0 && itemIndex === 0}
                 />
               ),
             )}

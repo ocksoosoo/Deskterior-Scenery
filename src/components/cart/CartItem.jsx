@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "@emotion/react";
 import { Link } from "react-router";
 import Badge from "../common/Badge";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 import {
   ItemWrapper,
   ItemLeft,
@@ -67,7 +68,7 @@ const CartItem = ({
           <ImageBox>
             {!imageLoaded && <ImageLoading>상품 불러오는 중...</ImageLoading>}
             <ItemImage
-              src={item.imageUrl}
+              src={toResizedImageUrl(item.imageUrl, 200)}
               alt={item.name}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageLoaded(true)}

@@ -3,7 +3,11 @@ import { useTheme } from "@emotion/react";
 import SafeImage from "../common/SafeImage";
 import SceneryBox from "../common/SceneryBox";
 import Badge from "../common/Badge";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ProductDetail/ProductImageGallery.styles";
+
+const MAIN_IMAGE_WIDTH = 900;
+const THUMB_IMAGE_WIDTH = 150;
 
 const ProductImageGallery = ({
   images,
@@ -26,7 +30,7 @@ const ProductImageGallery = ({
       {/* 큰 사진 (없거나 실패하면 SCENERY) */}
       <S.MainImageFrame>
         <SafeImage
-          src={images[safeCurrent]}
+          src={toResizedImageUrl(images[safeCurrent], MAIN_IMAGE_WIDTH)}
           alt={alt}
           fallback={
             <SceneryBox
@@ -67,7 +71,7 @@ const ProductImageGallery = ({
               aria-label={`${alt} ${i + 1}번 이미지 보기`}
             >
               <SafeImage
-                src={src}
+                src={toResizedImageUrl(src, THUMB_IMAGE_WIDTH)}
                 alt=""
                 fallback={<SceneryBox />}
                 style={S.fillImage}

@@ -19,8 +19,12 @@ import {
 import { getProductRaw } from "../../api/productsApi";
 import categories from "../../data/categories";
 import { preloadingImages } from "../../utils/preloadingImages";
-import { SelectedProductCard } from "./SelectedProductCard";
-import { DeskProductMap } from "./DeskProductMap";
+import { toResizedImageUrl } from "../../utils/imageProxy";
+import {
+  SelectedProductCard,
+  PRODUCT_SHOWCASE_WIDTH,
+} from "./SelectedProductCard";
+import { DeskProductMap, DESK_IMAGE_WIDTH } from "./DeskProductMap";
 import { ChevronDownIcon } from "../icons/Icons";
 
 // 스타일 키워드 데이터(main.js)에 한글 이름이 없어서, 호버 텍스트용으로만 따로 매핑
@@ -86,7 +90,9 @@ function DeskCurationSection({ items = [] }) {
       try {
         const product = await getProductRaw(activeProductNumber);
 
-        await preloadingImages([product.imageUrl]);
+        await preloadingImages([
+          toResizedImageUrl(product.imageUrl, PRODUCT_SHOWCASE_WIDTH),
+        ]);
 
         if (!ignore) {
           setProductData(product);
@@ -116,7 +122,9 @@ function DeskCurationSection({ items = [] }) {
       const image = new Image();
       image.src = item.imageUrl;
     });*/
-    const imageUrls = items.map((item) => item.imageUrl);
+    const imageUrls = items.map((item) =>
+      toResizedImageUrl(item.imageUrl, DESK_IMAGE_WIDTH),
+    );
 
     preloadingImages(imageUrls);
   }, [items]);
@@ -130,11 +138,13 @@ function DeskCurationSection({ items = [] }) {
       setIsProductLoading(true);
 
       const [, product] = await Promise.all([
-        preloadingImages([item.imageUrl]),
+        preloadingImages([toResizedImageUrl(item.imageUrl, DESK_IMAGE_WIDTH)]),
         getProductRaw(firstProductId),
       ]);
 
-      await preloadingImages([product.imageUrl]);
+      await preloadingImages([
+        toResizedImageUrl(product.imageUrl, PRODUCT_SHOWCASE_WIDTH),
+      ]);
 
       setProductData(product);
       setSelectedStyleId(item.styleId);
