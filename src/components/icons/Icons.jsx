@@ -125,20 +125,20 @@ export const LogoutIcon = (props) => (
     {...props}
   >
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M17.8789 11.0979L1.23881 11.0979L1.23881 12.8979L17.8789 12.8979L17.8789 11.0979Z"
       fill="black"
     />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M5.07544 6.7959L4.59188e-05 11.9985L5.07523 17.2027L6.30884 15.9273L2.47765 11.9988L6.30884 8.07152L5.07544 6.7959Z"
       fill="black"
     />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M8.93213 24L8.93213 16.65L10.6803 16.65L10.6803 22.2L22.2519 22.2L22.2519 1.8L10.6803 1.8L10.6803 7.35L8.93213 7.35L8.93213 -9.53674e-07L24.0001 -1.63184e-06L24.0001 24L8.93213 24Z"
       fill="black"
     />
