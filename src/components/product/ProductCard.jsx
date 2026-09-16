@@ -83,19 +83,13 @@ const ProductCard = ({
       );
     } catch(error) {
       console.log("위시리스트 변경 실패:", error);
-      showFailToast(error.message || "위시리스트 변경에 실패했습니다.");
+      showFailToast("로그인 후 이용할 수 있습니다.");
     } finally {
       setIsWishlitPending(false);
     }
   };
 
   const handleAddToCart = () => {
-    // 품절 상품은 장바구니에 담을 수 없게 실패 토스트 알림을 띄움
-    if(product.soldOut) {
-      showFailToast("품절된 상품은 장바구니에 담을 수 없습니다.");
-      return;
-    }
-
     onAddToCart?.(product.id);
     setJustAdded(true);
   };

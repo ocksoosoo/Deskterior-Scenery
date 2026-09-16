@@ -1,22 +1,33 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router";
 
-export const WishlistContainer = styled.section(({ theme }) => ({
-    width: "100%",
-    padding: theme.spacing.xl,
-    backgroundColor: theme.colors.cards,
-    borderRadius: theme.radius.md,
+export const WishlistContainer = styled.div(({ theme }) => ({
+  width: "100%",
+  padding: theme.spacing.xl,
+  backgroundColor: theme.colors.cards,
+  borderRadius: theme.radius.md,
+  boxSizing: "border-box",
 
-    [theme.media.mobile]: {
-        padding: theme.spacing.md,
-    }
+  [theme.media.mobile]: {
+    padding: theme.spacing.md,
+  },
 }));
 
 export const WishlistTitle = styled.h2(({ theme }) => ({
     fontFamily: theme.fontFamily.display,
     fontSize: theme.fontSize["4xl"], // 32
+    fontWeight: theme.fontWeight.regular,
     color: theme.colors.textMain,
+    margin: 0,
+    lineHeight: 1.2,
 
+    [theme.media.mobile]: {
+        fontSize: theme.fontSize["2xl"],
+    },
+
+    [theme.media.mobile]: {
+        fontSize: theme.fontSize.xl,
+    },
 }));
 
 export const WishlistHeader = styled.div(({ theme }) => ({
@@ -24,22 +35,41 @@ export const WishlistHeader = styled.div(({ theme }) => ({
     alignItems: "center",
     justifyContent: "space-between",
     gap: theme.spacing.md, // 16
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
     paddingBottom: theme.spacing.md,
     borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
 
     [theme.media.mobile]: {
-        marginBottom: theme.spacing.md,
+        marginBottom: theme.spacing.lg,
+        paddingBottom: theme.spacing.sm,
     }
 }));
 
+// export const TitleWrapper = styled.div(({ theme }) => ({
+//   display: "flex",
+//   flexDirection: "column",
+//   alignItems: "flex-start",
+//   paddingBottom: "36px",
+//   borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+//   marginBottom: theme.spacing.xl,
+// }));
+
+
 export const DeleteAllButton = styled.button(({ theme }) => ({
-    backgroundColor: "transparent",
+    backgroundColor: "none",
+    border: "none",
     color: theme.colors.error,
-    fontSize: theme.fontSize.md, // 16
+    fontSize: theme.fontSize.lg, // 16
     fontWeight: theme.fontWeight.medium,
     cursor: "pointer",
+    padding: 0,
 }));
+
+export const WishlistContent = styled.div({
+    width: "100%",
+    position: "relative",
+    minHeight: "260px",
+});
 
 // 카드들을 묶는 컨테이너
 export const WishlistList = styled.div(({ theme }) => ({
@@ -102,21 +132,27 @@ export const MoreButton = styled.button(({ theme }) => ({
 }));
 
 // empty state
-export const EmptyState = styled.div(({theme}) => ({
-    display: "flex",
-    width: "100%",
-    minHeight: "400px",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: theme.spacing.xs,
+export const EmptyState = styled.div(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  minHeight: "400px",
+  padding: `${theme.spacing["3xl"]} ${theme.spacing.md}`,
+  textAlign: "center",
+
+  [theme.media.mobile]: {
+    minHeight: "300px",
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.xs}`,
+  },
 }));
 
 export const EmptyIconWrapper = styled.div(({theme}) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: theme.spacing.lg, // 24
+    marginBottom: theme.spacing.xl, // 24
     color: theme.colors.imagePlaceholder,
 }));
 
@@ -124,6 +160,7 @@ export const EmptyText = styled.p(({theme}) => ({
     fontSize: theme.fontSize.lg, // 18
     fontWeight: theme.fontWeight.regular,
     color: theme.colors.secondText,
+    margin: 0,
 }));
 
 export const ExploreButton = styled(Link)(({theme}) => ({
@@ -136,9 +173,16 @@ export const ExploreButton = styled(Link)(({theme}) => ({
     color: theme.colors.cards,
     borderRadius: theme.radius.md,
     fontWeight: theme.fontWeight.medium,
-    fontSize: theme.fontSize.md,
+    fontSize: theme.fontSize.lg,
+    textDecoration: "none",
+    cursor: "pointer",
 
     "&:hover": {
         filter: "brightness(1.5)",
-    }
+    },
+
+    [theme.media.mobile]: {
+    fontSize: theme.fontSize.md,
+    padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+    },
 }));
