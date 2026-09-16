@@ -70,6 +70,8 @@ const CartItem = ({
             <ItemImage
               src={toResizedImageUrl(item.imageUrl, 200)}
               alt={item.name}
+              fetchpriority="high"
+              loading="eager" // 즉시 실행
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageLoaded(true)}
               $isLoaded={imageLoaded}
