@@ -50,7 +50,7 @@ export const Inner = styled.div(({ theme }) => ({
 export const Title = styled.h2(({ theme }) => ({
   margin: "0 0 24px",
   fontFamily: theme.fontFamily.display,
-  fontSize: theme.fontSize["5xl"], // 2.5rem (40px)
+  fontSize: theme.fontSize["4xl"], // 2rem (32px)
   fontStyle: "normal",
   fontWeight: theme.fontWeight.regular, // 400
   lineHeight: "normal",
@@ -59,7 +59,6 @@ export const Title = styled.h2(({ theme }) => ({
 
   [theme.media.mobile]: {
     margin: 0,
-    fontSize: theme.fontSize["4xl"], // 32px
     letterSpacing: "normal",
   },
 
