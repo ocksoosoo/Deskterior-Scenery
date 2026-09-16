@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // useRef 지움
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import useCartStore from "../../store/cartStore";
@@ -38,7 +38,6 @@ const CartPage = () => {
   const removeSelectedItems = useCartStore((s) => s.removeSelectedItems);
   const clearError = useCartStore((s) => s.clearError);
 
-  // ✅ 새로 추가된 체크박스 상태/액션 구독
   const unselectedItemIds = useCartStore((s) => s.unselectedItemIds);
   const toggleItemSelection = useCartStore((s) => s.toggleItemSelection);
   const setAllSelected = useCartStore((s) => s.setAllSelected);
@@ -52,8 +51,6 @@ const CartPage = () => {
 
   const [cartLoaded, setCartLoaded] = useState(false);
   const [productInfoReady, setProductInfoReady] = useState(false);
-
-  // ❌ 로컬에서 상태를 유지하던 checkedItems, seenIdsRef 등 복잡한 로직 모두 삭제 완료!
 
   useEffect(() => {
     let alive = true;
@@ -132,12 +129,12 @@ const CartPage = () => {
     }
   }, [error, clearError]);
 
-  // 💡 [핵심] 로컬 State 대신 실시간 파생 상태(Derived State)로 화면 렌더링
+  // 로컬 State 대신 실시간 상태로 렌더링
   const availableItems = cartItems.filter(
     (item) => !isSoldOutProduct(item.productId),
   );
 
-  // 전체 활성 상품 중에서 '해제 리스트'에 없는 것들만 '체크된 상태'로 간주!
+  // 전체 활성 상품 중에서 '해제 리스트'에 없는 것들만 '체크된 상태'로 간주
   const checkedItems = availableItems
     .map((i) => i.cartItemId)
     .filter((id) => !unselectedItemIds.includes(id));
@@ -146,23 +143,23 @@ const CartPage = () => {
     availableItems.length > 0 && checkedItems.length === availableItems.length;
 
   const handleToggleCheck = (id) => {
-    toggleItemSelection(id); // Zustand 액션 호출
+    toggleItemSelection(id); // Zustand 호출
   };
 
   const handleToggleAllCheck = () => {
     if (isAllChecked) {
-      // 모두 해제: 현재 화면에 있는 모든 상품 ID를 해제 리스트에 통째로 넣음
+      // 모두 해제
       setAllSelected(
         false,
         availableItems.map((i) => i.cartItemId),
       );
     } else {
-      // 모두 선택: 해제 리스트를 완전히 비워버림
+      // 모두 선택
       setAllSelected(true);
     }
   };
 
-  // 🗑️ 삭제 로직에서도 불필요한 setCheckedItems 상태 갱신 코드 전부 제거 (데이터가 지워지면 자연스럽게 화면에서도 사라짐)
+  // 삭제 로직
   const handleDelete = async (id) => {
     try {
       await removeItem(id);
