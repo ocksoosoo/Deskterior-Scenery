@@ -80,10 +80,13 @@ function AuthForm({ mode, onSubmit }) {
 
       resetUser();
 
-      if (mode === "login") showSuccessToast("로그인되었습니다.");
-      else if (mode === "signup") showSuccessToast("회원가입이 완료되었습니다.");
-
-      navigate("/");
+      if (mode === "login") {
+        showSuccessToast("로그인되었습니다.");
+        navigate("/");
+      } else if (mode === "signup") {
+        showSuccessToast("회원가입이 완료되었습니다.");
+        navigate("/login");
+      }
     } catch (error) {
       setMessage(error.message);
       setShakingButton(true);

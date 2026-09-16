@@ -10,6 +10,11 @@ export const Nav = styled.nav(({ theme }) => ({
   color: theme.colors.secondText,
   padding: `${theme.spacing.sm} 0`,
 
+  [theme.media.wide]: {
+    gap: theme.spacing.xl,
+    alignSelf: "stretch",
+  },
+
   [theme.media.tablet]: {
     gap: theme.spacing.xs,
     padding: 0,
@@ -21,11 +26,6 @@ export const Nav = styled.nav(({ theme }) => ({
     alignSelf: "stretch",
     padding: 0,
     marginBottom: theme.spacing.md,
-  },
-
-  [theme.media.wide]: {
-    gap: theme.spacing.xl,
-    alignSelf: "stretch",
   },
 }));
 

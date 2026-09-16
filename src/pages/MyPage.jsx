@@ -47,6 +47,7 @@ import {
   AccountInput,
   AddressField,
   SaveArea,
+  ErrorIconWrapper,
   ErrorText,
   SaveButton,
   SettingsCard,
@@ -391,7 +392,9 @@ function Mypage() {
                 <SaveArea>
                   {errors && (
                     <ErrorText>
-                      <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
+                      <ErrorIconWrapper>
+                        <IconCircleX stroke={1.5} color="#e64b3c" />
+                      </ErrorIconWrapper>
                       {errors}
                     </ErrorText>
                   )}
@@ -414,8 +417,8 @@ function Mypage() {
             <SettingsCard>
               <SettingsTitle>Account Settings</SettingsTitle>
               <Settingstext>
-                회원 탈퇴시 모든 계정 정보와 활동 내역이 영구적으로 삭제되며,
-                복구할 수 없습니다. <br /> 비말번호 변경은 보안을 위해 주기적으로
+                회원 탈퇴시 모든 계정 정보가 영구적으로 삭제되며, 복구할 수
+                없습니다. <br /> 비말번호 변경은 보안을 위해 주기적으로
                 권장드립니다.
               </Settingstext>
               <SettingsBtnGroup>
@@ -447,7 +450,7 @@ function Mypage() {
               <Modal
                 title="Withdrawal Confirmation"
                 description={
-                  "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보와 작성하신 리뷰가 모두 삭제되며 복구가 불가능 합니다."
+                  "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보가 모두 삭제되며 복구가 불가능 합니다."
                 }
                 confirmText="Confirm"
                 confirmTitle="회원 탈퇴"
@@ -494,10 +497,14 @@ function Mypage() {
                           setShowCurrentPassword(!showCurrentPassword)
                         }
                         aria-label={
-                          showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                          showCurrentPassword
+                            ? "비밀번호 숨기기"
+                            : "비밀번호 보기"
                         }
                         title={
-                          showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                          showCurrentPassword
+                            ? "비밀번호 숨기기"
+                            : "비밀번호 보기"
                         }
                       >
                         {showCurrentPassword ? (
@@ -556,7 +563,6 @@ function Mypage() {
             )}
           </CardBox>
         </MypageInner>
-
       </MypageBox>
     </>
   );

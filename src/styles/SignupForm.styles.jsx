@@ -1,27 +1,27 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router";
 
-export const SignupPage = styled.main({
+export const SignupPage = styled.main(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "stretch",
   gap: "20px",
   padding: "60px clamp(16px, 6vw, 64px)",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     alignItems: "center",
   },
-});
+}));
 
-export const SignupImageWrap = styled.div({
+export const SignupImageWrap = styled.div(({ theme }) => ({
   flex: "1 1 50%",
   minWidth: 0,
   position: "relative",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     display: "none",
   },
-});
+}));
 
 export const SignupImage = styled.img({
   position: "absolute",
@@ -30,7 +30,7 @@ export const SignupImage = styled.img({
   objectFit: "fill",
 });
 
-export const SignupCard = styled.section({
+export const SignupCard = styled.section(({ theme }) => ({
   flex: "1 1 50%",
   minWidth: 0,
   boxSizing: "border-box",
@@ -39,26 +39,26 @@ export const SignupCard = styled.section({
   borderRadius: "5px",
   backgroundColor: "#fff",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     flex: "none",
     width: "100%",
     padding: "28px 20px",
   },
-});
+}));
 
-export const Title = styled.h1({
+export const Title = styled.h1(({ theme }) => ({
   margin: "0 0 40px",
   textAlign: "left",
   fontSize: "20px",
   fontWeight: 550,
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     marginBottom: "28px",
     fontSize: "16px",
   },
-});
+}));
 
-export const SignupLink = styled(Link)({
+export const SignupLink = styled(Link)(({ theme }) => ({
   display: "block",
   textAlign: "center",
   marginTop: "20px",
@@ -66,8 +66,8 @@ export const SignupLink = styled(Link)({
   textDecoration: "none",
   color: "#000000",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     marginTop: "16px",
     fontSize: "13px",
   },
-});
+}));
