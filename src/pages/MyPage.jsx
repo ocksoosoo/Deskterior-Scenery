@@ -64,6 +64,7 @@ import {
   NewPasswordGroup,
   NewPasswordHidenButton,
   PasswordError,
+  MypageInner,
 } from "../styles/MyPage.styles";
 
 const ChangePasswordSchema = z.object({
@@ -294,265 +295,268 @@ function Mypage() {
   return (
     <>
       <MypageBox>
-        <MypageTitle>My Page</MypageTitle>
+        <MypageInner>
+          <MypageTitle>My Page</MypageTitle>
 
-        <CardBox>
-          <UserCard>
-            <UserHead>
-              <UserName>
-                {savedLastName}
-                {savedFirstName}
-              </UserName>
-              <UserLogOut
-                type="button"
-                aria-label="로그아웃 버튼"
-                title="로그아웃"
-                onClick={() => setIsLogOutModalOpen(true)}
-              >
-                Log out
-              </UserLogOut>
-            </UserHead>
-            <UserId>{id}</UserId>
-          </UserCard>
-
-          <AccountCard>
-            <AccountTitle>Account Information</AccountTitle>
-            <AccountForm onSubmit={handleSubmit}>
-              <AccountGrid>
-                <AccountField>
-                  <AccountLabel htmlFor="firstName">
-                    First Name<Required>*</Required>
-                  </AccountLabel>
-
-                  <AccountInput
-                    ref={firstNameRef}
-                    id="firstName"
-                    type="text"
-                    value={firstName}
-                    placeholder="ex)길동"
-                    onChange={handleInputChange(setFirstName)}
-                  />
-                </AccountField>
-
-                <AccountField>
-                  <AccountLabel htmlFor="lastName">
-                    Last Name<Required>*</Required>
-                  </AccountLabel>
-
-                  <AccountInput
-                    ref={lastNameRef}
-                    id="lastName"
-                    placeholder="ex)홍"
-                    type="text"
-                    value={lastName}
-                    onChange={handleInputChange(setLastName)}
-                  />
-                </AccountField>
-
-                <AccountField>
-                  <AccountLabel htmlFor="userId">
-                    ID<ReadonlyText>(readOnly)</ReadonlyText>
-                  </AccountLabel>
-
-                  <AccountInput id="userId" type="text" value={id} readOnly />
-                </AccountField>
-
-                <AccountField>
-                  <AccountLabel htmlFor="contact">Contact</AccountLabel>
-
-                  <AccountInput
-                    ref={contactRef}
-                    id="contact"
-                    type="tel"
-                    placeholder="ex)010-0000-0000"
-                    value={contact}
-                    onChange={handleInputChange(setContact)}
-                    onBlur={() => {
-                      setContact(formatPhoneNumber(contact));
-                    }}
-                  />
-                </AccountField>
-
-                <AddressField>
-                  <AccountLabel htmlFor="address">Address</AccountLabel>
-
-                  <AccountInput
-                    ref={addressRef}
-                    id="address"
-                    type="text"
-                    value={address}
-                    onChange={handleInputChange(setAddress)}
-                  />
-                </AddressField>
-              </AccountGrid>
-
-              <SaveArea>
-                {errors && (
-                  <ErrorText>
-                    <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
-                    {errors}
-                  </ErrorText>
-                )}
-
-                <SaveButton
-                  className={shakingButton ? "shake" : ""}
-                  type="submit"
-                  disabled={isSaving}
-                  title={isSaving ? "저장 중" : "회원정보 저장"}
-                  onAnimationEnd={() => setShakingButton(false)}
+          <CardBox>
+            <UserCard>
+              <UserHead>
+                <UserName>
+                  {savedLastName}
+                  {savedFirstName}
+                </UserName>
+                <UserLogOut
+                  type="button"
+                  aria-label="로그아웃 버튼"
+                  title="로그아웃"
+                  onClick={() => setIsLogOutModalOpen(true)}
                 >
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </SaveButton>
-              </SaveArea>
-            </AccountForm>
-          </AccountCard>
+                  Log out
+                </UserLogOut>
+              </UserHead>
+              <UserId>{id}</UserId>
+            </UserCard>
 
-          <WishlistSection />
+            <AccountCard>
+              <AccountTitle>Account Information</AccountTitle>
+              <AccountForm onSubmit={handleSubmit}>
+                <AccountGrid>
+                  <AccountField>
+                    <AccountLabel htmlFor="firstName">
+                      First Name<Required>*</Required>
+                    </AccountLabel>
 
-          <SettingsCard>
-            <SettingsTitle>Account Settings</SettingsTitle>
-            <Settingstext>
-              회원 탈퇴시 모든 계정 정보와 활동 내역이 영구적으로 삭제되며,
-              복구할 수 없습니다. <br /> 비말번호 변경은 보안을 위해 주기적으로
-              권장드립니다.
-            </Settingstext>
-            <SettingsBtnGroup>
-              <SettingsDeleteBtn
-                title="회원 탈퇴"
-                onClick={() => setIsDeleteUserModalOpen(true)}
-              >
-                Delete account
-              </SettingsDeleteBtn>
-              <SettingsChangeBtn
-                title="비밀번호 변경"
-                onClick={() => setIsPasswordChangeModalOpen(true)}
-              >
-                Change Password
-              </SettingsChangeBtn>
-            </SettingsBtnGroup>
-          </SettingsCard>
-          {isLogOutModalOpen && (
-            <Modal
-              title="Log out?"
-              description="정말 로그아웃 하시겠습니까?"
-              confirmText="Log out"
-              confirmTitle="로그아웃"
-              onClose={() => setIsLogOutModalOpen(false)}
-              onConfirm={handleLogout}
-            />
-          )}
-          {isDeleteUserModalOpen && (
-            <Modal
-              title="Withdrawal Confirmation"
-              description={
-                "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보와 작성하신 리뷰가 모두 삭제되며 복구가 불가능 합니다."
-              }
-              confirmText="Confirm"
-              confirmTitle="회원 탈퇴"
-              onClose={() => setIsDeleteUserModalOpen(false)}
-              onConfirm={handleDeleteUser}
-            />
-          )}
-          {isPasswordChangeModalOpen && (
-            <Modal
-              title="Change Password"
-              description="현재 비밀번호와 변경할 비밀번호를 입력해 주세요."
-              confirmText="Save"
-              confirmTitle="저장"
-              icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
-              onClose={handlePasswordModalClose}
-              onConfirm={handlePasswordChange}
-            >
-              <PasswordFormBox
-                as="form"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handlePasswordChange();
-                }}
-              >
-                <PasswordField>
-                  <PasswordLabel htmlFor="currentPassword">
-                    Current Password
-                  </PasswordLabel>
-                  <CurrentPasswordGroup>
-                    <PasswordInput
-                      id="currentPassword"
-                      type={showCurrentPassword ? "text" : "password"}
-                      placeholder="Current Password"
-                      value={currentPassword}
-                      onChange={(e) => {
-                        setCurrentPassword(e.target.value);
-                        setPasswordError("");
+                    <AccountInput
+                      ref={firstNameRef}
+                      id="firstName"
+                      type="text"
+                      value={firstName}
+                      placeholder="ex)길동"
+                      onChange={handleInputChange(setFirstName)}
+                    />
+                  </AccountField>
+
+                  <AccountField>
+                    <AccountLabel htmlFor="lastName">
+                      Last Name<Required>*</Required>
+                    </AccountLabel>
+
+                    <AccountInput
+                      ref={lastNameRef}
+                      id="lastName"
+                      placeholder="ex)홍"
+                      type="text"
+                      value={lastName}
+                      onChange={handleInputChange(setLastName)}
+                    />
+                  </AccountField>
+
+                  <AccountField>
+                    <AccountLabel htmlFor="userId">
+                      ID<ReadonlyText>(readOnly)</ReadonlyText>
+                    </AccountLabel>
+
+                    <AccountInput id="userId" type="text" value={id} readOnly />
+                  </AccountField>
+
+                  <AccountField>
+                    <AccountLabel htmlFor="contact">Contact</AccountLabel>
+
+                    <AccountInput
+                      ref={contactRef}
+                      id="contact"
+                      type="tel"
+                      placeholder="ex)010-0000-0000"
+                      value={contact}
+                      onChange={handleInputChange(setContact)}
+                      onBlur={() => {
+                        setContact(formatPhoneNumber(contact));
                       }}
                     />
+                  </AccountField>
 
-                    <CurrentPasswordHidenButton
-                      type="button"
-                      onClick={() =>
-                        setShowCurrentPassword(!showCurrentPassword)
-                      }
-                      aria-label={
-                        showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
-                      }
-                      title={
-                        showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
-                      }
-                    >
-                      {showCurrentPassword ? (
-                        <IconEyeClosed size={25} />
-                      ) : (
-                        <IconEye size={25} />
-                      )}
-                    </CurrentPasswordHidenButton>
-                  </CurrentPasswordGroup>
-                </PasswordField>
+                  <AddressField>
+                    <AccountLabel htmlFor="address">Address</AccountLabel>
 
-                <PasswordField>
-                  <PasswordLabel htmlFor="newPassword">
-                    New Password
-                  </PasswordLabel>
-
-                  <NewPasswordGroup>
-                    <PasswordInput
-                      id="newPassword"
-                      type={showNewPassword ? "text" : "password"}
-                      placeholder="New Password (4자 이상)"
-                      value={newPassword}
-                      onChange={(e) => {
-                        setNewPassword(e.target.value);
-                        setPasswordError("");
-                      }}
+                    <AccountInput
+                      ref={addressRef}
+                      id="address"
+                      type="text"
+                      value={address}
+                      onChange={handleInputChange(setAddress)}
                     />
+                  </AddressField>
+                </AccountGrid>
 
-                    <NewPasswordHidenButton
-                      type="button"
-                      onClick={() => setShowNewPassword(!showNewPassword)}
-                      aria-label={
-                        showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
-                      }
-                      title={
-                        showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
-                      }
-                    >
-                      {showNewPassword ? (
-                        <IconEyeClosed size={25} />
-                      ) : (
-                        <IconEye size={25} />
-                      )}
-                    </NewPasswordHidenButton>
-                  </NewPasswordGroup>
-
-                  {passwordError && (
-                    <PasswordError>
+                <SaveArea>
+                  {errors && (
+                    <ErrorText>
                       <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
-                      {passwordError}
-                    </PasswordError>
+                      {errors}
+                    </ErrorText>
                   )}
-                </PasswordField>
-              </PasswordFormBox>
-            </Modal>
-          )}
-        </CardBox>
+
+                  <SaveButton
+                    className={shakingButton ? "shake" : ""}
+                    type="submit"
+                    disabled={isSaving}
+                    title={isSaving ? "저장 중" : "회원정보 저장"}
+                    onAnimationEnd={() => setShakingButton(false)}
+                  >
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </SaveButton>
+                </SaveArea>
+              </AccountForm>
+            </AccountCard>
+
+            <WishlistSection />
+
+            <SettingsCard>
+              <SettingsTitle>Account Settings</SettingsTitle>
+              <Settingstext>
+                회원 탈퇴시 모든 계정 정보와 활동 내역이 영구적으로 삭제되며,
+                복구할 수 없습니다. <br /> 비말번호 변경은 보안을 위해 주기적으로
+                권장드립니다.
+              </Settingstext>
+              <SettingsBtnGroup>
+                <SettingsDeleteBtn
+                  title="회원 탈퇴"
+                  onClick={() => setIsDeleteUserModalOpen(true)}
+                >
+                  Delete account
+                </SettingsDeleteBtn>
+                <SettingsChangeBtn
+                  title="비밀번호 변경"
+                  onClick={() => setIsPasswordChangeModalOpen(true)}
+                >
+                  Change Password
+                </SettingsChangeBtn>
+              </SettingsBtnGroup>
+            </SettingsCard>
+            {isLogOutModalOpen && (
+              <Modal
+                title="Log out?"
+                description="정말 로그아웃 하시겠습니까?"
+                confirmText="Log out"
+                confirmTitle="로그아웃"
+                onClose={() => setIsLogOutModalOpen(false)}
+                onConfirm={handleLogout}
+              />
+            )}
+            {isDeleteUserModalOpen && (
+              <Modal
+                title="Withdrawal Confirmation"
+                description={
+                  "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보와 작성하신 리뷰가 모두 삭제되며 복구가 불가능 합니다."
+                }
+                confirmText="Confirm"
+                confirmTitle="회원 탈퇴"
+                onClose={() => setIsDeleteUserModalOpen(false)}
+                onConfirm={handleDeleteUser}
+              />
+            )}
+            {isPasswordChangeModalOpen && (
+              <Modal
+                title="Change Password"
+                description="현재 비밀번호와 변경할 비밀번호를 입력해 주세요."
+                confirmText="Save"
+                confirmTitle="저장"
+                icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
+                onClose={handlePasswordModalClose}
+                onConfirm={handlePasswordChange}
+              >
+                <PasswordFormBox
+                  as="form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handlePasswordChange();
+                  }}
+                >
+                  <PasswordField>
+                    <PasswordLabel htmlFor="currentPassword">
+                      Current Password
+                    </PasswordLabel>
+                    <CurrentPasswordGroup>
+                      <PasswordInput
+                        id="currentPassword"
+                        type={showCurrentPassword ? "text" : "password"}
+                        placeholder="Current Password"
+                        value={currentPassword}
+                        onChange={(e) => {
+                          setCurrentPassword(e.target.value);
+                          setPasswordError("");
+                        }}
+                      />
+
+                      <CurrentPasswordHidenButton
+                        type="button"
+                        onClick={() =>
+                          setShowCurrentPassword(!showCurrentPassword)
+                        }
+                        aria-label={
+                          showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                        }
+                        title={
+                          showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                        }
+                      >
+                        {showCurrentPassword ? (
+                          <IconEyeClosed size={25} />
+                        ) : (
+                          <IconEye size={25} />
+                        )}
+                      </CurrentPasswordHidenButton>
+                    </CurrentPasswordGroup>
+                  </PasswordField>
+
+                  <PasswordField>
+                    <PasswordLabel htmlFor="newPassword">
+                      New Password
+                    </PasswordLabel>
+
+                    <NewPasswordGroup>
+                      <PasswordInput
+                        id="newPassword"
+                        type={showNewPassword ? "text" : "password"}
+                        placeholder="New Password (4자 이상)"
+                        value={newPassword}
+                        onChange={(e) => {
+                          setNewPassword(e.target.value);
+                          setPasswordError("");
+                        }}
+                      />
+
+                      <NewPasswordHidenButton
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        aria-label={
+                          showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                        }
+                        title={
+                          showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                        }
+                      >
+                        {showNewPassword ? (
+                          <IconEyeClosed size={25} />
+                        ) : (
+                          <IconEye size={25} />
+                        )}
+                      </NewPasswordHidenButton>
+                    </NewPasswordGroup>
+
+                    {passwordError && (
+                      <PasswordError>
+                        <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
+                        {passwordError}
+                      </PasswordError>
+                    )}
+                  </PasswordField>
+                </PasswordFormBox>
+              </Modal>
+            )}
+          </CardBox>
+        </MypageInner>
+
       </MypageBox>
     </>
   );

@@ -22,11 +22,7 @@ export const WishlistTitle = styled.h2(({ theme }) => ({
     lineHeight: 1.2,
 
     [theme.media.mobile]: {
-        fontSize: theme.fontSize["2xl"],
-    },
-
-    [theme.media.mobile]: {
-        fontSize: theme.fontSize.xl,
+        fontSize: theme.fontSize["3xl"],
     },
 }));
 
