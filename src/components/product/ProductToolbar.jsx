@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "../icons/Icons";
+import { SORT_OPTIONS } from "../../data/sortOptions";
 import * as S from "../../styles/ListPageStyles/ProductToolbar.styles";
-
-export const SORT_OPTIONS = [
-  { value: "name", label: "이름순" },
-  { value: "priceHigh", label: "가격높은순" },
-  { value: "priceLow", label: "가격낮은순" },
-  { value: "reviewCount", label: "리뷰많은순" },
-];
 
 const SEARCH_DEBOUNCE_MS = 400;
 

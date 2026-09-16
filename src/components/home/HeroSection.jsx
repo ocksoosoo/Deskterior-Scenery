@@ -364,7 +364,7 @@ function AnimateHeroSection() {
         }}
         animate={
           isReady && isExpanded
-          ? { x: 0, y: 0, scale: 1, rotat: 0 }
+          ? { x: 0, y: 0, scale: 1, rotate: 0 }
           : undefined
         }
         transition={{
@@ -418,7 +418,7 @@ function AnimateHeroSection() {
         }}
         animate={
           isReady && isExpanded
-          ? { x: 0, y: 0, scale: 1, rotat: 0 }
+          ? { x: 0, y: 0, scale: 1, rotate: 0 }
           : undefined
         }
         transition={{
@@ -472,7 +472,7 @@ function AnimateHeroSection() {
         }}
         animate={
           isReady && isExpanded
-          ? { x: 0, y: 0, scale: 1, rotat: 0 }
+          ? { x: 0, y: 0, scale: 1, rotate: 0 }
           : undefined
         }
         transition={{
