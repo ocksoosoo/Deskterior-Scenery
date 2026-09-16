@@ -10,7 +10,10 @@ export const FooterContainer = styled.footer(({ theme }) => ({
   [theme.media.mobile]: {
     display: "flex",
     // spacing-2xl(48) spacing-md(16) spacing-xl(32) spacing-md(16)
-    padding: "48px 16px 32px",
+    paddingTop: "48px",
+    paddingRight: "calc(16px + env(safe-area-inset-right))",
+    paddingBottom: "calc(32px + env(safe-area-inset-bottom))",
+    paddingLeft: "calc(16px + env(safe-area-inset-left))",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "32px", // spacing-xl
