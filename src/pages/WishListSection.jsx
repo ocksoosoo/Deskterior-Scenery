@@ -17,10 +17,10 @@ import Loading from "../components/common/Loading";
 import Modal from "../components/common/Modal";
 import { showFailToast, showSuccessToast } from "../components/common/ShowToast";
 import { wishlistApi } from "../api/wishlistApi";
-import { getProducts } from "../api/productsApi";
 
 import useWishlistStore from "../store/wishlistStore";
 import useCartStore from "../store/cartStore";
+import useProductCatalogStore from "../store/productCatalogStore";
 
 import { useState, useEffect } from "react";
 
@@ -44,6 +44,7 @@ function WishlistSection() {
 
     const setLikedIds = useWishlistStore((state) => state.setLikedIds);
     const addToCart = useCartStore((state) => state.addToCart);
+    const fetchCatalog = useProductCatalogStore((state) => state.fetchCatalog);
 
     // 위시리스트 조회
     useEffect(() => {
@@ -54,7 +55,21 @@ function WishlistSection() {
             setErrorMessage("");
 
             try {
-                const response = await wishlistApi.getWishlist();
+                // /wishlist 응답에는 badge/stock(Best·New·Sold out 판단 근거)이 아예
+                // 내려오지 않아서, 카탈로그(id로 캐싱된 상품 목록)와 함께 불러와 보강한다.
+                // fetchCatalog는 앱 전체에서 한 번만 요청하고 이후엔 캐시를 재사용하며,
+                // 실패해도 내부에서 처리하고 빈 객체를 반환하므로 여기서 따로 catch할 필요는 없다
+                // 카탈로그 자체가 이전에 실패한 상태(쿨다운 중)라면, 사용자가
+                // Retry를 눌렀을 때만 그 쿨다운을 무시하고 다시 시도한다. 위시리스트만
+                // 실패했던 거라면 카탈로그는 이미 정상/캐시 상태이므로 강제할 필요가 없다
+                const isCatalogRetryable =
+                    retryCount > 0 &&
+                    useProductCatalogStore.getState().status === "error";
+
+                const [response, catalogById] = await Promise.all([
+                    wishlistApi.getWishlist(),
+                    fetchCatalog({ force: isCatalogRetryable }),
+                ]);
 
                 if (!response.success) {
                     throw new Error(
@@ -62,30 +77,16 @@ function WishlistSection() {
                     );
                 }
 
-                // 언마운트 시에만 조기 리턴하도록 수정
+                // 언마운트되었거나 그 사이 재요청(retry)이 걸렸다면, 방금 끝난
+                // 이 응답으로 최신 상태를 덮어쓰지 않도록 확인
                 if (ignore) return;
 
                 // 응답 형태(response.data.products)에 맞춰 안전하게 추출
                 const rawProducts = response.data?.products || response.data || [];
 
-                // /wishlist 응답에는 badge/stock(Best·New·Sold out 판단 근거)이 아예
-                // 내려오지 않아서, 카탈로그 전체를 한 번 더 불러와 id로 매칭해 보강한다
-                let catalogById = new Map();
-                try {
-                    const catalog = await getProducts({ limit: 100 });
-                    catalogById = new Map(
-                        (catalog.products || []).map((product) => [
-                            product.id,
-                            product,
-                        ]),
-                    );
-                } catch (catalogError) {
-                    console.error("상품 카탈로그 조회 실패:", catalogError);
-                }
-
                 const wishlistProducts = rawProducts.map((item) => {
                     const id = item.id ?? item.productId;
-                    const catalogProduct = catalogById.get(id);
+                    const catalogProduct = catalogById[id];
 
                     return {
                         ...catalogProduct,
@@ -121,7 +122,7 @@ function WishlistSection() {
         return () => {
             ignore = true;
         };
-    }, [setLikedIds, retryCount]);
+    }, [setLikedIds, fetchCatalog, retryCount]);
     // handleConfirmDeleteAll(): 전체 삭제
     async function handleConfirmDeleteAll() {
         if(isDeleting) return;
