@@ -1,4 +1,5 @@
 import { HeartIcon } from "../icons/Icons";
+import { getWishLabel, getCheckoutText, getCheckoutTitle } from "./ctaLabels";
 import * as S from "../../styles/ProductDetail/MobileCtaBar.styles";
 
 //모바일 전용 하단 고정(fixed) CTA 바 — 찜 · Add to Cart · CheckOut.
@@ -15,9 +16,9 @@ const MobileCtaBar = ({
     <S.WishButton
       type="button"
       onClick={onToggleWish}
-      aria-label={isWished ? "찜 해제" : "찜하기"}
+      aria-label={getWishLabel(isWished)}
       aria-pressed={isWished}
-      title={isWished ? "찜 해제" : "찜하기"}
+      title={getWishLabel(isWished)}
     >
       <HeartIcon filled={isWished} width={24} height={24} />
     </S.WishButton>
@@ -35,9 +36,9 @@ const MobileCtaBar = ({
       type="button"
       onClick={onCheckout}
       disabled={isSubmitting || soldOut}
-      title={soldOut ? "품절" : "결제하기"}
+      title={getCheckoutTitle(soldOut)}
     >
-      {soldOut ? "Sold Out" : "CheckOut"}
+      {getCheckoutText(soldOut)}
     </S.CheckoutButton>
   </S.Bar>
 );

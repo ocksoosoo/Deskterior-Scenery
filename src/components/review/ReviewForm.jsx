@@ -64,10 +64,7 @@ const ReviewForm = ({
     <>
       <S.Form onSubmit={handleSubmit}>
         <S.FormRow>
-          <S.RatingBox
-            onClick={promptLogin}
-            style={{ cursor: isLoggedIn ? "default" : "pointer" }}
-          >
+          <S.RatingBox onClick={promptLogin} $loggedIn={isLoggedIn}>
             <S.RatingLabel>{rating.toFixed(1)}</S.RatingLabel>
             <ReviewStars
               value={rating}
@@ -94,7 +91,7 @@ const ReviewForm = ({
                 ? "리뷰를 작성해 주세요"
                 : "로그인 후 리뷰를 작성할 수 있어요"
             }
-            style={{ cursor: isLoggedIn ? "text" : "pointer" }}
+            $loggedIn={isLoggedIn}
             onChange={(event) => {
               setContent(event.target.value);
               setError("");

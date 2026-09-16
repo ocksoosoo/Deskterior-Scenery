@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
 import SceneryBox from "../common/SceneryBox";
 import { toResizedImageUrl } from "../../utils/imageProxy";
+import useIsMobile from "../../hook/useIsMobile";
 import * as S from "../../styles/ProductDetail/ProductDetailContent.styles";
 
 const DETAIL_IMAGE_WIDTH_MOBILE = 700;
 const DETAIL_IMAGE_WIDTH = 1000;
 
 const ProductDetailContent = ({ sections = [] }) => {
-  const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia("(max-width: 767px)").matches,
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const handleChange = (event) => setIsMobile(event.matches);
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+  const isMobile = useIsMobile();
 
   if (!sections.length) return null;
 

@@ -8,6 +8,7 @@ import * as S from "../../styles/ProductDetail/Review.styles";
 
 const ReviewSection = ({
   reviews = [],
+  average = 0,
   isLoggedIn = false,
   onCreate,
   onUpdate,
@@ -19,12 +20,6 @@ const ReviewSection = ({
     editingId == null
       ? undefined
       : reviews.find((review) => review.id === editingId);
-
-  const average =
-    reviews.length === 0
-      ? 0
-      : reviews.reduce((sum, review) => sum + (review.rating ?? 0), 0) /
-        reviews.length;
 
   const handleSubmit = async (payload) => {
     if (editingId != null) {

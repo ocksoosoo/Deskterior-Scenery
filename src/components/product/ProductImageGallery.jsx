@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "@emotion/react";
 import SafeImage from "../common/SafeImage";
 import SceneryBox from "../common/SceneryBox";
 import Badge from "../common/Badge";
 import { toResizedImageUrl } from "../../utils/imageProxy";
+import useIsMobile from "../../hook/useIsMobile";
 import * as S from "../../styles/ProductDetail/ProductImageGallery.styles";
 
 const MAIN_IMAGE_WIDTH_MOBILE = 600;
@@ -19,18 +20,7 @@ const ProductImageGallery = ({
 }) => {
   const [current, setCurrent] = useState(0);
   const theme = useTheme();
-
-  const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia("(max-width: 767px)").matches,
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const handleChange = (event) => setIsMobile(event.matches);
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+  const isMobile = useIsMobile();
 
   if (!images?.length) return null;
 

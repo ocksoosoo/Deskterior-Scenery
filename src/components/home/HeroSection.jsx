@@ -34,6 +34,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAnimate, motion } from "motion/react";
 import mobileHeroVideo from "../../assets/hero-tangled-objects.mp4";
+import useIsMobile from "../../hook/useIsMobile";
 
 // 각 오브젝트와 이름이 가장 비슷한 실제 상품으로 연결 (이미지 자체는 상품
 // 데이터와 연결되어 있지 않은 정적 에셋이라 수동으로 매핑)
@@ -513,23 +514,7 @@ function AnimateHeroSection() {
 }
 
 function HeroSection() {
-  const [isMobile, setIsMobile] = useState(() =>
-    window.matchMedia("(max-width: 767px)").matches
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-
-    function handleChange(event) {
-      setIsMobile(event.matches);
-    }
-
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange);
-    };
-  }, []);
+  const isMobile = useIsMobile();
 
   if (isMobile) {
     return (

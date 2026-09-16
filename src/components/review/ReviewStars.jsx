@@ -1,4 +1,4 @@
-import { useId } from "react";
+import SelectableStarField from "../common/SelectableStarField";
 
 const COLOR = "#EB6923";
 
@@ -12,20 +12,6 @@ const INPUT_STAR = {
 const DISPLAY_STAR = {
   viewBox: "0 0 18 18",
   path: "M8.94255 3.23584L10.327 7.4969H14.8074L11.1827 10.1304L12.5672 14.3914L8.94255 11.758L5.31787 14.3914L6.70237 10.1304L3.0777 7.4969H7.55804L8.94255 3.23584Z",
-};
-
-// 화면엔 안 보이고 스크린리더만 읽는 스타일
-// 별점 고르는 숨겨진 라디오 버튼용
-const srOnly = {
-  position: "absolute",
-  width: 1,
-  height: 1,
-  margin: -1,
-  padding: 0,
-  border: 0,
-  overflow: "hidden",
-  clipPath: "inset(50%)",
-  whiteSpace: "nowrap",
 };
 
 const Star = ({ filled, size, shape }) => {
@@ -52,7 +38,6 @@ export const ReviewStarIcon = ({ size = 18, filled = true }) => (
 //- onChange 를 주면 네이티브 radio 로 별점 선택(입력용)
 //- 안 주면 읽기 전용 (변형: variant="display")
 const ReviewStars = ({ value = 0, onChange, size, variant = "input" }) => {
-  const uid = useId();
   const selectable = typeof onChange === "function";
   const score = Math.max(0, Math.min(5, Number(value) || 0));
   const rounded = Math.round(score);
@@ -62,32 +47,13 @@ const ReviewStars = ({ value = 0, onChange, size, variant = "input" }) => {
 
   if (selectable) {
     return (
-      <fieldset
-        style={{
-          display: "inline-flex",
-          gap: 2,
-          border: 0,
-          padding: 0,
-          margin: 0,
-        }}
-      >
-        <legend style={srOnly}>별점 선택 (5점 만점)</legend>
-
-        {[1, 2, 3, 4, 5].map((star) => (
-          <label key={star} style={{ cursor: "pointer", lineHeight: 0 }}>
-            <input
-              type="radio"
-              name={uid}
-              value={star}
-              checked={star === rounded}
-              onChange={() => onChange(star)}
-              aria-label={`${star}점`}
-              style={srOnly}
-            />
-            <Star filled={star <= rounded} size={starSize} shape={shape} />
-          </label>
-        ))}
-      </fieldset>
+      <SelectableStarField
+        value={score}
+        onChange={onChange}
+        renderStar={(filled) => (
+          <Star filled={filled} size={starSize} shape={shape} />
+        )}
+      />
     );
   }
 
