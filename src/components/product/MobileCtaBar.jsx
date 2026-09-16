@@ -17,11 +17,17 @@ const MobileCtaBar = ({
       onClick={onToggleWish}
       aria-label={isWished ? "찜 해제" : "찜하기"}
       aria-pressed={isWished}
+      title={isWished ? "찜 해제" : "찜하기"}
     >
       <HeartIcon filled={isWished} width={24} height={24} />
     </S.WishButton>
 
-    <S.CartButton type="button" onClick={onAddToCart} disabled={isSubmitting}>
+    <S.CartButton
+      type="button"
+      onClick={onAddToCart}
+      disabled={isSubmitting}
+      title="장바구니 담기"
+    >
       Add to Cart
     </S.CartButton>
 
@@ -29,6 +35,7 @@ const MobileCtaBar = ({
       type="button"
       onClick={onCheckout}
       disabled={isSubmitting || soldOut}
+      title={soldOut ? "품절" : "결제하기"}
     >
       {soldOut ? "Sold Out" : "CheckOut"}
     </S.CheckoutButton>

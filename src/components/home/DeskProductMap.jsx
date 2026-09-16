@@ -37,6 +37,7 @@ function DeskProductMap({
                     key={product.productId}
                     type="button"
                     isSelected={product.productId === activeProductNumber}
+                    aria-label={`${index + 1}번 상품 보기`}
                     style={{
                       left: `${product.x}%`,
                       top: `${product.y}%`,

@@ -306,6 +306,7 @@ function Mypage() {
               <UserLogOut
                 type="button"
                 aria-label="로그아웃 버튼"
+                title="로그아웃"
                 onClick={() => setIsLogOutModalOpen(true)}
               >
                 Log out
@@ -397,6 +398,7 @@ function Mypage() {
                   className={shakingButton ? "shake" : ""}
                   type="submit"
                   disabled={isSaving}
+                  title={isSaving ? "저장 중" : "회원정보 저장"}
                   onAnimationEnd={() => setShakingButton(false)}
                 >
                   {isSaving ? "Saving..." : "Save Changes"}
@@ -415,10 +417,14 @@ function Mypage() {
               권장드립니다.
             </Settingstext>
             <SettingsBtnGroup>
-              <SettingsDeleteBtn onClick={() => setIsDeleteUserModalOpen(true)}>
+              <SettingsDeleteBtn
+                title="회원 탈퇴"
+                onClick={() => setIsDeleteUserModalOpen(true)}
+              >
                 Delete account
               </SettingsDeleteBtn>
               <SettingsChangeBtn
+                title="비밀번호 변경"
                 onClick={() => setIsPasswordChangeModalOpen(true)}
               >
                 Change Password
@@ -427,9 +433,10 @@ function Mypage() {
           </SettingsCard>
           {isLogOutModalOpen && (
             <Modal
-              title="Logout?"
+              title="Log out?"
               description="정말 로그아웃 하시겠습니까?"
               confirmText="Log out"
+              confirmTitle="로그아웃"
               onClose={() => setIsLogOutModalOpen(false)}
               onConfirm={handleLogout}
             />
@@ -441,6 +448,7 @@ function Mypage() {
                 "회원 탈퇴를 진행하시겠습니까?\n탈퇴 후 계정 정보와 작성하신 리뷰가 모두 삭제되며 복구가 불가능 합니다."
               }
               confirmText="Confirm"
+              confirmTitle="회원 탈퇴"
               onClose={() => setIsDeleteUserModalOpen(false)}
               onConfirm={handleDeleteUser}
             />
@@ -450,6 +458,7 @@ function Mypage() {
               title="Change Password"
               description="현재 비밀번호와 변경할 비밀번호를 입력해 주세요."
               confirmText="Save"
+              confirmTitle="저장"
               icon={<IconPencil size={24} stroke={1.5} color="#ff5a2f" />}
               onClose={handlePasswordModalClose}
               onConfirm={handlePasswordChange}
@@ -482,6 +491,12 @@ function Mypage() {
                       onClick={() =>
                         setShowCurrentPassword(!showCurrentPassword)
                       }
+                      aria-label={
+                        showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                      }
+                      title={
+                        showCurrentPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                      }
                     >
                       {showCurrentPassword ? (
                         <IconEyeClosed size={25} />
@@ -512,6 +527,12 @@ function Mypage() {
                     <NewPasswordHidenButton
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
+                      aria-label={
+                        showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                      }
+                      title={
+                        showNewPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                      }
                     >
                       {showNewPassword ? (
                         <IconEyeClosed size={25} />

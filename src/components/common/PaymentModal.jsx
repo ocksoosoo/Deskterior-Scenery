@@ -40,8 +40,12 @@ const PaymentModal = ({ onClose, onConfirm }) => {
         <ModalDescription>결제를 진행하시겠습니까?</ModalDescription>
 
         <ButtonGroup>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
-          <ConfirmButton onClick={onConfirm}>Confirm</ConfirmButton>
+          <CancelButton title="취소" onClick={onClose}>
+            Cancel
+          </CancelButton>
+          <ConfirmButton title="결제 확인" onClick={onConfirm}>
+            Confirm
+          </ConfirmButton>
         </ButtonGroup>
       </ModalBox>
     </ModalOverlay>

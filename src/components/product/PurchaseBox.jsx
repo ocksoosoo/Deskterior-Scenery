@@ -28,6 +28,7 @@ const PurchaseBox = ({
           onClick={decrease}
           disabled={safeQty <= 1}
           aria-label="수량 감소"
+          title="수량 감소"
         >
           −
         </S.StepButton>
@@ -37,6 +38,7 @@ const PurchaseBox = ({
           onClick={increase}
           disabled={safeQty >= maxQuantity}
           aria-label="수량 증가"
+          title="수량 증가"
         >
           +
         </S.StepButton>
@@ -47,6 +49,7 @@ const PurchaseBox = ({
           type="button"
           onClick={onAddToCart}
           disabled={isSubmitting}
+          title="장바구니 담기"
         >
           Add to Cart
         </S.CartButton>
@@ -55,6 +58,7 @@ const PurchaseBox = ({
           onClick={onToggleWish}
           aria-label={isWished ? "찜 해제" : "찜하기"}
           aria-pressed={isWished}
+          title={isWished ? "찜 해제" : "찜하기"}
         >
           <HeartIcon filled={isWished} width={24} height={24} />
         </S.WishButton>
@@ -64,6 +68,7 @@ const PurchaseBox = ({
         type="button"
         onClick={onCheckout}
         disabled={isSubmitting || soldOut}
+        title={soldOut ? "품절" : "결제하기"}
       >
         {soldOut ? "Sold Out" : "CheckOut"}
       </S.CheckoutButton>

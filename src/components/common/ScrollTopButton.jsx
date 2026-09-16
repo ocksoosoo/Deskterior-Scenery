@@ -18,6 +18,7 @@ const ScrollTopButton = () => {
     <S.Button
       type="button"
       aria-label="맨 위로"
+      title="맨 위로"
       onClick={handleClick}
       $withCtaBar={withCtaBar}
     >

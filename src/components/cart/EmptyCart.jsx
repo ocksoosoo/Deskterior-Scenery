@@ -36,7 +36,7 @@ const EmptyCart = () => {
 
       <Subtitle>데스크 취향을 발견하고 물건을 담으러 가볼까요?</Subtitle>
 
-      <ContinueButton onClick={handleGoToProducts}>
+      <ContinueButton title="쇼핑 계속하기" onClick={handleGoToProducts}>
         Continue shopping
       </ContinueButton>
     </EmptyContainer>

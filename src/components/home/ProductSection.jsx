@@ -404,6 +404,7 @@ function MobileProductGroup({ title, items, isBest = false, onAddToCart }) {
             <MobileMoreButton
               type="button"
               aria-label={`${title} 상품 더 보기`}
+              title={`${title} 상품 더 보기`}
               onClick={() => {
                 setVisibleCount((count) => Math.min(count + 2, items.length));
               }}

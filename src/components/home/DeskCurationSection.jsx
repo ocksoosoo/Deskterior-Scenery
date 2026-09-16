@@ -23,6 +23,17 @@ import { SelectedProductCard } from "./SelectedProductCard";
 import { DeskProductMap } from "./DeskProductMap";
 import { ChevronDownIcon } from "../icons/Icons";
 
+// 스타일 키워드 데이터(main.js)에 한글 이름이 없어서, 호버 텍스트용으로만 따로 매핑
+const STYLE_NAME_KO = {
+  minimal: "미니멀",
+  natural: "내추럴",
+  hip: "힙",
+  metallic: "메탈릭",
+  vintage: "빈티지",
+  cozy: "코지",
+  pastel: "파스텔",
+};
+
 function DeskCurationSection({ items = [] }) {
   // 어느 페이지에 있었든 홈으로 돌아오면 항상 첫 번째 스타일/상품부터 보이도록,
   // 이전 선택을 기억하지 않고 null(= 첫 번째 스타일)로 시작한다
@@ -184,6 +195,7 @@ function DeskCurationSection({ items = [] }) {
               type="button"
               isSelected={item.styleId === activeStyleId}
               aria-pressed={item.styleId === activeStyleId}
+              title={STYLE_NAME_KO[item.styleId]}
               onClick={() => {
                 handleStyleChange(item);
               }}
@@ -210,6 +222,7 @@ function DeskCurationSection({ items = [] }) {
             type="button"
             aria-label="데스크 스타일 선택"
             aria-expanded={isKeywordOpen}
+            title="데스크 스타일 선택"
             onClick={() => {
               setIsKeywordOpen((previous) => !previous);
             }}
@@ -225,6 +238,7 @@ function DeskCurationSection({ items = [] }) {
                   <KeywordMenuButton
                     type="button"
                     aria-pressed={item.styleId === activeStyleId}
+                    title={STYLE_NAME_KO[item.styleId]}
                     onClick={(event) => {
                       handleStyleChange(item);
                       setIsKeywordOpen(false);

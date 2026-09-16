@@ -188,6 +188,7 @@ const Header = () => {
         ref={menuButtonRef}
         type="button"
         aria-label="메뉴 열기"
+        title="메뉴 열기"
         onClick={openMenu}
       >
         <MenuIcon width={44} height={44} />
@@ -277,6 +278,7 @@ const Header = () => {
                   ref={closeButtonRef}
                   type="button"
                   aria-label="메뉴 닫기"
+                  title="메뉴 닫기"
                   onClick={closeMenu}
                 >
                   <CloseIcon width={24} height={24} style={{ flexShrink: 0 }} />
@@ -287,16 +289,25 @@ const Header = () => {
                 {user ? (
                   <MobileMenuAuthActionButton
                     type="button"
+                    title="로그아웃"
                     onClick={requestLogout}
                   >
-                    Logout
+                    Log out
                   </MobileMenuAuthActionButton>
                 ) : (
                   <>
-                    <MobileMenuAuthButton to="/login" onClick={closeMenu}>
+                    <MobileMenuAuthButton
+                      to="/login"
+                      title="로그인"
+                      onClick={closeMenu}
+                    >
                       Login
                     </MobileMenuAuthButton>
-                    <MobileMenuAuthButton to="/signup" onClick={closeMenu}>
+                    <MobileMenuAuthButton
+                      to="/signup"
+                      title="회원가입"
+                      onClick={closeMenu}
+                    >
                       Sign Up
                     </MobileMenuAuthButton>
                   </>
@@ -306,6 +317,7 @@ const Header = () => {
                   aria-label={
                     user ? "로그인 시 마이페이지" : "비로그인 시 로그인"
                   }
+                  title="마이페이지"
                   onClick={closeMenu}
                 >
                   <PersonIcon width={20} height={20} />
@@ -320,6 +332,7 @@ const Header = () => {
                     key={category.id}
                     to={category.path}
                     isActive={category.path === pathname}
+                    title={CATEGORY_NAME_KO[category.id]}
                     onClick={closeMenu}
                   >
                     {category.name}
@@ -337,9 +350,10 @@ const Header = () => {
         // 안에 갇혀 보이는 문제가 있었다. 햄버거 메뉴와 같은 방식으로 body에 포탈.
         createPortal(
           <Modal
-            title="Logout?"
+            title="Log out?"
             description="정말 로그아웃 하시겠습니까?"
-            confirmText="Logout"
+            confirmText="Log out"
+            confirmTitle="로그아웃"
             onClose={() => setIsLogoutModalOpen(false)}
             onConfirm={handleLogout}
           />,
