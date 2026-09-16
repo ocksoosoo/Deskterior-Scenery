@@ -1,5 +1,4 @@
 import { AnimatePresence } from "motion/react";
-import { AnimatePresence } from "motion/react";
 import {
   ModalOverlay,
   ModalBox,
