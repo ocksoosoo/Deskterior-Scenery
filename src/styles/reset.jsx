@@ -3,10 +3,16 @@ import { css } from "@emotion/react";
 export const reset = css`
   /* 폰트 */
 
+  /* font-display: swap이면 폰트가 늦게 도착했을 때 텍스트가 대체 폰트에서
+     Pretendard로 뒤늦게 다시 그려지고(스왑), 이 폰트 파일이 2MB나 돼서 그
+     시점이 아주 늦어지면 그 재렌더가 LCP(가장 큰 콘텐츠 페인트)로 잡혀버린다.
+     optional은 "빨리(대략 100ms 안에) 오면 쓰고, 늦으면 이번 방문에서는
+     그냥 대체 폰트로 끝까지 간다"라서 이 늦은 재렌더 자체가 없어진다
+     (한 번 캐시되면 다음 방문부터는 바로 Pretendard로 보인다) */
   @font-face {
     font-family: "Pretendard";
     font-weight: 300 700;
-    font-display: swap;
+    font-display: optional;
     src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
       format("woff2-variations");
   }
@@ -16,7 +22,7 @@ export const reset = css`
     font-family: "DM Serif Text";
     font-style: normal;
     font-weight: 400;
-    font-display: swap;
+    font-display: optional;
     src: url("https://cdn.jsdelivr.net/fontsource/fonts/dm-serif-text@latest/latin-400-normal.woff2")
       format("woff2");
   }

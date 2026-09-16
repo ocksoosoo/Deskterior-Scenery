@@ -1,5 +1,8 @@
 import SceneryBox from "../common/SceneryBox";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ProductDetail/ProductDetailContent.styles";
+
+const DETAIL_IMAGE_WIDTH = 1000;
 
 const ProductDetailContent = ({ sections = [] }) => {
   if (!sections.length) return null;
@@ -13,7 +16,7 @@ const ProductDetailContent = ({ sections = [] }) => {
           <S.Article key={section.id}>
             {section.image && (
               <S.DetailImage
-                src={section.image}
+                src={toResizedImageUrl(section.image, DETAIL_IMAGE_WIDTH)}
                 alt={section.title || ""}
                 loading="lazy"
                 fallback={

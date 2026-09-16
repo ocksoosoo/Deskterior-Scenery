@@ -7,10 +7,15 @@ import { wishlistApi } from "../../api/wishlistApi";
 import useWishlistStore from "../../store/wishlistStore";
 import useCartStore from "../../store/cartStore";
 import PRODUCT_NAME_KO from "../../data/productNamesKo";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ListPageStyles/ProductCard.styles";
 
 // 바구니 아이콘 안쪽 창(구멍) 영역 - 아이콘 자체 path의 안쪽 사각형 좌표와 동일
 const BASKET_WINDOW_POINTS = "19.04,8.25 7.44,8.25 8.62,14.75 17.41,14.75";
+
+// 카드 이미지 실제 표시 크기(약 186px)의 2배(레티나 대응) - 원본(1024px)을
+// 그대로 받지 않고 이 크기로 리사이징된 이미지를 받는다
+const CARD_IMAGE_WIDTH = 400;
 
 const ProductCard = ({
   product,
@@ -116,7 +121,7 @@ const ProductCard = ({
               aria-label={`${product.name} 상세 보기`}
             >
               <S.ProductImage
-                src={product.imageUrl}
+                src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
                 alt={product.name}
                 loading={imagePriority ? "eager" : "lazy"} //
                 fetchPriority={imagePriority ? "high" : "auto"} //
@@ -125,7 +130,7 @@ const ProductCard = ({
             </S.ImageLink>
           ) : (
             <S.ProductImage
-              src={product.imageUrl}
+              src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
               alt={product.name}
               loading={imagePriority ? "eager" : "lazy"} //
               fetchPriority={imagePriority ? "high" : "auto"} //
