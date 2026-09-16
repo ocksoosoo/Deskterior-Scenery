@@ -14,6 +14,7 @@ export const HeaderSection = styled.header(({ theme }) => ({
 
   backdropFilter: "blur(8px)",
   WebkitBackdropFilter: "blur(8px)", // 사파리 호환용
+  boxShadow: "0 1px 6px rgba(0, 0, 0, 0.02)",
 
   // 768px 근처는 로고(96px 고정)+아이콘(96px 고정)+양쪽 padding(64px씩)을 빼면
   // 카테고리 5개가 들어갈 공간이 얼마 안 남아서, 네비게이션이 로고/아이콘에
