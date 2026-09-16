@@ -230,7 +230,7 @@ const Header = () => {
             title="로그아웃"
             onClick={requestLogout}
           >
-            <LogoutIcon />
+            <LogoutIcon width={30} height={30} />
           </AuthIconButton>
         ) : (
           <AuthIconButton
@@ -239,7 +239,7 @@ const Header = () => {
             aria-label="로그인 버튼"
             title="로그인"
           >
-            <LoginIcon />
+            <LoginIcon width={30} height={30} />
           </AuthIconButton>
         )}
 
