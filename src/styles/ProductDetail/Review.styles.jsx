@@ -30,7 +30,7 @@ export const Header = styled.div(({ theme }) => ({
 export const Title = styled.h2(({ theme }) => ({
   margin: 0,
   fontFamily: theme.fontFamily.display,
-  fontSize: theme.fontSize["5xl"], // 2.5rem (40px)
+  fontSize: theme.fontSize["4xl"], // 2rem (32px)
   fontWeight: theme.fontWeight.regular, // 400
   fontStyle: "normal",
   lineHeight: "normal",
@@ -38,7 +38,6 @@ export const Title = styled.h2(({ theme }) => ({
   color: theme.colors.textMain,
 
   [theme.media.mobile]: {
-    fontSize: theme.fontSize["4xl"], // 32px
     letterSpacing: "normal",
   },
 }));
