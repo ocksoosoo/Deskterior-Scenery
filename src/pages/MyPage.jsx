@@ -254,6 +254,11 @@ function Mypage() {
       return;
     }
 
+    if (currentPassword === newPassword) {
+      setPasswordError("현재 비밀번호와 변경할 비밀번호가 일치합니다.");
+      return;
+    }
+
     try {
       setIsPasswordSaving(true);
 
