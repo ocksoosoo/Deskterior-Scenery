@@ -1,37 +1,47 @@
 import styled from "@emotion/styled";
+import { IconBrightness } from "@tabler/icons-react";
+import { theme } from "./theme";
+import { Link } from "react-router";
 
-export const MypageBox = styled.main({
+export const MypageBox = styled.main(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   width: "100%",
   margin: "0 auto",
   padding: "60px clamp(16px, 6vw, 64px)",
-  backgroundColor: "#f7f5ef",
+  backgroundColor: theme.colors.background,
+}));
+
+export const MypageInner = styled.div({
+  width: "100%",
+  maxWidth: "896px",
+  margin: "0 auto",
 });
 
-export const MypageInner = styled.div({});
-
-export const MypageTitle = styled.h1({
-  margin: "0 0 32px",
-  fontSize: "40px",
-  fontWeight: 700,
+export const MypageTitle = styled.h1(({ theme }) => ({
+  fontFamily: theme.fontFamily.display,
+  margin: `0 0 ${theme.spacing.xl}`,
+  fontSize: theme.fontSize["4xl"],
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.textMain,
   lineHeight: 1.2,
-});
+}));
 
-export const CardBox = styled.div({
+export const CardBox = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "30px",
+  gap: theme.spacing.xl,
   width: "100%",
-});
+}));
 
-export const UserCard = styled.section({
+export const UserCard = styled.section(({ theme }) => ({
   width: "100%",
   minHeight: "180px",
-  padding: "30px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
-});
+  padding: theme.spacing.xl,
+  backgroundColor: theme.colors.cards,
+  borderRadius: theme.radius.md,
+  border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+}));
 
 export const UserHead = styled.div({
   display: "flex",
@@ -43,8 +53,9 @@ export const UserHead = styled.div({
 
 export const UserName = styled.p(({ theme }) => ({
   margin: 0,
-  fontSize: "35px",
-  fontWeight: 700,
+  fontSize: theme.fontSize["2xl"],
+  fontWeight: theme.fontWeight.semiBold,
+  color: theme.colors.textMain,
   lineHeight: 1.4,
   letterSpacing: 10,
 
@@ -53,43 +64,44 @@ export const UserName = styled.p(({ theme }) => ({
   },
 }));
 
-export const UserLogOut = styled.button({
-  width: "120px",
-  height: "50px",
-  padding: "10px 18px",
+export const UserLogOut = styled.button(({ theme }) => ({
+  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   border: "none",
-  borderRadius: "6px",
-  backgroundColor: "#222320",
-  color: "#fff",
-  fontSize: "16px",
+  borderRadius: theme.radius.md,
+  backgroundColor: theme.colors.textMain,
+  color: theme.colors.cards,
+  fontSize: theme.fontSize.lg,
+  fontWeight: theme.fontWeight.medium,
   cursor: "pointer",
   transform: "translateY(60%)",
   cursor: "pointer",
   "&:hover": {
     filter: "brightness(1.5)",
   },
-});
+}));
 
-export const UserId = styled.p({
-  marginTop: "45px",
-  fontSize: "20px",
-  color: "#777",
-});
+export const UserId = styled.p(({ theme }) => ({
+  marginTop: theme.spacing.md,
+  fontSize: theme.fontSize.md,
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.secondText,
+}));
 
-export const AccountCard = styled.section({
+export const AccountCard = styled.section(({ theme }) => ({
   width: "100%",
   minHeight: "380px",
-  padding: "32px 28px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
-});
+  padding: theme.spacing.xl,
+  backgroundColor: theme.colors.cards,
+  border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+  borderRadius: theme.radius.md,
+}));
 
 export const AccountTitle = styled.h2(({ theme }) => ({
-  margin: "0 0 28px",
-  paddingBottom: "16px",
-  borderBottom: "3px solid #e5e5e5",
-  fontSize: "28px",
-  fontWeight: 700,
+  fontFamily: theme.fontFamily.display,
+  marginBottom: theme.spacing.lg,
+  paddingBottom: theme.spacing.md,
+  borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+  fontSize: theme.fontSize["3xl"],
   lineHeight: 1.2,
 
   [theme.media.smallMobile]: {
@@ -106,8 +118,8 @@ export const AccountForm = styled.form({
 export const AccountGrid = styled.div(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-  columnGap: "36px",
-  rowGap: "32px",
+  columnGap: theme.spacing.xl,
+  rowGap: theme.spacing.lg,
   width: "100%",
 
   [theme.media.smallMobile]: {
@@ -117,70 +129,72 @@ export const AccountGrid = styled.div(({ theme }) => ({
   },
 }));
 
-export const AccountField = styled.div({
+export const AccountField = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "8px",
+  gap: theme.spacing.xs,
   minWidth: 0,
-});
+}));
 
-export const AddressField = styled.div({
+export const AddressField = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "8px",
+  gap: theme.spacing.xs,
   gridColumn: "1 / -1",
-});
+}));
 
-export const ReadonlyText = styled.span({
-  marginLeft: "4px",
-  fontSize: "12px",
-  fontWeight: 400,
-  color: "#999",
-});
+export const ReadonlyText = styled.span(({ theme }) => ({
+  marginLeft: theme.spacing["2xs"],
+  fontSize: theme.fontSize.xs,
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.secondText,
+}));
 
-export const AccountLabel = styled.label({
-  fontSize: "14px",
-  fontWeight: 600,
-  color: "#222320",
-});
+export const AccountLabel = styled.label(({ theme }) => ({
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.medium,
+  color: theme.colors.textMain,
+}));
 
-export const Required = styled.span({
-  color: "#ff6b35",
-});
+export const Required = styled.span(({ theme }) => ({
+  color: theme.colors.emphasis,
+}));
 
-export const AccountInput = styled.input({
+export const AccountInput = styled.input(({ theme }) => ({
   width: "100%",
-  padding: "0 0 10px",
+  padding: `${theme.spacing.xs} 0`,
   border: "none",
-  borderBottom: "2px solid #ddd",
+  borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
   outline: "none",
   backgroundColor: "transparent",
-  fontSize: "14px",
+  fontSize: theme.colors.textMain,
   lineHeight: 1.4,
-  color: "#555",
+  color: theme.colors.textMain,
+  transition: "border-color 0.2s ease",
 
   "&:focus": {
-    borderBottomColor: "#222320",
+  borderBottomWidth: theme.borderWidth.focus,
+    borderBottomColor: theme.colors.textMain,
   },
   "&:placeholder": {
-    color: "#d4d4d4",
+    color: theme.colors.secondText,
   },
   "&[readonly]": {
-    color: "#777",
+    color: theme.colors.secondText,
     cursor: "default",
   },
-});
+}));
 
 export const SaveArea = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   width: "100%",
-  marginTop: "40px",
+  marginTop: theme.spacing.xl,
 
   [theme.media.mobile]: {
     flexDirection: "column",
     alignItems: "stretch",
-    gap: "12px",
+    gap: theme.spacing.sm,
   },
 }));
 
@@ -189,6 +203,7 @@ export const ErrorIconWrapper = styled.span(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   flexShrink: 0,
+  color: theme.colors.error,
 
   "& svg": {
     width: "18px",
@@ -206,13 +221,12 @@ export const ErrorIconWrapper = styled.span(({ theme }) => ({
 export const ErrorText = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  gap: "8px",
-  padding: "12.7px 14px",
-  border: "1px solid #f0b49b",
-  borderRadius: "5px",
-  backgroundColor: "#f8d0bb",
-  color: "#222",
-  fontSize: "13px",
+  gap: theme.spacing.xs,
+  padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
+  borderRadius: theme.radius.md,
+  backgroundColor: "#f8d1bd",
+  color: theme.colors.textMain,
+  fontSize: theme.fontSize.xs,
 
   [theme.media.mobile]: {
     width: "100%",
@@ -227,13 +241,18 @@ export const ErrorText = styled.div(({ theme }) => ({
 
 export const SaveButton = styled.button(({ theme }) => ({
   marginLeft: "auto",
-  padding: "14px 24px",
+  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   border: "none",
-  borderRadius: "8px",
-  backgroundColor: "#222320",
-  color: "#fff",
-  fontSize: "14px",
+  borderRadius: theme.radius.md,
+  backgroundColor: theme.colors.textMain,
+  color: theme.colors.cards,
+  fontSize: theme.fontSize.lg,
+  fontWeight: theme.fontWeight.medium,
   cursor: "pointer",
+  transition: "opacity 0.2s ease",
+  "&:hover": {
+    filter: "brightness(1.5)",
+  },
 
   [theme.media.mobile]: { width: "100%", marginLeft: 0 },
 
@@ -269,99 +288,109 @@ export const SaveButton = styled.button(({ theme }) => ({
   },
 }));
 
-export const SettingsCard = styled.section({
+export const SettingsCard = styled.section(({theme}) => ({
   width: "100%",
   minHeight: "240px",
-  padding: "32px 28px",
-  backgroundColor: "#fff",
-  borderRadius: "8px",
-});
+  padding: theme.spacing.xl,
+  backgroundColor: theme.colors.cards,
+  borderRadius: theme.radius.md,
+  border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+}));
 
 export const SettingsTitle = styled.h2(({ theme }) => ({
-  margin: "0 0 30px",
-  fontSize: "28px",
-  fontWeight: 700,
+  fontFamily: theme.fontFamily.display,
+  margin: `0 0 ${theme.spacing.xl}`,
+  fontSize: theme.fontSize["4xl"],
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.textMain,
   lineHeight: 1.2,
 
   [theme.media.smallMobile]: {
-    fontSize: "25px",
+    fontSize: theme.fontSize["2xl"],
   },
 }));
 
-export const Settingstext = styled.p({
-  margin: "0 0 30px",
-  fontSize: "14px",
+export const Settingstext = styled.p(({theme}) => ({
+  margin: `0 0 ${theme.spacing.xl}`,
+  fontSize: theme.fontSize.sm,
   lineHeight: 1.5,
-  color: "#777",
+  color: theme.colors.secondText,
 
   "@media (width < 506px)": {
     fontSize: "12px",
   },
-});
+}));
 
 export const SettingsBtnGroup = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  gap: "16px",
+  gap: theme.spacing.md,
 
   [theme.media.smallMobile]: {
     flexDirection: "column",
     alignItems: "stretch",
-    gap: "12px",
+    gap: theme.spacing.sm,
   },
 }));
 
 export const SettingsDeleteBtn = styled.button(({ theme }) => ({
-  padding: "12px 18px",
-  border: "1px solid #ef4d4d",
-  borderRadius: "8px",
-  backgroundColor: "#fff",
-  color: "#ef4d4d",
-  fontSize: "14px",
+  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+  border: `${theme.borderWidth.default} solid ${theme.colors.error}`,
+  borderRadius: theme.radius.md,
+  backgroundColor: theme.colors.cards,
+  color: theme.colors.error,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.medium,
   cursor: "pointer",
-
+  transition: "background-color 0.2s ease",
+  "&:hover": {
+    filter: "brightness(1.02)",
+  },
   [theme.media.smallMobile]: {
     width: "100%",
   },
 }));
 
 export const SettingsChangeBtn = styled.button(({ theme }) => ({
-  padding: "12px 18px",
+  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
   border: "none",
-  borderRadius: "8px",
-  backgroundColor: "#efede7",
-  color: "#666",
-  fontSize: "14px",
+  borderRadius: theme.radius.md,
+  backgroundColor: theme.colors.subtle,
+  color: theme.colors.textMain,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.medium,
   cursor: "pointer",
-
+  "&:hover": {
+    filter: "brightness(1.02)",
+  },
   [theme.media.smallMobile]: {
     width: "100%",
   },
 }));
 
-export const PasswordFormBox = styled.div({
+export const PasswordFormBox = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "20px",
+  gap: theme.spacing.lg,
   width: "100%",
-  padding: "0 32px",
-  marginTop: "32px",
+  padding: `${theme.spacing.lg} 0`,
+  marginTop: theme.spacing.lg,
   marginBottom: "36px",
   boxSizing: "border-box",
-});
+}));
 
-export const PasswordField = styled.div({
+export const PasswordField = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "10px",
+  gap: theme.spacing.xs,
   width: "100%",
-});
+}));
 
-export const PasswordLabel = styled.label({
-  fontSize: "16px",
-  fontWeight: 500,
-  color: "#222",
-});
+export const PasswordLabel = styled.label(({ theme }) => ({
+  fontSize: theme.fontSize.md,
+  fontWeight: theme.fontWeight.medium,
+  color: theme.colors.textMain,
+}));
 
 export const CurrentPasswordGroup = styled.div({
   position: "relative",
@@ -373,28 +402,43 @@ export const NewPasswordGroup = styled.div({
   width: "100%",
 });
 
-export const PasswordInput = styled.input({
+export const PasswordInput = styled.input(({ theme }) => ({
   width: "100%",
   height: "54px",
-  padding: "0 48px 0 16px",
+  padding: `0 ${theme.spacing["2xl"]} 0 ${theme.spacing.md}`,
   boxSizing: "border-box",
-  border: "1px solid #e4e1db",
-  borderRadius: "5px",
+  border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+  borderRadius: theme.radius.sm,
   outline: "none",
-  backgroundColor: "#fff",
-  fontSize: "14px",
-  color: "#222",
-
+  backgroundColor: theme.colors.cards,
+  fontSize: theme.fontSize.sm,
+  color: theme.colors.textMain,
+  transition: "border-color 0.2s ease",
   "&::placeholder": {
-    color: "#888",
+    color: theme.colors.secondText,
   },
 
   "&:focus": {
-    borderColor: "#999",
+    borderColor: theme.colors.textMain,
   },
-});
+}));
 
-export const CurrentPasswordHidenButton = styled.button({
+export const CurrentPasswordHidenButton = styled.button(({ theme }) => ({
+  position: "absolute",
+  top: "50%",
+  right: theme.spacing.sm,
+  transform: "translateY(-50%)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  border: "none",
+  backgroundColor: "transparent",
+  color: theme.colors.secondText,
+  cursor: "pointer",
+}));
+
+export const NewPasswordHidenButton = styled.button(({theme}) => ({
   position: "absolute",
   top: "50%",
   right: "14px",
@@ -405,36 +449,40 @@ export const CurrentPasswordHidenButton = styled.button({
   padding: 0,
   border: "none",
   backgroundColor: "transparent",
-  color: "#777",
+  color: theme.colors.secondText,
   cursor: "pointer",
-});
+}));
 
-export const NewPasswordHidenButton = styled.button({
-  position: "absolute",
-  top: "50%",
-  right: "14px",
-  transform: "translateY(-50%)",
+export const PasswordError = styled.p(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
-  padding: 0,
-  border: "none",
-  backgroundColor: "transparent",
-  color: "#777",
-  cursor: "pointer",
-});
-
-export const PasswordError = styled.p({
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  marginTop: "12px",
+  gap: theme.spacing.xs,
   width: "100%",
-  padding: "10px 12px",
+  padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
   boxSizing: "border-box",
-  border: "1px solid #f0b49b",
-  borderRadius: "5px",
-  backgroundColor: "#f8d0bb",
-  color: "#222",
-  fontSize: "13px",
+  backgroundColor: "#f8d1bd",
+  color: theme.colors.textMain,
+  fontSize: theme.fontSize.xs,
+  borderRadius: theme.radius.sm,
+  color: theme.colors.textMain,
+  fontSize: theme.fontSize.xs,
+}));
+
+export const MypageBreadcrumb = styled.nav(({ theme }) => ({
+  marginBottom: theme.spacing.sm,
+  fontSize: theme.fontSize.md,
+  fontWeight: theme.fontWeight.regular,
+  color: theme.colors.secondText,
+
+  [theme.media.mobile]: {
+    fontSize: theme.fontSize.xs,
+  },
+}));
+
+export const MypageBreadcrumbLink = styled(Link)({
+  color: "inherit",
+  
+  "&:hover": {
+    textDecoration: "underline",
+  },
 });

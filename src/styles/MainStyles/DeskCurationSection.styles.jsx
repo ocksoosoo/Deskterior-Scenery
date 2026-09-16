@@ -251,6 +251,7 @@ export const ProductLoading = styled.div(({ theme }) => ({
   width: "100%",
   height: "100%",
   minHeight: "100%",
+  flex: 1,
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -269,7 +270,7 @@ export const ProductLoading = styled.div(({ theme }) => ({
 
   [theme.media.mobile]: {
     minHeight: "220px",
-    padding: `${theme.spacing.xl} 0`,
+    padding: 0,
   },
 }));
 
