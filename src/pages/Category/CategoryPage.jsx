@@ -1,20 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import { useLocation, useSearchParams } from "react-router";
-import { getProducts, deriveBadgeFields } from "../../api/productsApi";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
 import useCartStore from "../../store/cartStore";
 import {
   showSuccessToast,
   showFailToast,
 } from "../../components/common/ShowToast";
 import ProductCard from "../../components/product/ProductCard";
-import ProductToolbar, {
-  SORT_OPTIONS,
-} from "../../components/product/ProductToolbar";
+import ProductToolbar from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
 import { FadeLoader } from "react-spinners";
 import useLoadingStore from "../../store/UseLoadingStore";
 import useCategoriesStore from "../../store/categoriesStore";
 import { EmptyBoxIcon } from "../../components/icons/Icons";
+import useResponsiveRowSize from "../../hook/useResponsiveRowSize";
+import useCategoryPageParams from "../../hook/useCategoryPageParams";
+import useCategoryProducts from "../../hook/useCategoryProducts";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
 const PAGE_SIZE = 6;
@@ -25,41 +25,6 @@ const RESIZE_DEBOUNCE_MS = 150;
 
 const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
-// 카테고리별 마지막 조회 페이지 기억 (새로고침에도 유지되도록 sessionStorage 사용)
-const LAST_PAGE_STORAGE_KEY = "categoryLastPage";
-
-function readLastPageMap() {
-  try {
-    const saved = sessionStorage.getItem(LAST_PAGE_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeLastPage(categoryId, page) {
-  try {
-    const map = readLastPageMap();
-    map[categoryId] = page;
-    sessionStorage.setItem(LAST_PAGE_STORAGE_KEY, JSON.stringify(map));
-  } catch {
-    // sessionStorage 접근 불가(프라이빗 모드 등)면 다음 방문 때 1페이지로 시작됨
-  }
-}
-
-// URL의 page 값 검증 (숫자 아님/정수 아님/1 미만이면 1페이지로 취급)
-function parsePageParam(value) {
-  const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
-}
-
-// URL의 sort 값 검증 (지원하지 않는 값이면 기본값으로 보정)
-function parseSortParam(value) {
-  return SORT_OPTIONS.some((option) => option.value === value)
-    ? value
-    : "name";
-}
-
 const CategoryPage = ({ categoryId = "lighting" }) => {
   const cartItems = useCartStore((s) => s.cartItems);
   const addToCart = useCartStore((s) => s.addToCart);
@@ -69,25 +34,13 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   const { pathname } = useLocation();
 
-  const [isMobile, setIsMobile] = useState(
-    () => window.innerWidth < MOBILE_BREAKPOINT,
-  );
-  useEffect(() => {
-    let resizeTimer = null;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-      }, RESIZE_DEBOUNCE_MS);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      clearTimeout(resizeTimer);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
   // 모바일 2개, PC/태블릿 3개씩 한 행
-  const rowSize = isMobile ? 2 : 3;
+  const rowSize = useResponsiveRowSize({
+    mobileCount: 2,
+    defaultCount: 3,
+    breakpoint: MOBILE_BREAKPOINT,
+    debounceMs: RESIZE_DEBOUNCE_MS,
+  });
 
   // 카테고리 목록은 스토어에서 앱 전체 캐시/1회 요청 처리
   const categories = useCategoriesStore((state) => state.categories);
@@ -103,118 +56,18 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   // 카테고리 이름 로딩 실패해도 상품목록은 보이도록 categoryId로 폴백
   const categoryName = category?.name ?? categoryId;
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("q") ?? "";
-  const pageParam = searchParams.get("page");
-  // URL에 page 있으면 그 값, 없으면 마지막으로 보던 페이지
-  const currentPage = pageParam
-    ? parsePageParam(pageParam)
-    : (readLastPageMap()[categoryId] ?? 1);
-  const sortBy = parseSortParam(searchParams.get("sort"));
+  const { search, currentPage, sortBy, updateSearchParams } =
+    useCategoryPageParams(categoryId);
 
-  const updateSearchParams = (updates, options) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null || value === "") {
-          next.delete(key);
-        } else {
-          next.set(key, String(value));
-        }
-      });
-      return next;
-    }, options);
-  };
-
-  // 기억한 페이지로 시작했다면 주소창에도 반영 (새로고침/공유 시에도 유지)
-  useEffect(() => {
-    if (!pageParam && currentPage > 1) {
-      updateSearchParams({ page: currentPage }, { replace: true });
-    }
-    // 마운트 시 한 번만 확인하면 되므로 categoryId만 의존성으로 둠
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId]);
-
-  // 페이지가 바뀔 때마다 마지막 조회 페이지 갱신
-  useEffect(() => {
-    writeLastPage(categoryId, currentPage);
-  }, [categoryId, currentPage]);
-
-  const [pageProducts, setPageProducts] = useState(null);
-  const [totalPages, setTotalPages] = useState(1);
-  const [erroredKey, setErroredKey] = useState(null);
-
-  const [loadedProductsForCategoryId, setLoadedProductsForCategoryId] =
-    useState(null);
-
-  const queryKey = `${categoryId}|${currentPage}|${sortBy}|${search}`;
-  const hasLoadedRef = useRef(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadProducts() {
-      try {
-        const data = await getProducts(
-          {
-            category: categoryId,
-            page: currentPage,
-            limit: PAGE_SIZE,
-            sort: sortBy,
-            q: search,
-          },
-          { signal: controller.signal },
-        );
-
-        const totalPagesFromServer = Math.max(1, data.pagination.totalPages);
-
-        // page가 총 페이지 수보다 크면 마지막 페이지로 보정 (재요청 완료 후에만 로딩완료 처리)
-        if (currentPage > totalPagesFromServer) {
-          updateSearchParams({ page: totalPagesFromServer }, { replace: true });
-          return;
-        }
-
-        const products = data.products.map((product) => ({
-          ...product,
-          ...deriveBadgeFields(product),
-        }));
-
-        // 이미지 로딩까지 기다리지 않고 데이터만 오면 바로 렌더 (이미지는 lazy loading)
-        setPageProducts(products);
-
-        setTotalPages(totalPagesFromServer);
-
-        setErroredKey(null);
-
-        hasLoadedRef.current = true;
-
-        setLoadedProductsForCategoryId(categoryId);
-      } catch (error) {
-        // 더 최신 요청으로 대체되어 취소된 요청이라 무시 (에러 아님)
-        if (error.name === "AbortError") return;
-
-        console.error("상품목록 로딩 실패:", error);
-
-        setErroredKey(queryKey);
-
-        if (hasLoadedRef.current) {
-          showFailToast("목록을 불러오지 못했습니다. 다시 시도해 주세요.");
-        }
-
-        setLoadedProductsForCategoryId(categoryId);
-      }
-    }
-
-    loadProducts();
-
-    return () => {
-      controller.abort();
-    };
-    // updateSearchParams는 매 렌더 새로 생성되므로 의존성에서 제외 (queryKey로 충분)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, currentPage, sortBy, search, queryKey]);
-
-  const productsReady = loadedProductsForCategoryId === categoryId;
+  const { pageProducts, totalPages, hasLoadedOnce, isCurrentError, productsReady } =
+    useCategoryProducts({
+      categoryId,
+      currentPage,
+      sortBy,
+      search,
+      updateSearchParams,
+      pageSize: PAGE_SIZE,
+    });
 
   useEffect(() => {
     if (!categoriesReady || !productsReady) {
@@ -223,10 +76,6 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
     finishPageLoading(pathname);
   }, [categoriesReady, productsReady, pathname, finishPageLoading]);
-
-  // 재조회 중에도 기존 데이터가 있으면 스피너 대신 유지 후 자연스럽게 교체
-  const hasLoadedOnce = pageProducts !== null;
-  const isCurrentError = erroredKey === queryKey;
 
   // categories 로딩 완료 후에도 없는 id면 잘못된 페이지
   if (categories !== null && !category) {
