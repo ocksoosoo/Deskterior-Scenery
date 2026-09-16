@@ -37,11 +37,11 @@ export const Course = styled.span(({ theme }) => ({
   },
 }));
 
-// 경로 태그 - 클릭 가능한 링크임을 알 수 있게 기본 상태에서도 밑줄 표시
+// 경로 태그
 export const BreadcrumbLink = styled.a({
   cursor: "pointer",
   color: "inherit",
-  textDecoration: "underline",
+  "&:hover": { textDecoration: "underline" },
 });
 
 // Cart
