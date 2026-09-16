@@ -1,16 +1,15 @@
 import styled from "@emotion/styled";
 
-export const MypageBox = styled.main(({ theme }) => ({
+export const MypageBox = styled.main({
+  display: "flex",
+  flexDirection: "column",
   width: "100%",
-  padding: `${theme.spacing["3xl"]} clamp(16px, 6vw, 64px)`,
-  backgroundColor: theme.colors.background,
-}));
-
-export const MypageInner = styled.div({
-  width: "100%",
-  maxWidth: "896px",
   margin: "0 auto",
+  padding: "60px clamp(16px, 6vw, 64px)",
+  backgroundColor: "#f7f5ef",
 });
+
+export const MypageInner = styled.div({});
 
 export const MypageTitle = styled.h1({
   margin: "0 0 32px",
@@ -97,13 +96,19 @@ export const AccountForm = styled.form({
   width: "100%",
 });
 
-export const AccountGrid = styled.div({
+export const AccountGrid = styled.div(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
   columnGap: "36px",
   rowGap: "32px",
   width: "100%",
-});
+
+  [theme.media.smallMobile]: {
+    gridTemplateColumns: "1fr",
+    columnGap: 0,
+    rowGap: "24px",
+  },
+}));
 
 export const AccountField = styled.div({
   display: "flex",
@@ -159,26 +164,61 @@ export const AccountInput = styled.input({
   },
 });
 
-export const SaveArea = styled.div({
+export const SaveArea = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   width: "100%",
   marginTop: "40px",
-});
 
-export const ErrorText = styled.div({
+  [theme.media.mobile]: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+  },
+}));
+
+export const ErrorIconWrapper = styled.span(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: 0,
+
+  "& svg": {
+    width: "18px",
+    height: "18px",
+  },
+
+  [theme.media.smallMobile]: {
+    "& svg": {
+      width: "15px",
+      height: "15px",
+    },
+  },
+}));
+
+export const ErrorText = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: "8px",
-  padding: "10px 14px",
+  padding: "12.7px 14px",
   border: "1px solid #f0b49b",
   borderRadius: "5px",
   backgroundColor: "#f8d0bb",
   color: "#222",
   fontSize: "13px",
-});
 
-export const SaveButton = styled.button({
+  [theme.media.mobile]: {
+    width: "100%",
+    boxSizing: "border-box",
+  },
+
+  [theme.media.smallMobile]: {
+    fontSize: "clamp(10px, calc(1.875vw + 4px), 13px)",
+    gap: "2px",
+  },
+}));
+
+export const SaveButton = styled.button(({ theme }) => ({
   marginLeft: "auto",
   padding: "14px 24px",
   border: "none",
@@ -187,6 +227,8 @@ export const SaveButton = styled.button({
   color: "#fff",
   fontSize: "14px",
   cursor: "pointer",
+
+  [theme.media.mobile]: { width: "100%", marginLeft: 0 },
 
   "@media (prefers-reduced-motion: no-preference)": {
     "&.shake": {
@@ -218,7 +260,7 @@ export const SaveButton = styled.button({
       transform: "translateX(0)",
     },
   },
-});
+}));
 
 export const SettingsCard = styled.section({
   width: "100%",

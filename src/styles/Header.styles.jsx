@@ -24,7 +24,7 @@ export const HeaderSection = styled.header(({ theme }) => ({
     gap: theme.spacing.md,
   },
 
-  "@media ((min-width: 320px) and (width < 768px))": {
+  [theme.media.mobile]: {
     // 모바일도 햄버거 메뉴·아이콘을 스크롤 중에 계속 눌러야 하므로 sticky 유지
     position: "sticky",
     height: "64px",
@@ -52,7 +52,7 @@ export const Logo = styled.h1(({ theme }) => ({
   fontSize: theme.fontSize.xl,
   fontFamily: theme.fontFamily.display,
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     flex: "none",
     justifySelf: "center",
     fontSize: "24px",
@@ -72,15 +72,15 @@ export const Logo = styled.h1(({ theme }) => ({
   },
 }));
 
-export const Navigation = styled.nav({
+export const Navigation = styled.nav(({ theme }) => ({
   display: "flex",
   flex: 1,
   justifyContent: "center",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     display: "none",
   },
-});
+}));
 
 export const NavList = styled.ul(({ theme }) => ({
   display: "flex",
@@ -144,7 +144,7 @@ export const IconContainer = styled.div(({ theme }) => ({
   justifyContent: "flex-end",
   gap: theme.spacing.sm,
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     flex: "none",
     justifySelf: "end",
     height: "44px",
@@ -182,10 +182,10 @@ export const CartIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-export const MenuButton = styled.button({
+export const MenuButton = styled.button(({ theme }) => ({
   display: "none",
 
-  "@media (min-width: 320px) and (width < 768px)": {
+  [theme.media.mobile]: {
     display: "flex",
     justifySelf: "start",
     alignItems: "center",
@@ -195,7 +195,7 @@ export const MenuButton = styled.button({
     padding: 0,
     cursor: "pointer",
   },
-});
+}));
 
 export const CartIconWrapper = styled.div({
   position: "relative",

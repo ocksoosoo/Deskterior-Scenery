@@ -65,12 +65,12 @@ export const IconWrapper = styled.div(({ theme }) => ({
   paddingTop: "2px",
   paddingRight: "4px",
   cursor: "pointer",
-  [theme.media.pc]: {
+  [theme.media.wide]: {
     "&:hover > div": {
       display: "block",
     },
   },
-  [theme.media.wide]: {
+  [theme.media.pc]: {
     "&:hover > div": {
       display: "block",
     },

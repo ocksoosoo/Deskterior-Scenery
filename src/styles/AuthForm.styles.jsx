@@ -22,14 +22,13 @@ export const Label = styled.label({
   flexDirection: "column",
   alignItems: "flex-start",
   gap: "5px",
-  //fontSize: "15px",
   fontSize: "clamp(13px, calc(11px + 0.625vw), 15px)",
   color: "#000000",
   fontWeight: 600,
   flex: 1,
 });
 
-export const Input = styled.input({
+export const Input = styled.input(({ theme }) => ({
   width: "100%",
   padding: "8px 0",
   border: "none",
@@ -49,12 +48,12 @@ export const Input = styled.input({
       fontSize: "clamp(10px, calc(2.352941vw - 9.070588px), 15px)",
     },
   },
-  "@media (min-width: 320px) and (width < 480px)": {
+  [theme.media.smallMobile]: {
     "&.id-input::placeholder": {
       fontSize: "clamp(10px, calc(2px + 2.5vw), 14px)",
     },
   },
-});
+}));
 
 export const InputIdGroup = styled.div({
   display: "flex",
@@ -198,10 +197,15 @@ export const SuccessMessage = styled.div({
   },
 });
 
-export const ErrorMessage = styled.div({
+export const ErrorMessage = styled.div(({ theme }) => ({
   ...messageStyle,
   backgroundColor: "#f8d1bd",
-});
+  "@media (width < 409px)": {
+    fontSize: "clamp(11px, calc(3.37vw - 1.79px), 12px)",
+    padding: "8px",
+    gap: "6px",
+  },
+}));
 
 export const ErrorIcon = styled.span({
   position: "relative",
@@ -224,6 +228,17 @@ export const ErrorIcon = styled.span({
   },
   "&::after": {
     transform: "translate(-50%, -50%) rotate(-45deg)",
+  },
+
+  "@media (width < 409px)": {
+    width: "16px",
+    height: "16px",
+    borderWidth: "1.2px",
+
+    "&::before, &::after": {
+      width: "7px",
+      height: "1.2px",
+    },
   },
 });
 

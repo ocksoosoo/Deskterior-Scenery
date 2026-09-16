@@ -33,7 +33,7 @@ export const signupSchema = z.object({
         /^010\d{8}$/.test(data) ||
         /^010-\d{4}-\d{4}$/.test(data),
       {
-        message: "전화번호를 010-0000-0000 형식으로 입력해주세요.",
+        message: "010-0000-0000 형식으로 입력해주세요.",
       },
     ),
 
