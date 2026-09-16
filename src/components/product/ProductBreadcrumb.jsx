@@ -23,7 +23,7 @@ const ProductBreadcrumb = ({ category, categoryPath, productName }) => {
 
   return (
     <S.Nav aria-label="현재 위치">
-      <S.BackButton type="button" onClick={handleBack}>
+      <S.BackButton type="button" onClick={handleBack} title="이전 페이지로 이동">
         <ArrowLeftIcon aria-hidden="true" focusable="false" />
         Prev
       </S.BackButton>

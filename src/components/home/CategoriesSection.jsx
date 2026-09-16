@@ -26,6 +26,7 @@ function CategoriesSection({ items = [], categories = [] }) {
             <CategoryItem
               key={item.id}
               type="button"
+              title={`${category?.name ?? ""} 카테고리로 이동`}
               onClick={() => {
                 if (category?.path) {
                   navigate(category.path);

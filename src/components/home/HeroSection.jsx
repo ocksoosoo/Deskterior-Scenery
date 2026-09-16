@@ -125,6 +125,7 @@ function AnimateHeroSection() {
         </ObjectInteractionArea>
 
         <GuideText
+        title="물건 펼치기"
         initial={{opacity: 0, y: 5}}
         animate={{
           opacity: isReady && !isExpanded ? 0.75 : 0,
@@ -152,6 +153,7 @@ function AnimateHeroSection() {
         <DeskLampButton
         type="button"
         aria-label="물건 펼치기"
+        title="물건 펼치기"
         initial={{
           x: "130%",
           y: "10%",
@@ -197,6 +199,7 @@ function AnimateHeroSection() {
         <HeadphonesButton
         type="button"
         aria-label="물건 펼치기"
+        title="물건 펼치기"
         initial={{
           x: "-130%",
           y: "65%",
@@ -250,6 +253,7 @@ function AnimateHeroSection() {
         <PenTrayButton
         type="button"
         aria-label="물건 펼치기"
+        title="물건 펼치기"
         onClick={() => {
           if(isReady) {
             setIsexpanded(true);
@@ -296,6 +300,7 @@ function AnimateHeroSection() {
         <DiaryButton
         type="button"
         aria-label="물건 펼치기"
+        title="물건 펼치기"
         onClick={() => {
           if(isReady) {
             setIsexpanded(true);
@@ -342,6 +347,7 @@ function AnimateHeroSection() {
         <FlowerVaseButton
         type="button"
         aria-label="물건 펼치기"
+        title="물건 펼치기"
         onClick={() => {
           if(isReady) {
             setIsexpanded(true);

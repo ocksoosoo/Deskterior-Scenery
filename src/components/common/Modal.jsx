@@ -15,6 +15,7 @@ const Modal = ({
   title,
   description,
   confirmText,
+  confirmTitle,
   onClose,
   onConfirm,
   children,
@@ -74,8 +75,12 @@ const Modal = ({
 
             {/* 버튼 */}
             <ButtonGroup>
-              <CancelButton onClick={onClose}>Cancel</CancelButton>
-              <ConfirmButton onClick={onConfirm}>{confirmText}</ConfirmButton>
+              <CancelButton title="취소" onClick={onClose}>
+                Cancel
+              </CancelButton>
+              <ConfirmButton title={confirmTitle} onClick={onConfirm}>
+                {confirmText}
+              </ConfirmButton>
             </ButtonGroup>
           </ModalBox>
         </ModalOverlay>

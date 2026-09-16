@@ -400,6 +400,7 @@ const CartPage = () => {
           title="All Delete?"
           description="정말 모두 지우시겠습니까?"
           confirmText="Delete"
+          confirmTitle="전체 삭제"
           onClose={() => setIsClearModalOpen(false)}
           onConfirm={confirmClearAll}
         />

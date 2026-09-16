@@ -309,6 +309,8 @@ function AuthForm({ mode, onSubmit }) {
             <PasswordHidenButton
               type="button"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
             >
               {showPassword ? (
                 <IconEyeClosed size={25} />
@@ -426,6 +428,7 @@ function AuthForm({ mode, onSubmit }) {
         <Button
           className={shakingButton ? "shake" : ""}
           type="submit"
+          title={mode === "signup" ? "회원가입" : "로그인"}
           onAnimationEnd={() => setShakingButton(false)}
         >
           {mode === "signup" ? "Sign Up" : "Log in"}

@@ -51,7 +51,9 @@ function LoginForm() {
 
           <AuthForm mode="login" onSubmit={handleLogin} />
 
-          <SignupLink to="/signup">Create an account</SignupLink>
+          <SignupLink to="/signup" title="회원가입">
+            Create an account
+          </SignupLink>
         </LoginCard>
       </LoginPage>
     </>

@@ -27,8 +27,12 @@ const ReviewDeleteModal = ({ onClose, onConfirm }) => {
         <ModalDescription>이 리뷰를 삭제하시겠습니까?</ModalDescription>
 
         <ButtonGroup>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
-          <ConfirmButton onClick={onConfirm}>Delete</ConfirmButton>
+          <CancelButton title="취소" onClick={onClose}>
+            Cancel
+          </CancelButton>
+          <ConfirmButton title="삭제" onClick={onConfirm}>
+            Delete
+          </ConfirmButton>
         </ButtonGroup>
       </ModalBox>
     </ModalOverlay>

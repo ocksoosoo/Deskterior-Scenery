@@ -88,7 +88,11 @@ function SelectedProductCard({
             </ProductContent>
 
             <ProductBottomArea>
-              <ViewMoreButton type="button" onClick={handleViewMore}>
+              <ViewMoreButton
+                type="button"
+                title="상세 보기"
+                onClick={handleViewMore}
+              >
                 View More
               </ViewMoreButton>
 
