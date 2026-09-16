@@ -13,20 +13,24 @@ import {
   GridContainer,
 } from "../../styles/CartStyles/RecommendItems.styles";
 
-const RecommendItems = () => {
+// 장바구니 추천상품
+const RecommendItems = ({ cartLoaded }) => {
   const theme = useTheme();
   const [recommendList, setRecommendList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   const addToCart = useCartStore((s) => s.addToCart);
-  const cartItems = useCartStore((s) => s.cartItems);
   const fetchCatalog = useProductCatalogStore((s) => s.fetchCatalog);
 
+  // 추천 상품 데이터 필터링
   useEffect(() => {
+    if (!cartLoaded) return;
+
     const fetchRecommend = async () => {
       try {
         setIsLoading(true);
 
-        // 상품과 뱃지
+        // 병렬 통신(상품+뱃지)
         const [data, catalogById] = await Promise.all([
           getProducts({ limit: 50 }),
           fetchCatalog(),
@@ -34,7 +38,7 @@ const RecommendItems = () => {
 
         const rawProducts = Array.isArray(data) ? data : data.products || [];
 
-        // 뱃지(isBest, isNew, soldOut) 부여
+        // 뱃지 속성 병합
         const productsWithBadges = rawProducts.map((item) => {
           const catalogProduct = catalogById[item.id] || {};
           return {
@@ -46,18 +50,17 @@ const RecommendItems = () => {
           };
         });
 
-        // 장바구니 상품들의 ID 배열 만들기
-        const cartProductIds = cartItems.map((item) => item.productId);
+        // 중복 추천 방지
+        const currentCartItems = useCartStore.getState().cartItems;
+        const cartProductIds = currentCartItems.map((item) => item.productId);
 
         // 품절 제외 + 장바구니에 담긴 상품 제외
         const availableProducts = productsWithBadges.filter(
           (item) => !item.soldOut && !cartProductIds.includes(item.id),
         );
 
-        // 랜덤하게 섞기
+        // 랜덤
         const shuffled = [...availableProducts].sort(() => 0.5 - Math.random());
-
-        // 3개 저장
         setRecommendList(shuffled.slice(0, 3));
       } catch (error) {
         console.error("추천 상품을 불러오는 데 실패했습니다:", error);
@@ -67,7 +70,7 @@ const RecommendItems = () => {
     };
 
     fetchRecommend();
-  }, []); //예외처리
+  }, [cartLoaded, fetchCatalog]); // 로드 완료 1번 실행
 
   // 장바구니 담는 함수
   const handleAddToCart = async (product) => {
@@ -77,8 +80,6 @@ const RecommendItems = () => {
         productId: product.id,
         imageUrl: product.images?.[0] || product.imageUrl,
       };
-
-      // 스토어의 addToCart 호출 (기본 수량 1개)
       await addToCart(cartProduct, 1);
       toast(<SuccessToast message="장바구니에 담았습니다." />);
     } catch (error) {

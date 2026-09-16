@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   SummaryContainer,
   SummaryInfoBox,
@@ -19,18 +18,17 @@ const CartSummary = ({
   deliveryFee,
   total,
   isAllSoldOut,
+  isCheckoutDisabled,
   onCheckout,
 }) => {
   return (
     <SummaryContainer>
       <SummaryInfoBox>
-        {/* 소계 */}
         <SubtotalRow>
           <LabelText>Subtotal</LabelText>
           <PriceText>₩ {subtotal.toLocaleString()}</PriceText>
         </SubtotalRow>
 
-        {/* 배송비 */}
         <DeliveryRow>
           <LabelText>
             Delivery Fee
@@ -61,8 +59,6 @@ const CartSummary = ({
                   fill="#74766F"
                 />
               </svg>
-
-              {/* ★ 상태(State) 없이 무조건 렌더링. CSS가 PC와 모바일을 알아서 제어함! */}
               <TooltipBox>
                 80,000원 이상 구매 시 무료로 배송되며,
                 <br />
@@ -73,15 +69,13 @@ const CartSummary = ({
           <PriceText>₩ {deliveryFee.toLocaleString()}</PriceText>
         </DeliveryRow>
 
-        {/* 총계 */}
         <TotalRow>
           <TotalLabel>Total</TotalLabel>
           <TotalPriceText>₩ {total.toLocaleString()}</TotalPriceText>
         </TotalRow>
       </SummaryInfoBox>
 
-      {/* 결제 버튼 */}
-      <CheckoutButton disabled={isAllSoldOut} onClick={onCheckout}>
+      <CheckoutButton disabled={isCheckoutDisabled} onClick={onCheckout}>
         {isAllSoldOut ? "Sold Out" : "Checkout"}
       </CheckoutButton>
     </SummaryContainer>

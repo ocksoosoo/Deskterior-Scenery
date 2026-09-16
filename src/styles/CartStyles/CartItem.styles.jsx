@@ -161,9 +161,12 @@ export const ItemName = styled.h4(({ theme }) => ({
 // 원가
 export const ItemPrice = styled.p(({ theme }) => ({
   margin: 0,
-  fontSize: theme.fontSize.sm,
+  fontSize: theme.fontSize.md,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.textMain,
+  [theme.media.tablet]: {
+    fontSize: theme.fontSize.sm,
+  },
   [theme.media.mobile]: {
     whiteSpace: "nowrap",
   },
