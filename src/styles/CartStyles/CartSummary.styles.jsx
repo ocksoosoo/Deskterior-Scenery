@@ -146,7 +146,7 @@ export const CheckoutButton = styled.button(({ theme }) => ({
   backgroundColor: theme.colors.textMain,
   color: theme.colors.cards,
   fontSize: theme.fontSize.lg,
-  fontWeight: theme.fontWeight.semiBold,
+  fontWeight: theme.fontWeight.medium,
   border: "none",
   borderRadius: theme.radius.md,
   cursor: "pointer",
