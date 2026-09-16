@@ -79,6 +79,9 @@ export const SelectAllLabel = styled.label(({ theme }) => ({
   [theme.media.mobile]: {
     fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
   },
+  "&:hover": {
+    textDecoration: "underline",
+  },
 }));
 
 // 왼쪽 버튼 두개
@@ -114,6 +117,9 @@ export const SelectedDeleteButton = styled.button(({ theme }) => ({
   [theme.media.mobile]: {
     fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
   },
+  "&:hover": {
+    textDecoration: "underline",
+  },
 }));
 
 // 전체 삭제
@@ -130,6 +136,9 @@ export const ClearAllButton = styled.button(({ theme }) => ({
   },
   [theme.media.mobile]: {
     fontSize: `clamp(${theme.fontSize.sm}, calc(10.67px + 0.69vw), ${theme.fontSize.md})`,
+  },
+  "&:hover": {
+    textDecoration: "underline",
   },
 }));
 

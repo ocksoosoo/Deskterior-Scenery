@@ -11,11 +11,26 @@ const useCartStore = create(
   persist(
     (set, get) => ({
       cartItems: [],
+      unselectedItemIds: [], // 체크 해제만 기억
       isLoading: false,
       error: null,
 
       // 에러 초기화
       clearError: () => set({ error: null }),
+
+      // 💡 [핵심 2] 체크박스 토글 액션
+      toggleItemSelection: (cartItemId) =>
+        set((state) => ({
+          unselectedItemIds: state.unselectedItemIds.includes(cartItemId)
+            ? state.unselectedItemIds.filter((id) => id !== cartItemId) // 다시 체크 -> 해제 목록에서 제거
+            : [...state.unselectedItemIds, cartItemId], // 체크 해제 -> 해제 목록에 추가
+        })),
+
+      // 💡 [핵심 3] 전체 선택 / 해제 액션
+      setAllSelected: (isSelected, allAvailableIds = []) =>
+        set(() => ({
+          unselectedItemIds: isSelected ? [] : allAvailableIds,
+        })),
 
       // 서버 장바구니 조회
       fetchCart: async () => {
@@ -118,6 +133,10 @@ const useCartStore = create(
           cartItems: state.cartItems.filter(
             (item) => item.cartItemId !== cartItemId,
           ),
+          // 상품 삭제 시 해제 리스트 찌꺼기 청소
+          unselectedItemIds: state.unselectedItemIds.filter(
+            (id) => id !== cartItemId,
+          ),
         }));
       },
 
@@ -148,12 +167,12 @@ const useCartStore = create(
             throw err;
           }
         }
-        set({ cartItems: [] });
+        set({ cartItems: [], unselectedItemIds: [] }); // 초기화
       },
 
       // 비회원 로컬 초기화
       clearLocalCart: () => {
-        set({ cartItems: [] });
+        set({ cartItems: [], unselectedItemIds: [] }); // 초기화
       },
 
       // 회원/비회원 장바구니 병합
@@ -223,7 +242,11 @@ const useCartStore = create(
 
     {
       name: "cart-storage",
-      partialize: (state) => ({ cartItems: state.cartItems }),
+      // 새로고침 해도 상태 저장(체크 해제)
+      partialize: (state) => ({
+        cartItems: state.cartItems,
+        unselectedItemIds: state.unselectedItemIds,
+      }),
     },
   ),
 );
