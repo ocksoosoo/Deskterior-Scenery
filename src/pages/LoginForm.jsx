@@ -43,7 +43,11 @@ function LoginForm() {
     <>
       <LoginPage>
         <LoginImageWrap>
-          <LoginImage src={loginbanner} alt="Login banner" />
+          <LoginImage
+            src={loginbanner}
+            alt="Login banner"
+            fetchPriority="high"
+          />
         </LoginImageWrap>
 
         <LoginCard>
