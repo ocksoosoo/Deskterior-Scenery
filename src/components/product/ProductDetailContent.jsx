@@ -1,11 +1,29 @@
+import { useEffect, useState } from "react";
 import SceneryBox from "../common/SceneryBox";
 import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ProductDetail/ProductDetailContent.styles";
 
+const DETAIL_IMAGE_WIDTH_MOBILE = 700;
 const DETAIL_IMAGE_WIDTH = 1000;
 
 const ProductDetailContent = ({ sections = [] }) => {
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const handleChange = (event) => setIsMobile(event.matches);
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   if (!sections.length) return null;
+
+  const detailImageWidth = isMobile
+    ? DETAIL_IMAGE_WIDTH_MOBILE
+    : DETAIL_IMAGE_WIDTH;
 
   return (
     <S.Section>
@@ -16,7 +34,7 @@ const ProductDetailContent = ({ sections = [] }) => {
           <S.Article key={section.id}>
             {section.image && (
               <S.DetailImage
-                src={toResizedImageUrl(section.image, DETAIL_IMAGE_WIDTH)}
+                src={toResizedImageUrl(section.image, detailImageWidth)}
                 alt={section.title || ""}
                 loading="lazy"
                 fallback={
