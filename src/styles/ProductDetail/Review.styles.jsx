@@ -170,7 +170,7 @@ export const SubmitButton = styled.button(({ theme }) => ({
   gap: theme.spacing.xs,
   borderRadius: theme.radius.md,
   background: theme.colors.textMain,
-  color: "#FFF",
+  color: theme.colors.cards, // #FDFDFD
   textAlign: "center",
   fontSize: theme.fontSize.md, // 1rem (16px)
   fontStyle: "normal",

@@ -250,13 +250,15 @@ const ProductDetailPage = () => {
       />
       <S.Wrapper>
         <S.Page>
-          <ProductBreadcrumb
-            category={product.category}
-            categoryPath={product.categoryPath}
-            productName={product.name}
-          />
+          <S.TopGrid>
+            <S.CrumbSlot>
+              <ProductBreadcrumb
+                category={product.category}
+                categoryPath={product.categoryPath}
+                productName={product.name}
+              />
+            </S.CrumbSlot>
 
-          <S.TopSection>
             <S.GalleryColumn>
               <ProductImageGallery
                 key={id}
@@ -287,7 +289,7 @@ const ProductDetailPage = () => {
                 soldOut={product.soldOut}
               />
             </S.InfoColumn>
-          </S.TopSection>
+          </S.TopGrid>
 
           <ProductDetailContent sections={product.detailSections} />
 

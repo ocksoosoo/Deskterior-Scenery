@@ -22,39 +22,44 @@ export const Page = styled.div(({ theme }) => ({
   },
 }));
 
-export const TopSection = styled.div(({ theme }) => ({
-  display: "flex",
-  alignItems: "flex-start",
-  gap: theme.spacing["2xl"], // 48
+// 브레드크럼(crumb)이 갤러리(이미지) 칼럼과 같은 폭을 공유하도록 그리드로 구성 —
+export const TopGrid = styled.div(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 31.25rem) 21.75rem",
+  gridTemplateAreas: `"crumb ." "gallery info"`,
+  columnGap: theme.spacing["2xl"], // 48
+  rowGap: theme.spacing.sm,
 
   [theme.media.tablet]: {
-    gap: theme.spacing.lg, // 24
+    gridTemplateColumns: "minmax(0, 1fr) 21.75rem",
+    columnGap: theme.spacing.lg, // 24
   },
 
   [theme.media.mobile]: {
-    flexDirection: "column",
-    gap: theme.spacing.md,
+    gridTemplateColumns: "minmax(0, 1fr)",
+    gridTemplateAreas: `"crumb" "gallery" "info"`,
+    rowGap: theme.spacing.md,
   },
 }));
 
-export const GalleryColumn = styled.div(({ theme }) => ({
-  flex: "0 1 31.25rem",
+export const CrumbSlot = styled.div({
+  gridArea: "crumb",
   minWidth: 0,
+});
 
-  [theme.media.tablet]: { flex: "1 1 0", width: "auto" },
-  [theme.media.mobile]: { flex: "none", width: "100%" },
-}));
+export const GalleryColumn = styled.div({
+  gridArea: "gallery",
+  minWidth: 0,
+});
 
 export const InfoColumn = styled.div(({ theme }) => ({
-  flex: "0 0 21.75rem",
+  gridArea: "info",
   minWidth: 0,
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing.lg,
 
   [theme.media.mobile]: {
-    flex: "none",
-    width: "100%",
     gap: theme.spacing.md,
   },
 }));

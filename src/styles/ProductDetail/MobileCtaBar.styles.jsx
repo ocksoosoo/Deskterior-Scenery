@@ -85,7 +85,7 @@ export const CartButton = styled.button(({ theme }) => ({
   gap: theme.spacing["2xs"], // 4
   borderRadius: "0.5rem", // 8
   background: theme.colors.textMain,
-  color: "#fff",
+  color: theme.colors.cards, // #FDFDFD
   textAlign: "center",
   fontSize: theme.fontSize.sm, // 0.875rem
   fontWeight: theme.fontWeight.medium, // 500

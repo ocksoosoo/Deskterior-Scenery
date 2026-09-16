@@ -4,7 +4,7 @@ import { Link } from "react-router";
 export const Nav = styled.nav(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  flexWrap: "wrap",
+  flexWrap: "nowrap",
   gap: theme.spacing.sm,
   fontSize: theme.fontSize.sm,
   color: theme.colors.secondText,
@@ -17,7 +17,6 @@ export const Nav = styled.nav(({ theme }) => ({
   },
 
   [theme.media.mobile]: {
-    flexWrap: "nowrap",
     alignItems: "center",
     alignSelf: "stretch",
     padding: 0,
@@ -55,7 +54,8 @@ export const BackButton = styled.button(({ theme }) => ({
 export const Trail = styled.ol(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  flexWrap: "wrap",
+  flex: "1 1 auto",
+  flexWrap: "nowrap",
   minWidth: 0,
   color: theme.colors.secondText,
   fontSize: theme.fontSize.md, // 1rem (16px)
@@ -64,31 +64,27 @@ export const Trail = styled.ol(({ theme }) => ({
   letterSpacing: "-0.0075rem",
 
   [theme.media.mobile]: {
-    flex: "1 1 auto",
-    flexWrap: "nowrap",
     fontSize: theme.fontSize.sm, // 0.875rem (14px)
   },
 }));
 
+// 모든 브레이크포인트에서 크럼은 줄바꿈 없이 한 줄로, 마지막(상품명)만 넘치면 줄임표(...) 처리
 export const Crumb = styled.li(({ theme }) => ({
+  whiteSpace: "nowrap",
+  flexShrink: 0,
+
   "&:not(:first-of-type)::before": {
     content: '">"',
     margin: `0 ${theme.spacing["2xs"]}`,
   },
 
-  // 모바일: 모든 크럼 줄바꿈 없이 한 줄로, 마지막(상품명)만 넘치면 줄임표(...) 처리
-  [theme.media.mobile]: {
-    whiteSpace: "nowrap",
-    flexShrink: 0,
-
-    '&[aria-current="page"]': {
-      display: "block",
-      flex: "1 1 auto",
-      flexShrink: 1,
-      minWidth: 0,
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-    },
+  '&[aria-current="page"]': {
+    display: "block",
+    flex: "1 1 auto",
+    flexShrink: 1,
+    minWidth: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 }));
 
