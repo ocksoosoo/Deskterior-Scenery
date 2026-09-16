@@ -11,7 +11,6 @@ import ProductDetailContent from "../../components/product/ProductDetailContent"
 import ReviewSection from "../../components/review/ReviewSection";
 import PaymentModal from "../../components/common/PaymentModal";
 import useLoadingStore from "../../store/UseLoadingStore";
-import { preloadingImages } from "../../utils/preloadingImages";
 import {
   showSuccessToast,
   showFailToast,
@@ -56,14 +55,10 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     let alive = true;
-    // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
-    // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
 
     const loadProduct = async () => {
       try {
         const data = await getProduct(id);
-
-        await preloadingImages(data.images ?? []);
 
         if (!alive) return;
 
@@ -89,13 +84,12 @@ const ProductDetailPage = () => {
 
   const isCurrentProduct = product != null && String(product.id) === id;
   const [reviews, setReviews] = useState([]);
-  // 리뷰 로딩이 끝난 상품 id를 기록 - 현재 id와 비교해 "이 상품 리뷰까지 로드 완료"를 파생시킴
+
   const [loadedReviewsForId, setLoadedReviewsForId] = useState(null);
   const reviewsLoaded = loadedReviewsForId === id;
   const productLoaded = loadedProductForId === id;
 
   // 상품(id)이 바뀌거나 로그인 상태(user)가 바뀌면 리뷰 목록 새로 조회
-  // (같은 페이지에서 로그인/로그아웃해도 isAuthor 가 최신 상태로 갱신되게)
   useEffect(() => {
     let alive = true;
     getReviews(id)
@@ -195,7 +189,6 @@ const ProductDetailPage = () => {
     showSuccessToast("결제가 완료되었습니다.");
   };
 
-  //리뷰 CRUD — 서버 연동. 작성/수정은 실패 시 throw 하여 폼이 에러 표시
   const handleCreateReview = async (payload) => {
     await createReview(id, payload);
     await reloadReviews();
@@ -228,12 +221,17 @@ const ProductDetailPage = () => {
     );
   }
 
-  if (!isCurrentProduct) return null;
+  if (!isCurrentProduct) {
+    return (
+      <S.Wrapper>
+        <S.Page style={{ minHeight: "1600px" }} />
+      </S.Wrapper>
+    );
+  }
 
   return (
     <>
-      {/* 이 페이지에 떠있는 모바일 CTA 바(81px)에 푸터 하단 콘텐츠가 가리지 않도록,
-          이 페이지가 떠있는 동안만 전역 footer에 여백을 추가한다 (Footer.styles.jsx는 안 건드림) */}
+      {/* 이 페이지에 떠있는 모바일 CTA 바(81px)에 푸터 하단 콘텐츠가 가리지 않도록*/}
       <Global
         styles={css`
           @media (width < 768px) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
 import SafeImage from "../common/SafeImage";
 import SceneryBox from "../common/SceneryBox";
@@ -6,6 +6,7 @@ import Badge from "../common/Badge";
 import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ProductDetail/ProductImageGallery.styles";
 
+const MAIN_IMAGE_WIDTH_MOBILE = 600;
 const MAIN_IMAGE_WIDTH = 900;
 const THUMB_IMAGE_WIDTH = 150;
 
@@ -19,18 +20,31 @@ const ProductImageGallery = ({
   const [current, setCurrent] = useState(0);
   const theme = useTheme();
 
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 767px)").matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const handleChange = (event) => setIsMobile(event.matches);
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   if (!images?.length) return null;
 
   const safeCurrent = current < images.length ? current : 0;
   // 3장 이하는 원래 고정 크기로, 4장 이상일 때만 남는 폭을 균등하게 나눠 채움
   const fillThumbs = images.length >= 4;
+  const mainImageWidth = isMobile ? MAIN_IMAGE_WIDTH_MOBILE : MAIN_IMAGE_WIDTH;
 
   return (
     <div>
       {/* 큰 사진 (없거나 실패하면 SCENERY) */}
       <S.MainImageFrame>
         <SafeImage
-          src={toResizedImageUrl(images[safeCurrent], MAIN_IMAGE_WIDTH)}
+          src={toResizedImageUrl(images[safeCurrent], mainImageWidth)}
           alt={alt}
           fallback={
             <SceneryBox
@@ -40,7 +54,6 @@ const ProductImageGallery = ({
             />
           }
           style={S.mainImage}
-          // 페이지의 LCP(Largest Contentful Paint) 요소라 브라우저에 최우선으로 받아오도록 힌트를 줌
           fetchPriority="high"
         />
         {soldOut && <S.ImageOverlay />}
@@ -75,7 +88,6 @@ const ProductImageGallery = ({
                 alt=""
                 fallback={<SceneryBox />}
                 style={S.fillImage}
-                // 메인 이미지보다 우선순위를 낮춰서 메인 이미지 로딩을 방해하지 않음
                 loading="lazy"
               />
             </S.ThumbButton>
