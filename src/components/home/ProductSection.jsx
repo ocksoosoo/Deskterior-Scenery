@@ -47,17 +47,6 @@ function getCategoryName(categoryId) {
   return category?.name ?? categoryId;
 }
 
-// 상품 상세(리뷰 등)를 보고 뒤로가기했을 때, 캐러셀 가운데에 있던 상품을 그대로
-// 기억하기 위한 세션 저장 - DeskCurationSection.jsx의 동일한 패턴을 그대로 따름
-function readCarouselSelection() {
-  try {
-    const saved = sessionStorage.getItem("homeProductCarouselSelection");
-    return saved ? JSON.parse(saved) : {};
-  } catch {
-    return {};
-  }
-}
-
 function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
   const theme = useTheme();
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -77,49 +66,16 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
     sideSpace: 0, // 카드를 가운데 두기 위한 왼쪽 여백
   });
 
+  // 어느 페이지에 있었든 홈으로 돌아오면(헤더 로고 클릭, 뒤로가기, 새로고침
+  // 등 경로에 상관없이) 항상 첫 상품이 가운데에 오도록, 이전 위치를 기억하지
+  // 않고 매번 items.length(첫 상품 위치)로 초기화한다
   useEffect(() => {
     if (items.length > 0 && !didInitRef.current) {
       didInitRef.current = true;
       setIsResetting(true);
-
-      // 상품 상세를 보고 뒤로가기했을 때는 첫 상품이 아니라, 떠나기 전
-      // 가운데에 있던 상품을 그대로 복원한다
-      const savedProductId = readCarouselSelection()[title];
-      const savedItemIndex = items.findIndex(
-        (item) => item.id === savedProductId,
-      );
-      const initialIndex =
-        savedItemIndex === -1
-          ? items.length // 저장된 값이 없으면 기존대로 첫 상품이 가운데
-          : savedItemIndex === 0
-            ? items.length // 0번째는 currentIndex=0(경계용 임시 상태)이 아니라 items.length로 매핑
-            : savedItemIndex;
-
-      setCurrentIndex(initialIndex);
+      setCurrentIndex(items.length);
     }
-  }, [items, title]);
-
-  // 캐러셀이 이동할 때마다 지금 가운데에 있는 상품을 세션에 기록 - 상품명/이미지/리뷰 등
-  // 어떤 걸 눌러서 상세로 이동하든 상관없이 항상 최신 상태로 남도록 별도 effect로 분리
-  useEffect(() => {
-    if (items.length === 0 || isResetting) return;
-
-    const activeItemIndex = currentIndex % items.length;
-    const activeProduct = items[activeItemIndex];
-    if (!activeProduct) return;
-
-    const selection = readCarouselSelection();
-    selection[title] = activeProduct.id;
-
-    try {
-      sessionStorage.setItem(
-        "homeProductCarouselSelection",
-        JSON.stringify(selection),
-      );
-    } catch {
-      // sessionStorage 접근 불가(프라이빗 모드 등)면 다음 방문 때 첫 상품으로 시작됨
-    }
-  }, [currentIndex, items, title, isResetting]);
+  }, [items]);
 
   useEffect(() => {
     if (!isResetting) return;
