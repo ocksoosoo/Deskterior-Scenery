@@ -17,6 +17,7 @@ import Loading from "../components/common/Loading";
 import Modal from "../components/common/Modal";
 import { showFailToast, showSuccessToast } from "../components/common/ShowToast";
 import { wishlistApi } from "../api/wishlistApi";
+import { getProducts } from "../api/productsApi";
 
 import useWishlistStore from "../store/wishlistStore";
 import useCartStore from "../store/cartStore";
@@ -54,27 +55,49 @@ function WishlistSection() {
 
             try {
                 const response = await wishlistApi.getWishlist();
-                
+
                 if (!response.success) {
                     throw new Error(
                         response.message || "위시리스트를 불러오지 못했습니다.",
                     );
                 }
-                
+
                 // 언마운트 시에만 조기 리턴하도록 수정
                 if (ignore) return;
 
                 // 응답 형태(response.data.products)에 맞춰 안전하게 추출
                 const rawProducts = response.data?.products || response.data || [];
 
-                const wishlistProducts = rawProducts.map((item) => ({
-                    ...item,
-                    id: item.id ?? item.productId,
-                    rating: item.rating ?? item.averageRating,
-                    reviewCount: item.reviewCount ?? item.totalCount,
-                    // DB 데이터의 soldOut 또는 stock === 0 반영
-                    soldOut: Boolean(item.soldOut ?? (item.stock === 0)),
-                }));
+                // /wishlist 응답에는 badge/stock(Best·New·Sold out 판단 근거)이 아예
+                // 내려오지 않아서, 카탈로그 전체를 한 번 더 불러와 id로 매칭해 보강한다
+                let catalogById = new Map();
+                try {
+                    const catalog = await getProducts({ limit: 100 });
+                    catalogById = new Map(
+                        (catalog.products || []).map((product) => [
+                            product.id,
+                            product,
+                        ]),
+                    );
+                } catch (catalogError) {
+                    console.error("상품 카탈로그 조회 실패:", catalogError);
+                }
+
+                const wishlistProducts = rawProducts.map((item) => {
+                    const id = item.id ?? item.productId;
+                    const catalogProduct = catalogById.get(id);
+
+                    return {
+                        ...catalogProduct,
+                        ...item,
+                        id,
+                        rating: item.rating ?? item.averageRating ?? catalogProduct?.rating,
+                        reviewCount: item.reviewCount ?? item.totalCount ?? catalogProduct?.reviewCount,
+                        isBest: catalogProduct?.isBest ?? false,
+                        isNew: catalogProduct?.isNew ?? false,
+                        soldOut: catalogProduct?.soldOut ?? false,
+                    };
+                });
 
                 setItems(wishlistProducts);
 
@@ -206,6 +229,8 @@ function WishlistSection() {
                             product={item}
                             onWishlistRemove={handleWishlistRemove}
                             onAddToCart={handleAddToCart}
+                            isBest={item.isBest}
+                            isNew={item.isNew}
                             />
                         </WishlistItem>
                     ))}
