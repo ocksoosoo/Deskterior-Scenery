@@ -10,7 +10,7 @@ import {
 const EmptyCart = () => {
   const navigate = useNavigate();
   const handleGoToProducts = () => {
-    navigate("/lightingpage");
+    navigate("/");
   };
 
   return (
