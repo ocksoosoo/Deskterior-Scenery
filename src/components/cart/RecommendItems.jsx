@@ -17,17 +17,23 @@ const RecommendItems = () => {
   const [recommendList, setRecommendList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const addToCart = useCartStore((s) => s.addToCart);
+  const cartItems = useCartStore((s) => s.cartItems);
 
   useEffect(() => {
     const fetchRecommend = async () => {
       try {
         setIsLoading(true);
         // 전체 상품 리스트
-        const data = await getProducts();
+        const data = await getProducts({ limit: 50 });
         const products = Array.isArray(data) ? data : data.products || [];
 
-        // 품절 상품 제외
-        const availableProducts = products.filter((item) => !item.soldOut);
+        // 장바구니 상품들의 ID 배열 만들기
+        const cartProductIds = cartItems.map((item) => item.productId);
+
+        // 품절 제외 + 장바구니에 있는 상품 제외
+        const availableProducts = products.filter(
+          (item) => !item.soldOut && !cartProductIds.includes(item.id),
+        );
 
         // 랜덤
         const shuffled = [...availableProducts].sort(() => 0.5 - Math.random());
