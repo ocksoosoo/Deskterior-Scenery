@@ -28,13 +28,14 @@ export const HeroMedia = styled.div({
   height: "100%",
 });
 
+// 펼치기 전에는 오브젝트들이 각자 다른 위치로 흩어져있고 서로 겹치기도
+// 해서, 60%x70% 중앙 영역만 덮던 이전 방식으로는 가장자리 오브젝트나
+// 겹친 오브젝트를 클릭했을 때 펼치기 대신 곧바로 그 상품 상세페이지로
+// 튀는 문제가 있었다. 히어로 전체를 덮어서, 펼치기 전 클릭은 어디를
+// 누르든 항상 이 레이어가 먼저 받아 펼치기만 실행되게 한다
 export const ObjectInteractionArea = styled.div({
   position: "absolute",
-  left: "50%",
-  top: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "60%",
-  height: "70%",
+  inset: 0,
   background: "transparent",
   zIndex: 20,
 });
@@ -284,7 +285,7 @@ export const GuideText = styled(motion.span)(({theme}) => ({
   color: theme.colors.secondText,
   pointerEvents: "none",
   zIndex: 10,
-  textDecoration: "underline",
+  textDecoration: "none",
 
   [theme.media.tablet]: {
     left: "63%",

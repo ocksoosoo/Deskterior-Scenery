@@ -149,6 +149,24 @@ function AnimateHeroSection() {
     navigate(`/products/${HERO_PRODUCT_IDS[key]}`);
   }
 
+  // 펼치기 전에는 오브젝트 버튼 5개가 전부 Tab 순서에 들어가 있으면, 어차피
+  // 다 똑같이 "펼치기"만 하는 중복된 정지점이 5번 생겨서 키보드 사용자에게
+  // 불필요하게 반복된다. 대신 이 안내 문구 하나만 Tab으로 접근 가능하게 해서
+  // 펼치기 전엔 단일 진입점, 펼친 뒤엔 각 라벨이 진입점이 되게 한다
+  function handleGuideActivate(event) {
+    if (!isReady || isExpanded) return;
+    // 펼쳐지는 순간 이 요소도 aria-hidden 처리되므로 먼저 blur 처리한다
+    event.currentTarget.blur();
+    setIsexpanded(true);
+    pendingFocusKey.current = "deskLamp";
+  }
+
+  function handleGuideKeyDown(event) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    handleGuideActivate(event);
+  }
+
   function handleLabelKeyDown(event, productId) {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
@@ -187,6 +205,13 @@ function AnimateHeroSection() {
         </ObjectInteractionArea>
 
         <GuideText
+        role="button"
+        tabIndex={isReady && !isExpanded ? 0 : -1}
+        aria-hidden={isExpanded || undefined}
+        aria-label="클릭해서 오브젝트 펼치기"
+        onClick={handleGuideActivate}
+        onKeyDown={handleGuideKeyDown}
+        style={{ textDecoration: isAreaHovered ? "underline" : "none" }}
         initial={{opacity: 0, y: 5}}
         animate={{
           opacity: isReady && !isExpanded ? 0.75 : 0,
@@ -214,8 +239,8 @@ function AnimateHeroSection() {
         <DeskLampButton
         type="button"
         aria-label="물건 펼치기"
-        aria-hidden={isExpanded || undefined}
-        tabIndex={isExpanded ? -1 : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
         initial={{
           x: "130%",
           y: "10%",
@@ -247,6 +272,7 @@ function AnimateHeroSection() {
         ref={(el) => { labelRefs.current.deskLamp = el; }}
         role="button"
         tabIndex={isExpanded ? 0 : -1}
+        aria-hidden={!isExpanded || undefined}
         aria-label="Desk Lamp 상세 보기"
         style={{ cursor: "pointer", pointerEvents: isExpanded ? "auto" : "none" }}
         onClick={() => navigate(`/products/${HERO_PRODUCT_IDS.deskLamp}`)}
@@ -266,8 +292,8 @@ function AnimateHeroSection() {
         <HeadphonesButton
         type="button"
         aria-label="물건 펼치기"
-        aria-hidden={isExpanded || undefined}
-        tabIndex={isExpanded ? -1 : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
         initial={{
           x: "-130%",
           y: "65%",
@@ -301,6 +327,7 @@ function AnimateHeroSection() {
         ref={(el) => { labelRefs.current.headphones = el; }}
         role="button"
         tabIndex={isExpanded ? 0 : -1}
+        aria-hidden={!isExpanded || undefined}
         aria-label="Headphones 상세 보기"
         style={{ cursor: "pointer", pointerEvents: isExpanded ? "auto" : "none" }}
         onClick={() => navigate(`/products/${HERO_PRODUCT_IDS.headphones}`)}
@@ -321,8 +348,8 @@ function AnimateHeroSection() {
         <PenTrayButton
         type="button"
         aria-label="물건 펼치기"
-        aria-hidden={isExpanded || undefined}
-        tabIndex={isExpanded ? -1 : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
         onClick={(event) => handleObjectClick(event, "penTray")}
         onHoverStart={() => handleObjectHoverStart(".floating-penTray")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-penTray")}
@@ -355,6 +382,7 @@ function AnimateHeroSection() {
         ref={(el) => { labelRefs.current.penTray = el; }}
         role="button"
         tabIndex={isExpanded ? 0 : -1}
+        aria-hidden={!isExpanded || undefined}
         aria-label="Pen Tray 상세 보기"
         style={{ cursor: "pointer", pointerEvents: isExpanded ? "auto" : "none" }}
         onClick={() => navigate(`/products/${HERO_PRODUCT_IDS.penTray}`)}
@@ -374,8 +402,8 @@ function AnimateHeroSection() {
         <DiaryButton
         type="button"
         aria-label="물건 펼치기"
-        aria-hidden={isExpanded || undefined}
-        tabIndex={isExpanded ? -1 : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
         onClick={(event) => handleObjectClick(event, "diary")}
         onHoverStart={() => handleObjectHoverStart(".floating-diary")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-diary")}
@@ -408,6 +436,7 @@ function AnimateHeroSection() {
         ref={(el) => { labelRefs.current.diary = el; }}
         role="button"
         tabIndex={isExpanded ? 0 : -1}
+        aria-hidden={!isExpanded || undefined}
         aria-label="Diary Pen 상세 보기"
         style={{ cursor: "pointer", pointerEvents: isExpanded ? "auto" : "none" }}
         onClick={() => navigate(`/products/${HERO_PRODUCT_IDS.diary}`)}
@@ -427,8 +456,8 @@ function AnimateHeroSection() {
         <FlowerVaseButton
         type="button"
         aria-label="물건 펼치기"
-        aria-hidden={isExpanded || undefined}
-        tabIndex={isExpanded ? -1 : undefined}
+        aria-hidden="true"
+        tabIndex={-1}
         onClick={(event) => handleObjectClick(event, "flowerVase")}
         onHoverStart={() => handleObjectHoverStart(".floating-flowerVase")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-flowerVase")}
@@ -461,6 +490,7 @@ function AnimateHeroSection() {
         ref={(el) => { labelRefs.current.flowerVase = el; }}
         role="button"
         tabIndex={isExpanded ? 0 : -1}
+        aria-hidden={!isExpanded || undefined}
         aria-label="Flower Vase 상세 보기"
         style={{ cursor: "pointer", pointerEvents: isExpanded ? "auto" : "none" }}
         onClick={() => navigate(`/products/${HERO_PRODUCT_IDS.flowerVase}`)}

@@ -7,7 +7,7 @@ const headingStyle = (theme) => ({
   fontWeight: 700,
 });
 
-// PC(1024px→1088px)와 와이드(1440px→1024px) 사이 급격한 전환 없이 부드럽게 줄어들도록 보간
+// PC~와이드 구간에서 부드럽게 줄어들도록 보간
 const fluidContentMaxWidth =
   "clamp(1024px, calc(1245.54px - 15.385vw), 1088px)";
 
@@ -92,8 +92,7 @@ export const PageTitle = styled.h2(({ theme }) => ({
   margin: 0,
 
   [theme.media.mobile]: {
-    // 767px에서 768px(데스크탑 48px)로 넘어갈 때 뚝 끊기지 않도록, 34px(320px
-    // 기준)~44px(767px 기준)까지 뷰포트 폭에 비례해 자연스럽게 커지게 함
+    // 데스크탑(48px)로 뚝 끊기지 않게 34~44px 구간 보간
     fontSize: "clamp(34px, 2.2vw + 27px, 44px)",
     fontWeight: theme.fontWeight.regular,
     letterSpacing: "normal",
@@ -148,8 +147,7 @@ export const Content = styled.div(({ theme }) => ({
 export const EmptyState = styled.div(({ theme }) => ({
   display: "flex",
   width: "100%",
-  // 상품 2행 그리드와 높이가 같도록: 카드 높이(약 400px, ProductName이 1줄이든 2줄이든
-  // minHeight로 통일됨) * 2 + 행 간격(2xl, 48px). 실제 렌더링 값으로 측정해서 반영함
+  // 상품 2행 그리드와 높이 동일 (카드 높이 * 2 + 행 간격, 실측값)
   minHeight: "848px",
   flexDirection: "column",
   alignItems: "center",
@@ -232,8 +230,7 @@ export const Row = styled.div(({ theme }) => ({
   // 모바일은 한 행에 2개(태블릿의 3개짜리 유연한 행과 같은 방식, 개수만 다름)
   [theme.media.mobile]: {
     alignItems: "flex-start",
-    // 카드 2개(167.5px) + 사이 간격(xs, 8px) = 콘텐츠 폭(343px)에 맞춰야 하므로
-    // 태블릿(md)보다 좁은 xs 간격을 사용
+    // 카드 2개 + 간격이 콘텐츠 폭에 맞도록 태블릿보다 좁은 xs 간격 사용
     gap: theme.spacing.xs,
 
     "&& > *": {

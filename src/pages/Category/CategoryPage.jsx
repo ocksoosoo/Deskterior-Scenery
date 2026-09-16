@@ -7,7 +7,9 @@ import {
   showFailToast,
 } from "../../components/common/ShowToast";
 import ProductCard from "../../components/product/ProductCard";
-import ProductToolbar from "../../components/product/ProductToolbar";
+import ProductToolbar, {
+  SORT_OPTIONS,
+} from "../../components/product/ProductToolbar";
 import Pagination from "../../components/product/Pagination";
 import { FadeLoader } from "react-spinners";
 import useLoadingStore from "../../store/UseLoadingStore";
@@ -16,16 +18,14 @@ import { EmptyBoxIcon } from "../../components/icons/Icons";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
 const PAGE_SIZE = 6;
-// 모바일(theme.media.mobile 기준 768px 미만)에서는 한 줄에 2개씩,
-// 그 외(태블릿/PC)에서는 3개씩 묶어서 한 행(Row)을 만든다
+// theme.media.mobile(768px)과 반드시 같은 값으로 유지 (theme 쪽 기준이 바뀌면 여기도 함께 변경)
 const MOBILE_BREAKPOINT = 768;
+// 리사이즈 이벤트가 너무 잦아 매번 리렌더되지 않도록 디바운스
+const RESIZE_DEBOUNCE_MS = 150;
 
 const PLACEHOLDER_PRODUCT = { id: "placeholder", name: " ", price: 0 };
 
-// 카테고리별로 마지막에 보던 페이지 - 다른 카테고리를 봤다가 다시 이 카테고리로
-// 돌아왔을 때(URL에 page가 없는 첫 진입) 1페이지가 아니라 보던 페이지부터
-// 이어서 볼 수 있게 하기 위함. 지금 보고 있지 않은 카테고리의 기억까지 새로고침
-// 한 번에 다 날아가지 않도록, 메모리 변수가 아니라 sessionStorage에 저장한다
+// 카테고리별 마지막 조회 페이지 기억 (새로고침에도 유지되도록 sessionStorage 사용)
 const LAST_PAGE_STORAGE_KEY = "categoryLastPage";
 
 function readLastPageMap() {
@@ -47,11 +47,17 @@ function writeLastPage(categoryId, page) {
   }
 }
 
-// URL의 page 값을 신뢰하지 않고 검증한다 - 숫자가 아니거나("abc"), 정수가
-// 아니거나(2.5), 1보다 작으면(-5, 0) 전부 1페이지로 취급한다
+// URL의 page 값 검증 (숫자 아님/정수 아님/1 미만이면 1페이지로 취급)
 function parsePageParam(value) {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+}
+
+// URL의 sort 값 검증 (지원하지 않는 값이면 기본값으로 보정)
+function parseSortParam(value) {
+  return SORT_OPTIONS.some((option) => option.value === value)
+    ? value
+    : "name";
 }
 
 const CategoryPage = ({ categoryId = "lighting" }) => {
@@ -63,21 +69,27 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
 
   const { pathname } = useLocation();
 
-  // 화면 크기에 따라 한 행에 들어가는 상품 개수(2/3)를 동적으로 계산
   const [isMobile, setIsMobile] = useState(
     () => window.innerWidth < MOBILE_BREAKPOINT,
   );
   useEffect(() => {
-    const handleResize = () =>
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    let resizeTimer = null;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+      }, RESIZE_DEBOUNCE_MS);
+    };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      clearTimeout(resizeTimer);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+  // 모바일 2개, PC/태블릿 3개씩 한 행
   const rowSize = isMobile ? 2 : 3;
 
-  // 스토어가 앱 전체에서 딱 한 번만 요청/캐시하므로, 다른 페이지에서 이미
-  // 불러왔다면 여기선 다시 요청하지 않고 캐시된 값을 그대로 씀
-  // (실패 시 정적 목록 대체와 실패 토스트도 스토어 안에서 한 번만 처리됨)
+  // 카테고리 목록은 스토어에서 앱 전체 캐시/1회 요청 처리
   const categories = useCategoriesStore((state) => state.categories);
   const categoriesStatus = useCategoriesStore((state) => state.status);
   const categoriesReady =
@@ -88,19 +100,17 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   }, [fetchCategories]);
 
   const category = categories?.find((c) => c.id === categoryId);
-  // 카테고리 이름을 못 가져와도(로딩 실패) 상품목록 자체는 볼 수 있도록 categoryId로 폴백
+  // 카테고리 이름 로딩 실패해도 상품목록은 보이도록 categoryId로 폴백
   const categoryName = category?.name ?? categoryId;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("q") ?? "";
   const pageParam = searchParams.get("page");
-  // URL에 page가 명시돼 있으면 그 값을 그대로 쓰고(뒤로가기, 공유된 링크 등),
-  // 없으면(카테고리 메뉴를 새로 눌러 들어온 경우) 이 카테고리에서 마지막으로
-  // 보던 페이지로 이어서 시작한다
+  // URL에 page 있으면 그 값, 없으면 마지막으로 보던 페이지
   const currentPage = pageParam
     ? parsePageParam(pageParam)
     : (readLastPageMap()[categoryId] ?? 1);
-  const sortBy = searchParams.get("sort") ?? "name";
+  const sortBy = parseSortParam(searchParams.get("sort"));
 
   const updateSearchParams = (updates, options) => {
     setSearchParams((prev) => {
@@ -116,19 +126,16 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     }, options);
   };
 
-  // 기억해둔 페이지로 시작했다면(URL엔 page가 없었던 상태) 주소창에도 반영해서
-  // 새로고침·뒤로가기·링크 공유 시에도 지금 보고 있는 페이지가 유지되게 한다
+  // 기억한 페이지로 시작했다면 주소창에도 반영 (새로고침/공유 시에도 유지)
   useEffect(() => {
     if (!pageParam && currentPage > 1) {
       updateSearchParams({ page: currentPage }, { replace: true });
     }
-    // 카테고리에 새로 진입했을 때(마운트 시) 한 번만 확인하면 되는 동작이라
-    // categoryId만 의존성으로 둔다
+    // 마운트 시 한 번만 확인하면 되므로 categoryId만 의존성으로 둠
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId]);
 
-  // 페이지가 바뀔 때마다(직접 이동, URL 직접 접근 등 경로 무관하게) 이 카테고리의
-  // "마지막으로 보던 페이지"를 최신 상태로 기록
+  // 페이지가 바뀔 때마다 마지막 조회 페이지 갱신
   useEffect(() => {
     writeLastPage(categoryId, currentPage);
   }, [categoryId, currentPage]);
@@ -144,25 +151,24 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    let alive = true;
+    const controller = new AbortController();
 
     async function loadProducts() {
       try {
-        const data = await getProducts({
-          category: categoryId,
-          page: currentPage,
-          limit: PAGE_SIZE,
-          sort: sortBy,
-          q: search,
-        });
-
-        if (!alive) return;
+        const data = await getProducts(
+          {
+            category: categoryId,
+            page: currentPage,
+            limit: PAGE_SIZE,
+            sort: sortBy,
+            q: search,
+          },
+          { signal: controller.signal },
+        );
 
         const totalPagesFromServer = Math.max(1, data.pagination.totalPages);
 
-        // 기억해둔(또는 URL에 직접 입력된) 페이지가 실제 총 페이지 수보다 크면
-        // (그 사이 상품이 줄어든 경우 등) 빈 결과를 검색-실패 화면으로 보여주는
-        // 대신, 실제로 존재하는 마지막 페이지로 조용히 보정한다
+        // page가 총 페이지 수보다 크면 마지막 페이지로 보정 (재요청 완료 후에만 로딩완료 처리)
         if (currentPage > totalPagesFromServer) {
           updateSearchParams({ page: totalPagesFromServer }, { replace: true });
           return;
@@ -173,11 +179,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
           ...deriveBadgeFields(product),
         }));
 
-        // 이미지가 전부 로드될 때까지 기다렸다가 스피너를 끄면, 캐시가 없는
-        // 상태(시크릿 모드 등)에서 이미지 호스트가 느릴 때 전체 화면이 오래
-        // 덮여있게 된다. 홈페이지와 같은 방식으로 데이터만 오면 바로 렌더하고
-        // 이미지는 ProductCard의 lazy loading으로 각자 채워지게 둔다
-
+        // 이미지 로딩까지 기다리지 않고 데이터만 오면 바로 렌더 (이미지는 lazy loading)
         setPageProducts(products);
 
         setTotalPages(totalPagesFromServer);
@@ -185,31 +187,30 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
         setErroredKey(null);
 
         hasLoadedRef.current = true;
-      } catch (error) {
-        console.error("상품목록 로딩 실패:", error);
 
-        if (!alive) return;
+        setLoadedProductsForCategoryId(categoryId);
+      } catch (error) {
+        // 더 최신 요청으로 대체되어 취소된 요청이라 무시 (에러 아님)
+        if (error.name === "AbortError") return;
+
+        console.error("상품목록 로딩 실패:", error);
 
         setErroredKey(queryKey);
 
         if (hasLoadedRef.current) {
           showFailToast("목록을 불러오지 못했습니다. 다시 시도해 주세요.");
         }
-      } finally {
-        if (alive) {
-          setLoadedProductsForCategoryId(categoryId);
-        }
+
+        setLoadedProductsForCategoryId(categoryId);
       }
     }
 
     loadProducts();
 
     return () => {
-      alive = false;
+      controller.abort();
     };
-    // updateSearchParams는 매 렌더 새로 만들어지는 함수라 의존성에 넣으면 이
-    // effect가 원치 않게 매번 다시 실행된다. 실제로 재요청이 필요한 시점은
-    // 아래 값들이 바뀔 때뿐이라 queryKey로 충분히 표현된다
+    // updateSearchParams는 매 렌더 새로 생성되므로 의존성에서 제외 (queryKey로 충분)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, currentPage, sortBy, search, queryKey]);
 
@@ -223,14 +224,11 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     finishPageLoading(pathname);
   }, [categoriesReady, productsReady, pathname, finishPageLoading]);
 
-  // 카테고리/정렬/검색/페이지가 바뀌어 재조회 중이어도, 이미 보여줄 데이터가 있으면
-  // 화면 전체를 스피너로 갈아치우지 않고 기존 목록을 유지하다가 새 데이터로 자연스럽게 교체
+  // 재조회 중에도 기존 데이터가 있으면 스피너 대신 유지 후 자연스럽게 교체
   const hasLoadedOnce = pageProducts !== null;
   const isCurrentError = erroredKey === queryKey;
 
-  // 카테고리 목록을 정상적으로 받아왔는데 그 안에 없는 id면 진짜 잘못된 페이지.
-  // (아직 로딩 중이라 categories가 null이면 category도 항상 undefined라 이
-  // 조건에 안 걸리고, 로딩이 끝난 뒤에만 진짜 없는 카테고리인지 판단된다)
+  // categories 로딩 완료 후에도 없는 id면 잘못된 페이지
   if (categories !== null && !category) {
     return null;
   }
@@ -246,17 +244,14 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     if (!product) return;
 
     try {
-      // 1. 장바구니에 해당 상품이 이미 있는지 찾기
       const existingItem = cartItems.find(
         (item) => item.productId === product.id,
       );
 
       if (existingItem) {
-        // 2. 이미 있다면? -> 장바구니에서 빼기
         await removeItem(existingItem.cartItemId);
         showSuccessToast("장바구니에서 삭제했습니다.");
       } else {
-        // 3. 없다면? -> 장바구니에 담기
         await addToCart({
           productId: product.id,
           name: product.name,
@@ -275,12 +270,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
   let resultsContent;
 
   if (!hasLoadedOnce && !isCurrentError) {
-    // 데이터가 도착하기 전에도 실제 그리드와 비슷한 높이를 미리 잡아둔다.
-    // 예전엔 이 시점에 페이지 전체를 null로 그려서, 데이터가 도착하는 순간
-    // 상품 그리드가 통째로 생겨나며 그 아래(footer 등)가 한 번에 크게
-    // 밀려버렸다 - 그게 큰 레이아웃 시프트(CLS)의 원인이었다.
-    // 공용 <Loading/>은 화면 전체를 덮는 고정 오버레이라 여기 쓰면 헤더까지
-    // 같이 가려버리므로, 이 자리 안에서만 도는 인라인 스피너를 직접 둔다
+    // 그리드 높이를 미리 확보해 CLS 방지 (전역 Loading은 전체를 덮으므로 인라인 스피너 사용)
     resultsContent = (
       <S.EmptyState role="status" aria-live="polite">
         <FadeLoader color="#222320" size={40} speedMultiplier={1} />
@@ -289,7 +279,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     );
   } else if (isCurrentError && !hasLoadedOnce) {
     resultsContent = (
-      <S.EmptyState>
+      <S.EmptyState role="alert">
         <EmptyBoxIcon width={96} height={96} aria-hidden="true" />
         <S.EmptyTitle>상품을 불러올 수 없습니다</S.EmptyTitle>
         <S.EmptySubtitle>다시 시도해 주세요</S.EmptySubtitle>
@@ -297,17 +287,14 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
     );
   } else if (pageProducts.length === 0) {
     resultsContent = (
-      <S.EmptyState>
+      <S.EmptyState role="status" aria-live="polite">
         <S.StyledNoResultIcon width={96} height={96} aria-hidden="true" />
         <S.EmptyTitle>"{search}"에 대한 검색 결과가 없습니다</S.EmptyTitle>
         <S.EmptySubtitle>검색어를 확인하거나 다시 입력해주세요</S.EmptySubtitle>
       </S.EmptyState>
     );
   } else {
-    // PAGE_SIZE(6)만큼 항상 채우면, 실제 상품이 적은 페이지(ex. 2개)에서도
-    // 안 보이는 빈 칸이 남은 줄만큼 생겨 페이지네이션이 상품 개수와 무관하게
-    // 항상 같은 위치(맨 아래)에 고정돼버린다. 마지막 줄만 채워서 페이지네이션이
-    // 실제 상품 개수에 맞게 자연스럽게 따라오게 함 (뷰포트별 한 줄당 개수는 rowSize)
+    // 마지막 줄만 placeholder로 채워서 페이지네이션이 실제 상품 수를 따라오게 함
     const placeholderCount =
       (rowSize - (pageProducts.length % rowSize)) % rowSize;
 
@@ -341,9 +328,7 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
                   onAddToCart={handleAddToCart}
                   isBest={item.product.isBest}
                   isNew={item.product.isNew}
-                  // LCP(가장 큰 콘텐츠) 후보는 보통 맨 왼쪽 위 카드 하나라서, 그
-                  // 하나만 최우선으로 걸어서 다른 이미지들과 대역폭을 안 나누게
-                  // 한다. 첫 줄의 나머지 카드는 lazy로 둬도 LCP엔 영향 없다
+                  // LCP 후보인 맨 왼쪽 위 카드만 최우선 로딩
                   imagePriority={rowIndex === 0 && itemIndex === 0}
                 />
               ),

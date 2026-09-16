@@ -47,9 +47,10 @@ export function postProducts(data) {
 }
 
 // 상품 목록 조회 — GET /products?category=&page=&limit=
-export async function getProducts(params = {}) {
+// options로 { signal }을 넘기면 clientApi(fetch)에 그대로 전달돼 요청 취소가 가능하다
+export async function getProducts(params = {}, options = {}) {
   const query = new URLSearchParams(params).toString();
-  const res = await clientApi(`/products${query ? `?${query}` : ""}`); // { success, data: { products, pagination } }
+  const res = await clientApi(`/products${query ? `?${query}` : ""}`, options); // { success, data: { products, pagination } }
   return res.data;
 }
 
