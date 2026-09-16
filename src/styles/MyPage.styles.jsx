@@ -1,12 +1,15 @@
 import styled from "@emotion/styled";
 
-export const MypageBox = styled.main({
-  display: "flex",
-  flexDirection: "column",
+export const MypageBox = styled.main(({ theme }) => ({
   width: "100%",
+  padding: `${theme.spacing["3xl"]} clamp(16px, 6vw, 64px)`,
+  backgroundColor: theme.colors.background,
+}));
+
+export const MypageInner = styled.div({
+  width: "100%",
+  maxWidth: "896px",
   margin: "0 auto",
-  padding: "60px clamp(16px, 6vw, 64px)",
-  backgroundColor: "#f7f5ef",
 });
 
 export const MypageTitle = styled.h1({

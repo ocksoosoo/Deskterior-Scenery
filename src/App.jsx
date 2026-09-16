@@ -9,6 +9,7 @@ import categories from "./data/categories";
 import Toast from "./components/common/Toast";
 import CommonLayout from "./pages/commonLayout";
 import Loading from "./components/common/Loading";
+import { MotionConfig } from "motion/react";
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
 const LoginForm = lazy(() => import("./pages/LoginForm"));
 const SignupForm = lazy(() => import("./pages/SignupForm"));
@@ -59,7 +60,7 @@ function App() {
   }, [setUser, clearUser]);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <Global styles={reset} />
 
       <Toast />
@@ -88,7 +89,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-    </>
+    </MotionConfig>
   );
 }
 
