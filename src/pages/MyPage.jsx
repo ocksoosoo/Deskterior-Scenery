@@ -3,7 +3,7 @@ import useWishlistStore from "../store/wishlistStore";
 import { z } from "zod";
 import { signupSchema } from "../schema/AuthSchema";
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, Link } from "react-router";
 import useLoadingStore from "../store/UseLoadingStore";
 import useCartStore from "../store/cartStore";
 import {
@@ -66,6 +66,8 @@ import {
   NewPasswordHidenButton,
   PasswordError,
   MypageInner,
+  MypageBreadcrumb,
+  MypageBreadcrumbLink,
 } from "../styles/MyPage.styles";
 
 const ChangePasswordSchema = z.object({
@@ -302,6 +304,14 @@ function Mypage() {
     <>
       <MypageBox>
         <MypageInner>
+          <MypageBreadcrumb aria-label="현재 위치">
+            <MypageBreadcrumbLink to="/" title="홈으로 이동">
+              Home
+            </MypageBreadcrumbLink>
+            {" > "}
+            <span aria-current="page">My Page</span>
+        </MypageBreadcrumb>
+        
           <MypageTitle>My Page</MypageTitle>
 
           <CardBox>

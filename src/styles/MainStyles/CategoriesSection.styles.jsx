@@ -26,7 +26,7 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
 
 export const CategoriesInner = styled.div(({theme}) => ({
   width: "100%",
-  maxWidth: "1024px",
+  maxWidth: "896px",
   marginInline: "auto",
   display: "flex",
   flexDirection: "column",

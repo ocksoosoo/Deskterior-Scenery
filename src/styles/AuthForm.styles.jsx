@@ -35,6 +35,7 @@ export const Input = styled.input(({ theme }) => ({
   borderBottom: `${theme.borderWidth.focus} solid ${theme.colors.subtle}`,
   outline: "none",
   backgroundColor: "transparent",
+  transition: "border-color 0.2s ease",
   "&:focus": {
     borderBottomColor: theme.colors.textMain,
   },
@@ -60,6 +61,7 @@ export const InputIdGroup = styled.div(({ theme }) => ({
   alignItems: "center",
   width: "100%",
   borderBottom: `${theme.borderWidth.focus} solid ${theme.colors.subtle}`,
+  transition: "border-color 0.2s ease",
   "& input": {
     flex: 1,
     minWidth: 0,
@@ -189,6 +191,7 @@ const messageStyle = {
 
 export const SuccessMessage = styled.div({
   ...messageStyle,
+  color: theme.colors.textMain,
   backgroundColor: "#d9f3df",
   textAlign: "left",
   "& svg": {
@@ -199,6 +202,7 @@ export const SuccessMessage = styled.div({
 
 export const ErrorMessage = styled.div(({ theme }) => ({
   ...messageStyle,
+  color: theme.colors.textMain,
   backgroundColor: "#f8d1bd",
   "@media (width < 409px)": {
     fontSize: "clamp(11px, calc(3.37vw - 1.79px), 12px)",

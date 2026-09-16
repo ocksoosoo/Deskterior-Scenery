@@ -31,7 +31,7 @@ export const WishlistHeader = styled.div(({ theme }) => ({
     alignItems: "center",
     justifyContent: "space-between",
     gap: theme.spacing.md, // 16
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.lg,
     paddingBottom: theme.spacing.md,
     borderBottom: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
 
@@ -59,6 +59,10 @@ export const DeleteAllButton = styled.button(({ theme }) => ({
     fontWeight: theme.fontWeight.medium,
     cursor: "pointer",
     padding: 0,
+
+    "&:hover": {
+        textDecoration: "underline",
+    }
 }));
 
 export const WishlistContent = styled.div({
