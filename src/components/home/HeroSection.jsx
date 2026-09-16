@@ -24,11 +24,11 @@ import {
   GuideText,
   MobileHeroVideo,
 } from "../../styles/MainStyles/HeroSection.styles";
-import deskLamp from "../../assets/obj-desk-lamp.png";
-import diary from "../../assets/obj-diary-pen.png";
-import flowerVase from "../../assets/obj-flower-vase.png";
-import headphones from "../../assets/obj-headphones.png";
-import penTray from "../../assets/obj-pen-tray.png";
+import deskLamp from "../../assets/obj_desk_lamp.webp";
+import diary from "../../assets/obj_diary_pen.webp";
+import flowerVase from "../../assets/obj_flower_vase.webp";
+import headphones from "../../assets/obj_headphones.webp";
+import penTray from "../../assets/obj_pen_tray.webp";
 import { useEffect, useRef, useState } from "react";
 import { useAnimate, motion } from "motion/react";
 import heroPoster from "../../assets/Hero.png";
