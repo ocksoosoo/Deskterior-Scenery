@@ -1,7 +1,8 @@
 import AuthForm from "../components/AuthForm";
 import { login } from "../api/authApi";
 import useCartStore from "../store/cartStore";
-import loginbanner from "../assets/loginbanner.webp";
+//import loginbanner from "../assets/loginbanner.webp";
+import loginbanner from "../assets/login_image.webp";
 import useAuthStore from "../store/UseAuthStore";
 import usePageLoading from "../hook/usePageLoading";
 

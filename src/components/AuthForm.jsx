@@ -175,10 +175,8 @@ function AuthForm({ mode, onSubmit }) {
       }
 
       setIdCheck(id);
-      //showSuccessToast("사용 가능한 ID입니다!");
       setMessage("");
       setSuccessMessage("사용 가능한 ID입니다!");
-      //setMessage(result.message);
     } catch (error) {
       if (currentIdRef.current !== id) {
         return;
@@ -186,9 +184,7 @@ function AuthForm({ mode, onSubmit }) {
 
       setIdCheck("");
       setSuccessMessage("");
-      //showError(error.message, idRef);  삭제 X
       setMessage(error.message || "아이디 중복 확인에 실패했습니다.");
-      //showFailToast(error.message || "아이디 중복 확인에 실패했습니다.");
       setIdShakingButton(true);
     }
   };
@@ -324,14 +320,6 @@ function AuthForm({ mode, onSubmit }) {
           </PasswordGroup>
         </Label>
 
-        {/* 로그아웃 테스트 버튼
-        {mode === "login" && (
-          <Button type="button" onClick={handleLogOut}>
-            로그아웃
-          </Button>
-        )}
-        */}
-
         {mode === "signup" && (
           <>
             <Label>
@@ -436,12 +424,6 @@ function AuthForm({ mode, onSubmit }) {
         >
           {mode === "signup" ? "Sign Up" : "Log in"}
         </Button>
-
-        {/* 취소 테스트 버튼
-        <Button type="button" onClick={handleCancel}>
-          취소
-        </Button>
-        */}
       </Form>
     </>
   );

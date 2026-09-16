@@ -11,9 +11,9 @@ import CommonLayout from "./pages/commonLayout";
 import Loading from "./components/common/Loading";
 import { MotionConfig } from "motion/react";
 const HomePage = lazy(() => import("./pages/Home/HomePage"));
-const LoginForm = lazy(() => import("./pages/LoginForm"));
-const SignupForm = lazy(() => import("./pages/SignupForm"));
-const MyPage = lazy(() => import("./pages/MyPage"));
+import LoginForm from "./pages/LoginForm";
+import SignupForm from "./pages/SignupForm";
+import MyPage from "./pages/MyPage";
 const CategoryPage = lazy(() => import("./pages/Category/CategoryPage"));
 const ProductDetailPage = lazy(
   () => import("./pages/Product/ProductDetailPage"),
