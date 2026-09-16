@@ -41,6 +41,6 @@ export const ContinueButton = styled.button(({ theme }) => ({
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   borderRadius: theme.radius.md,
   "&:hover": {
-    filter: "brightness(1.3)",
+    filter: "brightness(1.5)",
   },
 }));

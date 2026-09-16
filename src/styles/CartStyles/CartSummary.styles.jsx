@@ -159,6 +159,6 @@ export const CheckoutButton = styled.button(({ theme }) => ({
     cursor: "not-allowed",
   },
   "&:hover": {
-    filter: "brightness(1.3)",
+    filter: "brightness(1.5)",
   },
 }));
