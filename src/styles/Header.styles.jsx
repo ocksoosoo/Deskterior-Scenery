@@ -28,8 +28,12 @@ export const HeaderSection = styled.header(({ theme }) => ({
   [theme.media.mobile]: {
     // 모바일도 햄버거 메뉴·아이콘을 스크롤 중에 계속 눌러야 하므로 sticky 유지
     position: "sticky",
-    height: "64px",
-    padding: `0 ${theme.spacing.md}`,
+    height: "calc(64px + env(safe-area-inset-top))",
+    paddingTop: "env(safe-area-inset-top)",
+    paddingRight: `calc(${theme.spacing.md} + env(safe-area-inset-right))`,
+    paddingBottom: 0,
+    paddingLeft: `calc(${theme.spacing.md} + env(safe-area-inset-left))`,
+    boxSizing: "border-box",
     // 로고가 화면 정중앙에 오도록 3분할 grid 사용. absolute + left:50%는 아이콘
     // 묶음 폭이 넓어질 때 로고와 겹치는 문제가 있었음.
     // 1fr auto 1fr로 하면 좌우 두 fr 트랙이 "같은 비율"일 뿐 "같은 폭"이 아니라서,
@@ -250,7 +254,10 @@ export const MobileMenuPanel = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
-  padding: theme.spacing.lg,
+  paddingTop: `calc(${theme.spacing.lg} + env(safe-area-inset-top))`,
+  paddingRight: theme.spacing.lg,
+  paddingBottom: `calc(${theme.spacing.lg} + env(safe-area-inset-bottom))`,
+  paddingLeft: `calc(${theme.spacing.lg} + env(safe-area-inset-left))`,
   gap: theme.spacing.lg,
   background: theme.colors.cards,
   overflowY: "auto",
