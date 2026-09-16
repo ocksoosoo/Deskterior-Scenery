@@ -13,23 +13,19 @@ import * as S from "../../styles/ListPageStyles/ProductCard.styles";
 // 바구니 아이콘 안쪽 창(구멍) 영역 - 아이콘 자체 path의 안쪽 사각형 좌표와 동일
 const BASKET_WINDOW_POINTS = "19.04,8.25 7.44,8.25 8.62,14.75 17.41,14.75";
 
-// 카드 이미지 실제 표시 크기(약 186px)의 2배(레티나 대응) - 원본(1024px)을
-// 그대로 받지 않고 이 크기로 리사이징된 이미지를 받는다
+// 카드 이미지 표시 크기(약 186px)의 2배(레티나 대응)로 리사이징
 const CARD_IMAGE_WIDTH = 400;
 
 const ProductCard = ({
   product,
   onAddToCart,
-  // onToggleLike,
   onWishlistRemove,
   showCategory = false,
   isBest = false,
   isNew = false,
-  // 카드가 놓이는 배경색을 바깥에서 직접 지정 (기본값은 스타일 쪽에서 처리).
-  // 예전엔 boolean(useListBackground)으로 두 색 중 하나만 고르는 구조였는데,
-  // 세 번째 배경색이 필요한 곳이 생기면 대응이 안 돼서 값 자체를 받게 바꿈
+  // 카드 배경색을 바깥에서 직접 지정 (기본값은 스타일 쪽에서 처리)
   background,
-  imagePriority = false, //
+  imagePriority = false,
 }) => {
   const theme = useTheme();
   const liked = useWishlistStore((state) => state.likedIds.has(product.id));
@@ -50,16 +46,6 @@ const ProductCard = ({
   // 빈(placeholder) 카드는 링크 없음
   const isClickable = Boolean(product?.id) && product.id !== "placeholder";
 
-  // const handleToggleLike = () => {
-  //   const next = !liked;
-  //   toggleLike(product.id);
-  //   onToggleLike?.(product.id);
-  //   showSuccessToast(
-  //     next ? "찜 목록에 추가되었습니다." : "찜 목록에서 삭제되었습니다.",
-  //   );
-  // };
-
-  // 위시리스트 토글 함수
   const handleToggleLike = async () => {
     // 연속 클릭으로 요청이 중복되는 것을 방지
     if(isWishlistPending) return;
@@ -87,7 +73,7 @@ const ProductCard = ({
         : "위시리스트에 추가되었습니다.",
       );
     } catch(error) {
-      console.log("위시리스트 변경 실패:", error);
+      console.error("위시리스트 변경 실패:", error);
       showFailToast("로그인 후 이용할 수 있습니다.");
     } finally {
       setIsWishlitPending(false);
@@ -123,18 +109,18 @@ const ProductCard = ({
               <S.ProductImage
                 src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
                 alt={product.name}
-                loading={imagePriority ? "eager" : "lazy"} //
-                fetchPriority={imagePriority ? "high" : "auto"} //
-                decoding="async" //
+                loading={imagePriority ? "eager" : "lazy"}
+                fetchPriority={imagePriority ? "high" : "auto"}
+                decoding="async"
               />
             </S.ImageLink>
           ) : (
             <S.ProductImage
               src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
               alt={product.name}
-              loading={imagePriority ? "eager" : "lazy"} //
-              fetchPriority={imagePriority ? "high" : "auto"} //
-              decoding="async" //
+              loading={imagePriority ? "eager" : "lazy"}
+              fetchPriority={imagePriority ? "high" : "auto"}
+              decoding="async"
             />
           ))}
 
@@ -143,7 +129,7 @@ const ProductCard = ({
             type="button"
             aria-pressed={liked}
             aria-label={liked ? "위시리스트 등록 해제" : "위시리스트 등록"}
-            title="찜"
+            title={liked ? "찜 해제" : "찜하기"}
             onClick={handleToggleLike}
             disabled={isWishlistPending}
           >
@@ -156,8 +142,7 @@ const ProductCard = ({
             onClick={handleAddToCart}
             data-just-added={justAdded}
             onAnimationEnd={(event) => {
-              // 버튼 안쪽 물결(waterRise) 애니메이션 종료도 버블링되므로,
-              // 버튼 자신의 흔들림(cartShake) 애니메이션이 끝났을 때만 반응하게 함
+              // 버튼 자신의 흔들림 애니메이션이 끝났을 때만 반응 (물결 애니메이션 버블링 제외)
               if (event.target === event.currentTarget) setJustAdded(false);
             }}
           >

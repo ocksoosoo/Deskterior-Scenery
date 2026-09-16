@@ -5,8 +5,7 @@ export const StyledSearchIcon = styled(SearchIcon)({
   flexShrink: 0,
 });
 
-// 돋보기도 호버/클릭이 되는 버튼으로 감싸서 검색을 즉시 실행할 수 있게 함
-// (색상은 버튼 쪽에 두고 아이콘은 currentColor로 상속받아 호버에 같이 반응)
+// 돋보기를 버튼으로 감싸서 클릭 시 즉시 검색 실행 (색은 버튼→아이콘 currentColor 상속)
 export const SearchSubmitButton = styled.button(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -45,8 +44,7 @@ export const ClearButton = styled.button(({ theme }) => ({
 export const ClearIcon = styled(CloseIcon)({
   width: "22px",
   height: "22px",
-  // CloseIcon의 path가 stroke="#74766F"로 색이 고정돼있어서, 부모 버튼(hover
-  // 포함)의 color를 바꿔도 반영이 안 됐다. currentColor로 덮어써서 상속되게 함
+  // CloseIcon의 path stroke가 고정색이라 부모 color 변화가 반영 안 되던 것을 상속되게 함
   "& path": {
     stroke: "currentColor",
   },
@@ -97,12 +95,9 @@ export const SearchBox = styled.div(({ theme }) => ({
   borderRadius: theme.radius.full,
   background: theme.colors.cards,
   padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-  // 가장 긴 상품명("Minimal Bluetooth Mechanical Keyboard" 등, 약 250px)이
-  // X버튼+구분선+돋보기(약 60px)까지 다 뜬 상태에서도 안 잘리게 여유있게 잡음
+  // 가장 긴 상품명 + X버튼/구분선/돋보기까지 다 떠도 안 잘리게 여유있게 잡음
   width: "400px",
-  // X버튼(22px)이 입력창 줄 높이보다 커서, 검색어 유무에 따라 flex의
-  // "가장 큰 자식" 기준 높이가 달라져 박스가 미세하게 커졌다 작아졌다 했다.
-  // 높이를 고정해서 X버튼이 나타나도 박스 크기가 흔들리지 않게 함
+  // X버튼 유무로 박스 높이가 미세하게 흔들리는 것 방지
   height: "46px",
   boxSizing: "border-box",
 
@@ -112,6 +107,11 @@ export const SearchBox = styled.div(({ theme }) => ({
 
   [theme.media.mobile]: {
     width: "100%",
+  },
+
+  // input의 outline을 지웠으므로 박스 테두리 색으로 포커스 여부를 대신 드러낸다
+  "&:focus-within": {
+    borderColor: theme.colors.emphasis,
   },
 }));
 
@@ -128,8 +128,7 @@ export const SearchInput = styled.input(({ theme }) => ({
     color: theme.colors.secondText,
   },
 
-  // 클릭(포커스)하는 동안엔 힌트 텍스트를 숨기고, 다른 곳을 클릭(블러)하면
-  // 입력값이 비어있을 때 다시 보이게 함 (기본 동작은 값이 없어도 포커스 중엔 계속 보임)
+  // 포커스 중엔 placeholder 숨기고, blur 시 값이 비어있으면 다시 표시
   "&:focus::placeholder": {
     opacity: 0,
   },

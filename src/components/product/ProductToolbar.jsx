@@ -26,9 +26,8 @@ const ProductToolbar = ({
   const [lastSent, setLastSent] = useState(search);
   const debounceRef = useRef(null);
 
-  // 외부에서 검색어가 바뀌면(예: 브라우저 뒤로가기) 입력창도 동기화 — 렌더 중 조정
-  // 단, 우리가 방금 보낸 검색어 때문에 바뀐 거라면(디바운스 응답 반영) 입력창은 건드리지 않음 —
-  // 그 사이 사용자가 계속 타이핑했을 수 있어서 덮어쓰면 글자가 지워질 수 있음
+  // 외부에서 검색어가 바뀌면 입력창도 동기화 (단, 방금 우리가 보낸 값이면
+  // 건드리지 않음 - 그 사이 타이핑한 내용이 지워질 수 있음)
   if (search !== syncedSearch) {
     setSyncedSearch(search);
     if (search !== lastSent) {
