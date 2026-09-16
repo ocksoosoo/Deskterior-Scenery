@@ -21,14 +21,18 @@ export const ErrorContent = styled.div({
   textAlign: "center",
 });
 
-export const ErrorNumber = styled.h1({
+export const ErrorNumber = styled.h1(({ theme }) => ({
   margin: 0,
   padding: 0,
   fontSize: "170px",
   fontWeight: 700,
   lineHeight: 1,
   color: "#74766F",
-});
+
+  [theme.media.smallMobile]: {
+    fontSize: "clamp(120px, calc(31.25vw + 20px), 170px)",
+  },
+}));
 
 export const ErrorTitle = styled.h2({
   margin: "42px 0 0",
@@ -38,13 +42,17 @@ export const ErrorTitle = styled.h2({
   color: "#D0D0D0",
 });
 
-export const ErrorText = styled.p({
+export const ErrorText = styled.p(({ theme }) => ({
   margin: "4px 0 0",
   fontSize: "14px",
   fontWeight: 400,
   lineHeight: "22px",
   color: "#D0D0D0",
-});
+
+  [theme.media.smallMobile]: {
+    fontSize: "clamp(12px, calc(1.25vw + 8px), 14px)",
+  },
+}));
 
 export const TimerText = styled.p({
   margin: "4px 0 0",
