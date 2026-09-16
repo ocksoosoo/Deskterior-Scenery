@@ -18,6 +18,8 @@ const ProductImageGallery = ({
   if (!images?.length) return null;
 
   const safeCurrent = current < images.length ? current : 0;
+  // 3장 이하는 원래 고정 크기로, 4장 이상일 때만 남는 폭을 균등하게 나눠 채움
+  const fillThumbs = images.length >= 4;
 
   return (
     <div>
@@ -51,7 +53,7 @@ const ProductImageGallery = ({
       </S.MainImageFrame>
 
       {/* 큰 사진 밑 작은 사진들 */}
-      <S.ThumbRow>
+      <S.ThumbRow $fill={fillThumbs}>
         {images.map((src, i) => {
           const selected = i === safeCurrent;
           return (
@@ -59,6 +61,7 @@ const ProductImageGallery = ({
               key={i}
               type="button"
               $active={selected}
+              $fill={fillThumbs}
               onClick={() => setCurrent(i)}
               aria-current={selected ? "true" : undefined}
               aria-label={`${alt} ${i + 1}번 이미지 보기`}

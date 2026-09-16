@@ -39,17 +39,34 @@ export const BadgeGroup = styled.div(({ theme }) => ({
   zIndex: 10,
 }));
 
-export const ThumbRow = styled.div(({ theme }) => ({
+// 썸네일이 4장 이상일 때만 큰 이미지(MainImageFrame) 폭을 꽉 채워서 남는 공간을
+// 균등하게 나눠 갖고, 3장 이하는 원래 고정 크기 그대로 둠 (적은 장수를 억지로
+// 늘리면 오히려 어색해서)
+export const ThumbRow = styled.div(({ theme, $fill }) => ({
   display: "flex",
-  flexWrap: "wrap",
+  flexWrap: $fill ? "nowrap" : "wrap",
   gap: theme.spacing.sm,
   marginTop: theme.spacing.md,
 }));
 
-export const ThumbButton = styled.button(({ theme, $active }) => ({
-  flex: "0 0 auto",
-  width: "5.625rem",
-  height: "5.625rem",
+export const ThumbButton = styled.button(({ theme, $active, $fill }) => ({
+  ...($fill
+    ? { flex: "1 1 0", minWidth: 0, aspectRatio: "1 / 1" }
+    : {
+        flex: "0 0 auto",
+        width: "5.625rem",
+        height: "5.625rem",
+
+        [theme.media.tablet]: {
+          width: "3.55rem",
+          height: "3.55rem",
+        },
+
+        [theme.media.mobile]: {
+          width: "4.8125rem",
+          height: "4.8125rem",
+        },
+      }),
   padding: 0,
   lineHeight: 0,
   overflow: "hidden",
@@ -63,16 +80,6 @@ export const ThumbButton = styled.button(({ theme, $active }) => ({
   "&:focus-visible": {
     outline: `${theme.borderWidth.focus} solid ${theme.colors.textMain}`,
     outlineOffset: "2px",
-  },
-
-  [theme.media.tablet]: {
-    width: "3.55rem",
-    height: "3.55rem",
-  },
-
-  [theme.media.mobile]: {
-    width: "4.8125rem",
-    height: "4.8125rem",
   },
 }));
 
