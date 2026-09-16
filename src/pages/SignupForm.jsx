@@ -23,7 +23,11 @@ function SignupForm() {
     <>
       <SignupPage>
         <SignupImageWrap>
-          <SignupImage src={signupbanner} alt="Signup banner" />
+          <SignupImage
+            src={signupbanner}
+            alt="Signup banner"
+            fetchPriority="high"
+          />
         </SignupImageWrap>
 
         <SignupCard>
