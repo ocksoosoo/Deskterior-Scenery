@@ -189,7 +189,7 @@ const messageStyle = {
   textAlign: "left",
 };
 
-export const SuccessMessage = styled.div({
+export const SuccessMessage = styled.div(({theme}) => ({
   ...messageStyle,
   color: theme.colors.textMain,
   backgroundColor: "#d9f3df",
@@ -198,7 +198,7 @@ export const SuccessMessage = styled.div({
     color: "#18a83b",
     flexShrink: 0,
   },
-});
+}));
 
 export const ErrorMessage = styled.div(({ theme }) => ({
   ...messageStyle,
