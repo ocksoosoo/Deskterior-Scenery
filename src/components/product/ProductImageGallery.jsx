@@ -34,6 +34,8 @@ const ProductImageGallery = ({
             />
           }
           style={S.mainImage}
+          // 페이지의 LCP(Largest Contentful Paint) 요소라 브라우저에 최우선으로 받아오도록 힌트를 줌
+          fetchPriority="high"
         />
         {soldOut && <S.ImageOverlay />}
 
@@ -66,6 +68,8 @@ const ProductImageGallery = ({
                 alt=""
                 fallback={<SceneryBox />}
                 style={S.fillImage}
+                // 메인 이미지보다 우선순위를 낮춰서 메인 이미지 로딩을 방해하지 않음
+                loading="lazy"
               />
             </S.ThumbButton>
           );
