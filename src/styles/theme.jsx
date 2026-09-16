@@ -73,8 +73,8 @@ const borderWidth = {
 const media = {
   smallMobile: `@media (width < 480px)`,
   mobile: `@media (width < 768px)`,
-  tablet: `@media (width >= 768px) and (width < 1024px)`,
-  pc: `@media (width >= 1024px) and (width < 1440px)`,
+  tablet: `@media (width < 1024px)`,
+  pc: `@media (width < 1440px)`,
   wide: `@media (width >= 1440px)`,
 };
 //  레이아웃 (헤더 등 고정 요소 크기 - 다른 값들이 이걸 기준으로 계산됨)

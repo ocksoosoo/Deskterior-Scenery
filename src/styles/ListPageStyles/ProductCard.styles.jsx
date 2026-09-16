@@ -132,6 +132,10 @@ export const LikeButton = styled.button(({ theme }) => ({
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.24)",
   },
 
+  "&:disabled": {
+    cursor: "default",
+  },
+
   "&:active": {
     transform: "scale(0.95)",
   },

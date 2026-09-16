@@ -417,7 +417,6 @@ function HeroSection() {
           poster={heroPoster}
           autoPlay
           muted
-          loop
           playsInline
           controls
           preload="metadata"

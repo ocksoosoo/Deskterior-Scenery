@@ -190,17 +190,20 @@ function WishlistSection() {
 
   return (
     <WishlistContainer>
-        {/* wishlist title 영역 */}
         <WishlistHeader>
             <WishlistTitle>Wish List</WishlistTitle>
-            <DeleteAllButton
-            type="button"
-            disabled={isLoading || Boolean(errorMessage) || !hasItems || isDeleting}
-            onClick={() => setIsDeleteModalOpen(true)}
-            >
-                Delete All
-            </DeleteAllButton>
-        </WishlistHeader>
+
+            {!isLoading && !errorMessage && hasItems && (
+                <DeleteAllButton
+                    type="button"
+                    disabled={isDeleting}
+                    onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                    Delete All
+                </DeleteAllButton>
+                )}
+            </WishlistHeader>
+
 
         {/* 위시 카드 영역 */}
         {/* 로딩 상태일 때 로딩 문구를 보여주고, 로딩이 완료되고 리스트에 담긴 상품이 있으면 보여준다. */}
