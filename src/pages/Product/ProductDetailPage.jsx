@@ -161,7 +161,7 @@ const ProductDetailPage = () => {
         {
           productId: product.id,
           name: product.name,
-          price: product.discountPrice || product.price,
+          price: product.discountPrice ?? product.price,
           imageUrl: product.images?.[0],
           isSoldOut: product.soldOut,
         },
@@ -294,6 +294,7 @@ const ProductDetailPage = () => {
           <ReviewSection
             key={id}
             reviews={reviews}
+            average={averageRating}
             isLoggedIn={Boolean(user)}
             onCreate={handleCreateReview}
             onUpdate={handleUpdateReview}

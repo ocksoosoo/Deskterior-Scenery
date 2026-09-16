@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { EmptyReviewIcon } from "../../components/icons/Icons";
 
 export const Section = styled.section(({ theme }) => ({
   width: "100%",
@@ -82,7 +83,7 @@ export const FormRow = styled.div(({ theme }) => ({
   },
 }));
 
-export const RatingBox = styled.div(({ theme }) => ({
+export const RatingBox = styled.div(({ theme, $loggedIn }) => ({
   display: "flex",
   flex: "0 0 auto",
   width: "14.5rem",
@@ -94,6 +95,7 @@ export const RatingBox = styled.div(({ theme }) => ({
   padding: theme.spacing.md,
   borderRadius: theme.radius.md,
   background: "rgba(235, 105, 35, 0.15)",
+  cursor: $loggedIn ? "default" : "pointer",
 
   [theme.media.mobile]: {
     width: "auto",
@@ -119,7 +121,7 @@ export const RatingHint = styled.span(({ theme }) => ({
   color: theme.colors.secondText, // #74766F
 }));
 
-export const Textarea = styled.textarea(({ theme }) => ({
+export const Textarea = styled.textarea(({ theme, $loggedIn }) => ({
   flex: "1 0 0",
   height: "8.25rem",
   padding: theme.spacing.md,
@@ -133,6 +135,7 @@ export const Textarea = styled.textarea(({ theme }) => ({
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
   color: theme.colors.textMain,
+  cursor: $loggedIn ? "text" : "pointer",
 
   "&::placeholder": { color: theme.colors.mutedText },
   "&:focus": {
@@ -260,7 +263,7 @@ export const EmptyState = styled.div({
   background: "#FFF",
 });
 
-export const EmptyIcon = styled.svg({
+export const EmptyIcon = styled(EmptyReviewIcon)({
   width: "6.875rem",
   height: "6.875rem",
 });

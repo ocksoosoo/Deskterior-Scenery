@@ -39,13 +39,6 @@ function toProduct(raw) {
   };
 }
 
-export function postProducts(data) {
-  return clientApi("/products", {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-}
-
 // 상품 목록 조회 — GET /products?category=&page=&limit=
 // options로 { signal }을 넘기면 clientApi(fetch)에 그대로 전달돼 요청 취소가 가능하다
 export async function getProducts(params = {}, options = {}) {
