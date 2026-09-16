@@ -1,5 +1,6 @@
 import AuthForm from "../components/AuthForm";
-import signupbanner from "../assets/signupbanner.webp";
+//import signupbanner from "../assets/signupbanner.webp";
+import signupbanner from "../assets/SignUp_image.webp";
 import { signUp } from "../api/authApi";
 import usePageLoading from "../hook/usePageLoading";
 import {
