@@ -33,7 +33,9 @@ import heroPoster from "../../assets/Hero.png"
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAnimate, motion } from "motion/react";
-import mobileHeroVideo from "../../assets/hero-tangled-objects.mp4";
+import mobileHeroVideo from "../../assets/hero-tangled-objects.webm";
+import heroVideoWebm from "../../assets/hero-tangled-objects.mp4"
+import heroVideoMP4 from "../../assets/hero-tangled-objects.mp4";
 import useIsMobile from "../../hook/useIsMobile";
 
 // 각 오브젝트와 이름이 가장 비슷한 실제 상품으로 연결 (이미지 자체는 상품
@@ -529,6 +531,8 @@ function HeroSection() {
           preload="metadata"
           aria-label="SCENERY 모바일 히어로 영상"
         />
+        <source src={heroVideoWebm} type="video/webm" />
+        <source src={heroVideoMP4} type="video/mp4" />
       </HeroContainer>
     );
   }
