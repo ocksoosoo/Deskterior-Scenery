@@ -6,6 +6,7 @@ import useAuthStore from "./UseAuthStore";
 // 로그인 여부
 const checkIsLoggedIn = () => !!useAuthStore.getState().user;
 
+// 장바구니 저장
 const useCartStore = create(
   persist(
     (set, get) => ({
@@ -13,10 +14,12 @@ const useCartStore = create(
       isLoading: false,
       error: null,
 
-      // 서버 장바구니 불러오기
-      fetchCart: async () => {
-        if (!checkIsLoggedIn()) return; // 비회원이면(로컬 스토리지 유지)
+      // 에러 초기화
+      clearError: () => set({ error: null }),
 
+      // 서버 장바구니 조회
+      fetchCart: async () => {
+        if (!checkIsLoggedIn()) return; // 비회원 로컬 유지
         set({ isLoading: true, error: null });
         try {
           const res = await cartApi.getCart();
@@ -29,7 +32,6 @@ const useCartStore = create(
       //  장바구니 담기
       addToCart: async (product, quantity = 1) => {
         if (checkIsLoggedIn()) {
-          // 회원이면 API 호출 후 재조회
           try {
             await cartApi.addToCart(product.productId, quantity);
             await get().fetchCart();
@@ -38,7 +40,7 @@ const useCartStore = create(
             throw err;
           }
         } else {
-          // 비회원은 로컬 배열만 업데이트
+          // 비회원 로컬 처리
           set((state) => {
             const existing = state.cartItems.find(
               (i) => i.productId === product.productId,
@@ -52,7 +54,6 @@ const useCartStore = create(
                 ),
               };
             }
-            // 새 상품 담기
             return {
               cartItems: [
                 ...state.cartItems,
@@ -70,11 +71,9 @@ const useCartStore = create(
       // 수량 업데이트
       updateQuantity: async (cartItemId, quantity) => {
         if (quantity < 1) return;
-
         if (checkIsLoggedIn()) {
           try {
             await cartApi.updateQuantity(cartItemId, quantity);
-            // 서버에 반영 성공 후 로컬 상태도 업데이트 (화면 리렌더링용)
             set((state) => ({
               cartItems: state.cartItems.map((item) =>
                 item.cartItemId === cartItemId ? { ...item, quantity } : item,
@@ -85,7 +84,6 @@ const useCartStore = create(
             throw err;
           }
         } else {
-          // 비회원 로컬 업데이트
           set((state) => ({
             cartItems: state.cartItems.map((item) =>
               item.cartItemId === cartItemId ? { ...item, quantity } : item,
@@ -116,8 +114,6 @@ const useCartStore = create(
             throw err;
           }
         }
-
-        // 로컬/서버 공통: 화면 배열에서 삭제
         set((state) => ({
           cartItems: state.cartItems.filter(
             (item) => item.cartItemId !== cartItemId,
@@ -135,8 +131,6 @@ const useCartStore = create(
             throw err;
           }
         }
-
-        // 로컬/서버 공통: 체크된 ID가 아닌 상품들만 남기기
         set((state) => ({
           cartItems: state.cartItems.filter(
             (item) => !cartItemIds.includes(item.cartItemId),
@@ -157,50 +151,64 @@ const useCartStore = create(
         set({ cartItems: [] });
       },
 
-      // 로그아웃 시 화면(로컬) 장바구니만 초기화
+      // 비회원 로컬 초기화
       clearLocalCart: () => {
         set({ cartItems: [] });
       },
 
-      //  데이터 병합
+      // 회원/비회원 장바구니 병합
       mergeLocalCartToServer: async () => {
-        // 비회원일때 아이템 local로 시작
         const allLocalItems = get().cartItems;
         const guestItems = allLocalItems.filter((item) =>
           String(item.cartItemId).startsWith("local_"),
         );
 
         if (guestItems.length === 0) {
-          // 비회원일때 담은아이템 없으면 서버에서 받아옴
           await get().fetchCart();
           return;
         }
 
-        try {
-          // 필터링된 아이템만 밀어넣음
-          await Promise.all(
-            guestItems.map((item) =>
-              cartApi.addToCart(item.productId, item.quantity),
-            ),
-          );
+        const failed = [];
+        const succeeded = [];
 
-          // 로컬 지우고 서버에 장바구니 데이터를 덮어쓰기
-          await get().fetchCart();
+        for (const item of guestItems) {
+          try {
+            await cartApi.addToCart(item.productId, item.quantity);
+            succeeded.push(item.cartItemId);
+          } catch (err) {
+            failed.push(item);
+          }
+        }
+
+        // 통신 성공한 로컬 아이템 제거
+        if (succeeded.length > 0) {
+          set((state) => ({
+            cartItems: state.cartItems.filter(
+              (i) => !succeeded.includes(i.cartItemId),
+            ),
+          }));
+        }
+
+        await get().fetchCart();
+
+        if (failed.length > 0) {
+          set({
+            error: `${failed.length}개의 상품을 장바구니로 옮기지 못했습니다.`,
+          });
+        } else {
           console.log("장바구니 병합 성공!");
-        } catch (err) {
-          console.error("장바구니 병합 실패:", err);
         }
       },
-      // 7번 API
-      syncCartWithServer: async () => {
-        if (!checkIsLoggedIn()) return; // 비회원은 통신 안 함
 
+      // 장바구니 아이콘 숫자 동기화
+      syncCartWithServer: async () => {
+        if (!checkIsLoggedIn()) return;
         try {
           const res = await cartApi.getCartCount();
-
           const serverCount = res.data ? res.data.count : res.count;
           const localCount = get().cartItems.length;
 
+          // 갯수 다르면 다시 갱신
           if (serverCount !== localCount) {
             console.log(
               `장바구니 동기화 중... (서버: ${serverCount}, 로컬: ${localCount})`,
@@ -212,6 +220,7 @@ const useCartStore = create(
         }
       },
     }),
+
     {
       name: "cart-storage",
       partialize: (state) => ({ cartItems: state.cartItems }),
