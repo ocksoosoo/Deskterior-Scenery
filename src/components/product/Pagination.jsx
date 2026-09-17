@@ -31,7 +31,12 @@ const getPageList = (currentPage, totalPages) => {
   return pages;
 };
 
-const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
+const Pagination = ({
+  currentPage = 1,
+  totalPages = 1,
+  onPageChange,
+  onPageHover,
+}) => {
   const pages = getPageList(currentPage, totalPages);
 
   const goToPrev = () => currentPage > 1 && onPageChange?.(currentPage - 1);
@@ -56,6 +61,9 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         $disabled={currentPage <= 1}
         onClick={goToPrev}
         onKeyDown={handleKeyDown(goToPrev)}
+        onMouseEnter={() =>
+          currentPage > 1 && onPageHover?.(currentPage - 1)
+        }
       />
 
       {pages.map((page, idx) =>
@@ -68,6 +76,7 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
             aria-current={page === currentPage ? "page" : undefined}
             title={page === currentPage ? "현재 페이지" : `${page}페이지로 이동`}
             onClick={() => onPageChange?.(page)}
+            onMouseEnter={() => page !== currentPage && onPageHover?.(page)}
           >
             {page}
           </S.PageButton>
@@ -83,6 +92,9 @@ const Pagination = ({ currentPage = 1, totalPages = 1, onPageChange }) => {
         $disabled={currentPage >= totalPages}
         onClick={goToNext}
         onKeyDown={handleKeyDown(goToNext)}
+        onMouseEnter={() =>
+          currentPage < totalPages && onPageHover?.(currentPage + 1)
+        }
       />
     </S.PaginationWrapper>
   );

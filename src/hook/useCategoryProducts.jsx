@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getProducts, deriveBadgeFields } from "../api/productsApi";
+import { fetchCategoryProducts } from "../utils/categoryProductsCache";
 import { showFailToast } from "../components/common/ShowToast";
 
 // 카테고리 상품 목록을 조회하고 로딩/에러/재조회 상태를 관리한다. 카테고리/
@@ -24,20 +24,21 @@ function useCategoryProducts({
   const hasLoadedRef = useRef(false);
 
   useEffect(() => {
-    const controller = new AbortController();
+    // 캐시된 요청을 다른 소비자와 공유할 수 있어 네트워크 요청 자체는 취소하지
+    // 않고, 이 effect가 최신 상태가 아니게 되면 결과만 무시한다
+    let cancelled = false;
 
     async function loadProducts() {
       try {
-        const data = await getProducts(
-          {
-            category: categoryId,
-            page: currentPage,
-            limit: pageSize,
-            sort: sortBy,
-            q: search,
-          },
-          { signal: controller.signal },
-        );
+        const data = await fetchCategoryProducts({
+          categoryId,
+          page: currentPage,
+          sort: sortBy,
+          search,
+          pageSize,
+        });
+
+        if (cancelled) return;
 
         const totalPagesFromServer = Math.max(1, data.pagination.totalPages);
 
@@ -47,13 +48,8 @@ function useCategoryProducts({
           return;
         }
 
-        const products = data.products.map((product) => ({
-          ...product,
-          ...deriveBadgeFields(product),
-        }));
-
         // 이미지 로딩까지 기다리지 않고 데이터만 오면 바로 렌더 (이미지는 lazy loading)
-        setPageProducts(products);
+        setPageProducts(data.products);
 
         setTotalPages(totalPagesFromServer);
 
@@ -63,8 +59,7 @@ function useCategoryProducts({
 
         setLoadedProductsForCategoryId(categoryId);
       } catch (error) {
-        // 더 최신 요청으로 대체되어 취소된 요청이라 무시 (에러 아님)
-        if (error.name === "AbortError") return;
+        if (cancelled) return;
 
         console.error("상품목록 로딩 실패:", error);
 
@@ -81,11 +76,11 @@ function useCategoryProducts({
     loadProducts();
 
     return () => {
-      controller.abort();
+      cancelled = true;
     };
     // updateSearchParams는 매 렌더 새로 생성되므로 의존성에서 제외 (queryKey로 충분)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId, currentPage, sortBy, search, queryKey]);
+  }, [categoryId, currentPage, sortBy, search, queryKey, pageSize]);
 
   const productsReady = loadedProductsForCategoryId === categoryId;
   // 재조회 중에도 기존 데이터가 있으면 스피너 대신 유지 후 자연스럽게 교체

@@ -2,8 +2,6 @@
 
 책상 위 공간을 꾸미는 **데스크테리어(Desk + Interior) 소품 전문 쇼핑몰**입니다.
 
-> ⚠️ 이 README는 코드베이스를 기반으로 작성된 초안입니다. `[ ]`로 표시된 항목은 팀원분들이 직접 채워 넣어야 합니다.
-
 <br>
 
 ## 목차
@@ -27,9 +25,6 @@
 ## 프로젝트 소개
 
 SCENERY는 조명, 수납, 디지털/전자기기, 데스크 액세서리, 문구 등 책상 주변을 꾸미는 소품을 카테고리별 큐레이션으로 취향껏 둘러보고 구매할 수 있는 이커머스 웹 서비스로, 상품 탐색부터 장바구니, 위시리스트(찜), 리뷰 작성까지 일반적인 쇼핑몰의 핵심 흐름을 구현했습니다.
-
-- 배포 URL: `[ ]`
-- 테스트 계정: `[ ]`
 
 <br>
 
@@ -177,8 +172,6 @@ SCENERY는 조명, 수납, 디지털/전자기기, 데스크 액세서리, 문�
 
 - Swagger (OpenAPI)
 
-`[ ]` 백엔드/DB/배포 관련 스택(사용 중인 서버, 데이터베이스, 배포 플랫폼 등)을 추가해주세요.
-
 <br>
 
 ## 프로젝트 파일 구조
@@ -323,11 +316,25 @@ Swagger 문서: 팀 노션/Swagger는 별도 공유
 
 ### 상품 (`/products`)
 
-| Method | Endpoint                           | 설명            |
-| ------ | ---------------------------------- | --------------- |
-| GET    | `/products?category=&page=&limit=` | 상품 목록 조회  |
-| GET    | `/products/{productId}`            | 상품 상세 조회  |
-| POST   | `/products`                        | 상품 등록 `[ ]` |
+| Method | Endpoint                           | 설명           |
+| ------ | ---------------------------------- | -------------- |
+| GET    | `/products?category=&page=&limit=` | 상품 목록 조회 |
+| GET    | `/products/{productId}`            | 상품 상세 조회 |
+| POST   | `/products`                        | 상품 등록      |
+
+`POST /products` 요청 body 예시
+
+```json
+{
+  "name": "3-in-1 Foldable Wireless Charger",
+  "categoryId": "digital-electronics",
+  "price": 48000,
+  "imageUrl": "https://i.ibb.co/MxtphN8v/17.webp",
+  "description": "폰, 워치, 이어폰을 슬림하게 거치하며 동시 충전하는 무선 스테이션",
+  "badge": [],
+  "stock": 10
+}
+```
 
 ### 카테고리 (`/categories`)
 
@@ -378,8 +385,6 @@ Swagger 문서: 팀 노션/Swagger는 별도 공유
 <br>
 
 ## 프로젝트 회고
-
-`[ ]` 팀원별로 프로젝트를 진행하며 느낀 점, 아쉬운 점, 다음 프로젝트에 적용하고 싶은 점 등을 자유롭게 작성해주세요.
 
 - **김양왕**
   - 느낀 점

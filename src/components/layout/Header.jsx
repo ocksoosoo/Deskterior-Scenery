@@ -14,6 +14,12 @@ import {
 import useCartStore from "../../store/cartStore";
 import useWishlistStore from "../../store/wishlistStore";
 import useCategoriesStore from "../../store/categoriesStore";
+import {
+  fetchCategoryProducts,
+  CATEGORY_PAGE_SIZE,
+} from "../../utils/categoryProductsCache";
+import { readLastPageMap } from "../../utils/categoryLastPage";
+import { DEFAULT_SORT } from "../../data/sortOptions";
 import { showFailToast, showSuccessToast } from "../common/ShowToast";
 import Modal from "../common/Modal";
 import { useNavigate } from "react-router";
@@ -52,6 +58,21 @@ const CATEGORY_NAME_KO = {
   "desk-accessories": "데스크 액세서리",
   "objects-stationery": "문구",
 };
+
+// 메뉴 hover 시 카테고리 페이지 청크와 상품 목록을 미리 받아둬서 클릭 후
+// 지연을 줄인다 (실제 이동 시 CategoryPage와 useCategoryProducts가 재사용)
+function prefetchCategory(categoryId) {
+  import("../../pages/Category/CategoryPage").catch(() => {});
+
+  const page = readLastPageMap()[categoryId] ?? 1;
+  fetchCategoryProducts({
+    categoryId,
+    page,
+    sort: DEFAULT_SORT,
+    search: "",
+    pageSize: CATEGORY_PAGE_SIZE,
+  }).catch(() => {});
+}
 
 const Header = () => {
   const navigate = useNavigate();
@@ -214,6 +235,9 @@ const Header = () => {
                 isActive={category.path === pathname}
                 aria-label={`${category.name} 버튼`}
                 title={CATEGORY_NAME_KO[category.id]}
+                onMouseEnter={() =>
+                  category.path !== pathname && prefetchCategory(category.id)
+                }
               >
                 {category.name}
               </NavButton>
