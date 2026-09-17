@@ -53,4 +53,8 @@ export const ContinueButton = styled.button(({ theme }) => ({
   "&:hover": {
     filter: "brightness(1.5)",
   },
+  "&:focus-visible": {
+    outline: `${theme.borderWidth.focus} solid ${theme.colors.emphasis}`,
+    outlineOffset: "2px",
+  },
 }));
