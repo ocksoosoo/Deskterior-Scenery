@@ -87,7 +87,7 @@ export const CartButton = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
   color: theme.colors.cards, // #FDFDFD
   textAlign: "center",
-  fontSize: theme.fontSize.sm, // 0.875rem
+  fontSize: theme.fontSize.md, // 1rem (16px)
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",

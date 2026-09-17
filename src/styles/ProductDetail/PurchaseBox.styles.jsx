@@ -81,7 +81,7 @@ export const ButtonRow = styled.div(({ theme }) => ({
 
 export const CartButton = styled.button(({ theme }) => ({
   display: "flex",
-  width: "8.875rem",
+  whiteSpace: "nowrap",
   height: "2.5rem",
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
   justifyContent: "center",
@@ -91,7 +91,7 @@ export const CartButton = styled.button(({ theme }) => ({
   background: theme.colors.textMain,
   color: theme.colors.cards, // #FDFDFD
   textAlign: "center",
-  fontSize: theme.fontSize.md, // 1rem (16px)
+  fontSize: theme.fontSize.lg, // 1.125rem (18px)
   fontWeight: theme.fontWeight.medium, // 500
   lineHeight: "normal",
   letterSpacing: "-0.00875rem",
@@ -100,7 +100,7 @@ export const CartButton = styled.button(({ theme }) => ({
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 
   [theme.media.tablet]: {
-    width: "10.0625rem",
+    fontSize: theme.fontSize.md, // 1rem (16px)
   },
 }));
 
@@ -172,6 +172,10 @@ export const CheckoutButton = styled.button(({ theme }) => ({
 
   "&:not(:disabled):hover": { filter: "brightness(1.2)" },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
+
+  [theme.media.tablet]: {
+    fontSize: theme.fontSize.md, // 1rem (16px)
+  },
 
   // 모바일: 하단 고정 CTA 바(MobileCtaBar)가 대신 보여줌
   [theme.media.mobile]: {
