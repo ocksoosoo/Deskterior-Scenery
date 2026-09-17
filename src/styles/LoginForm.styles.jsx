@@ -6,7 +6,7 @@ export const LoginPage = styled.main(({ theme }) => ({
   justifyContent: "center",
   alignItems: "stretch",
   gap: theme.spacing.xl,
-  padding: `${theme.spacing["3xl"]} clamp(16px, 6vw, 64px)`,
+  padding: `${theme.spacing["3xl"]} clamp(${theme.spacing.md}, 6vw, ${theme.spacing["3xl"]})`,
 
   [theme.media.mobile]: {
     alignItems: "center",

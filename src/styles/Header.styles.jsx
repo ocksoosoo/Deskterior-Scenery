@@ -60,7 +60,7 @@ export const Logo = styled.h1(({ theme }) => ({
   [theme.media.mobile]: {
     flex: "none",
     justifySelf: "center",
-    fontSize: "24px",
+    fontSize: theme.fontSize["2xl"],
     fontStyle: "normal",
     fontWeight: theme.fontWeight.regular,
     lineHeight: "normal",
@@ -69,11 +69,11 @@ export const Logo = styled.h1(({ theme }) => ({
 
   // 320px 근처 좁은 화면에서는 로고 글자 크기도 함께 줄임
   [theme.media.smallMobile]: {
-    fontSize: "20px",
+    fontSize: theme.fontSize.xl,
   },
 
   [theme.media.wide]: {
-    fontSize: "24px",
+    fontSize: theme.fontSize["2xl"],
   },
 }));
 
@@ -263,6 +263,7 @@ export const MobileMenuPanel = styled.div(({ theme }) => ({
   overflowY: "auto",
   transform: "translateX(-100%)",
   transition: "transform 0.28s ease",
+  willChange: "transform",
 
   "&[data-open='true']": {
     transform: "translateX(0)",

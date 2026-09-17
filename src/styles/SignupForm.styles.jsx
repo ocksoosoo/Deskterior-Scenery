@@ -6,7 +6,7 @@ export const SignupPage = styled.main(({ theme }) => ({
   justifyContent: "center",
   alignItems: "stretch",
   gap: theme.spacing.md,
-  padding: "60px clamp(16px, 6vw, 64px)",
+  padding: `60px clamp(${theme.spacing.md}, 6vw, ${theme.spacing["3xl"]})`,
 
   [theme.media.mobile]: {
     alignItems: "center",
@@ -45,7 +45,6 @@ export const SignupCard = styled.section(({ theme }) => ({
   backgroundColor: theme.colors.cards,
   boxShadow: "0 2px 6px rgba(0, 0, 0, 0.06)",
 
-
   [theme.media.mobile]: {
     flex: "none",
     width: "100%",
@@ -62,7 +61,7 @@ export const Title = styled.h1(({ theme }) => ({
 
   [theme.media.mobile]: {
     marginBottom: theme.spacing.lg,
-    fontSize: theme.spacing.lg,
+    fontSize: theme.fontSize["2xl"],
   },
 }));
 
