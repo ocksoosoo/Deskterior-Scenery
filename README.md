@@ -224,7 +224,6 @@ Deskterior-Scenery/
 │   ├── store/                      # Zustand 스토어 (인증, 로딩, 장바구니, 카테고리, 상품 카탈로그, 위시리스트)
 │   ├── styles/                     # Emotion 스타일 (기능별 하위 폴더로 분리)
 │   ├── utils/
-│   │   ├── imageProxy.js           # 이미지 리사이징 프록시(wsrv.nl) URL 변환
 │   │   └── preloadingImages.jsx
 │   ├── App.jsx                     # 라우트 정의
 │   └── main.jsx                    # 엔트리 포인트
