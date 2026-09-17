@@ -149,14 +149,14 @@ export const PageIndicator = styled.div(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: theme.spacing.xs,
+    gap: theme.spacing.sm,
     marginTop: theme.spacing.xl, //32
     color: theme.colors.secondText,
 }));
 
 export const IndicatorButton = styled.button(({theme}) => ({
-    width: "8px",
-    height: "8px",
+    width: "10px",
+    height: "10px",
     padding: 0,
     borderRadius: theme.radius.full,
     backgroundColor: theme.colors.secondText,
