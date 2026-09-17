@@ -32,10 +32,10 @@ import {
   MypageTitle,
   CardBox,
   UserCard,
-  UserHead,
   UserName,
-  UserLogOut,
+  UserBottom,
   UserId,
+  UserLogOut,
   AccountCard,
   AccountTitle,
   AccountForm,
@@ -310,17 +310,19 @@ function Mypage() {
             </MypageBreadcrumbLink>
             {" > "}
             <span aria-current="page">My Page</span>
-        </MypageBreadcrumb>
-        
+          </MypageBreadcrumb>
+
           <MypageTitle>My Page</MypageTitle>
 
           <CardBox>
             <UserCard>
-              <UserHead>
-                <UserName>
-                  {savedLastName}
-                  {savedFirstName}
-                </UserName>
+              <UserName>
+                {savedLastName} {savedFirstName}
+              </UserName>
+
+              <UserBottom>
+                <UserId>{id}</UserId>
+
                 <UserLogOut
                   type="button"
                   aria-label="로그아웃 버튼"
@@ -329,8 +331,7 @@ function Mypage() {
                 >
                   Log out
                 </UserLogOut>
-              </UserHead>
-              <UserId>{id}</UserId>
+              </UserBottom>
             </UserCard>
 
             <AccountCard>

@@ -1,6 +1,4 @@
 import styled from "@emotion/styled";
-import { IconBrightness } from "@tabler/icons-react";
-import { theme } from "./theme";
 import { Link } from "react-router";
 
 export const MypageBox = styled.main(({ theme }) => ({
@@ -35,32 +33,43 @@ export const CardBox = styled.div(({ theme }) => ({
 }));
 
 export const UserCard = styled.section(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
   width: "100%",
   minHeight: "180px",
   padding: theme.spacing.xl,
   backgroundColor: theme.colors.cards,
   borderRadius: theme.radius.md,
   border: `${theme.borderWidth.default} solid ${theme.colors.subtle}`,
+  boxSizing: "border-box",
 }));
 
-export const UserHead = styled.div({
+export const UserName = styled.p(({ theme }) => ({
+  margin: 0,
+  fontSize: theme.fontSize["4xl"],
+  fontWeight: theme.fontWeight.semiBold,
+  color: theme.colors.textMain,
+  lineHeight: 1.4,
+  letterSpacing: "2px",
+  overflowWrap: "anywhere",
+
+  [theme.media.smallMobile]: {
+    fontSize: "clamp(20px, calc(7.5vw - 4px), 32px)",
+  },
+}));
+
+export const UserBottom = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
   width: "100%",
-  marginBottom: "10px",
-});
-
-export const UserName = styled.p(({ theme }) => ({
-  margin: 0,
-  fontSize: theme.fontSize["2xl"],
-  fontWeight: theme.fontWeight.semiBold,
-  color: theme.colors.textMain,
-  lineHeight: 1.4,
-  letterSpacing: 10,
+  marginTop: "auto",
+  paddingTop: theme.spacing.lg,
 
   [theme.media.smallMobile]: {
-    fontSize: "clamp(25px, calc(20vw - 39px), 35px)",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: theme.spacing.lg,
   },
 }));
 
@@ -73,7 +82,6 @@ export const UserLogOut = styled.button(({ theme }) => ({
   fontSize: theme.fontSize.lg,
   fontWeight: theme.fontWeight.medium,
   cursor: "pointer",
-  transform: "translateY(60%)",
   cursor: "pointer",
   "&:hover": {
     filter: "brightness(1.5)",
@@ -81,10 +89,14 @@ export const UserLogOut = styled.button(({ theme }) => ({
 }));
 
 export const UserId = styled.p(({ theme }) => ({
-  marginTop: theme.spacing.md,
+  margin: 0,
   fontSize: theme.fontSize.md,
   fontWeight: theme.fontWeight.regular,
   color: theme.colors.secondText,
+
+  [theme.media.smallMobile]: {
+    alignSelf: "flex-start",
+  },
 }));
 
 export const AccountCard = styled.section(({ theme }) => ({
@@ -173,7 +185,7 @@ export const AccountInput = styled.input(({ theme }) => ({
   transition: "border-color 0.2s ease",
 
   "&:focus": {
-  borderBottomWidth: theme.borderWidth.focus,
+    borderBottomWidth: theme.borderWidth.focus,
     borderBottomColor: theme.colors.textMain,
   },
   "&:placeholder": {
@@ -288,7 +300,7 @@ export const SaveButton = styled.button(({ theme }) => ({
   },
 }));
 
-export const SettingsCard = styled.section(({theme}) => ({
+export const SettingsCard = styled.section(({ theme }) => ({
   width: "100%",
   minHeight: "240px",
   padding: theme.spacing.xl,
@@ -310,7 +322,7 @@ export const SettingsTitle = styled.h2(({ theme }) => ({
   },
 }));
 
-export const Settingstext = styled.p(({theme}) => ({
+export const Settingstext = styled.p(({ theme }) => ({
   margin: `0 0 ${theme.spacing.xl}`,
   fontSize: theme.fontSize.sm,
   lineHeight: 1.5,
@@ -438,7 +450,7 @@ export const CurrentPasswordHidenButton = styled.button(({ theme }) => ({
   cursor: "pointer",
 }));
 
-export const NewPasswordHidenButton = styled.button(({theme}) => ({
+export const NewPasswordHidenButton = styled.button(({ theme }) => ({
   position: "absolute",
   top: "50%",
   right: "14px",
@@ -481,7 +493,7 @@ export const MypageBreadcrumb = styled.nav(({ theme }) => ({
 
 export const MypageBreadcrumbLink = styled(Link)({
   color: "inherit",
-  
+
   "&:hover": {
     textDecoration: "underline",
   },

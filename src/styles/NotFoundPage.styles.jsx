@@ -13,19 +13,19 @@ export const NotFoundBox = styled.main({
   alignItems: "center",
 });
 
-export const ErrorContent = styled.div({
-  marginTop: "32px",
+export const ErrorContent = styled.div(({ theme }) => ({
+  marginTop: theme.spacing.xl,
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   textAlign: "center",
-});
+}));
 
 export const ErrorNumber = styled.h1(({ theme }) => ({
   margin: 0,
   padding: 0,
   fontSize: "170px",
-  fontWeight: 700,
+  fontWeight: theme.fontWeight.bold,
   lineHeight: 1,
   color: "#74766F",
 
@@ -34,18 +34,18 @@ export const ErrorNumber = styled.h1(({ theme }) => ({
   },
 }));
 
-export const ErrorTitle = styled.h2({
+export const ErrorTitle = styled.h2(({ theme }) => ({
   margin: "42px 0 0",
-  fontSize: "18px",
-  fontWeight: 600,
+  fontSize: theme.fontSize.lg,
+  fontWeight: theme.fontWeight.semiBold,
   lineHeight: "26px",
   color: "#D0D0D0",
-});
+}));
 
 export const ErrorText = styled.p(({ theme }) => ({
-  margin: "4px 0 0",
-  fontSize: "14px",
-  fontWeight: 400,
+  margin: `${theme.spacing["2xs"]} 0 0`,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.regular,
   lineHeight: "22px",
   color: "#D0D0D0",
 
@@ -54,15 +54,15 @@ export const ErrorText = styled.p(({ theme }) => ({
   },
 }));
 
-export const TimerText = styled.p({
-  margin: "4px 0 0",
-  fontSize: "14px",
-  fontWeight: 400,
+export const TimerText = styled.p(({ theme }) => ({
+  margin: `${theme.spacing["2xs"]} 0 0`,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.regular,
   lineHeight: "22px",
   color: "#D0D0D0",
-});
+}));
 
-export const HomeButton = styled(Link)({
+export const HomeButton = styled(Link)(({ theme }) => ({
   marginTop: "50px",
   width: "170px",
   height: "52px",
@@ -72,20 +72,20 @@ export const HomeButton = styled(Link)({
   boxSizing: "border-box",
   backgroundColor: "#FDFDFD",
   color: "#222320",
-  borderRadius: "8px",
+  borderRadius: theme.radius.md,
   fontSize: "17px",
-  fontWeight: 600,
+  fontWeight: theme.fontWeight.semiBold,
   "&:hover": {
     backgroundColor: "#EAEAEA",
   },
-});
+}));
 
-export const Brand = styled.div({
+export const Brand = styled.div(({ theme }) => ({
   marginTop: "auto",
   marginBottom: "60px",
-  fontFamily: "serif",
-  fontSize: "14px",
-  fontWeight: 700,
+  fontFamily: theme.fontFamily.display,
+  fontSize: theme.fontSize.sm,
+  fontWeight: theme.fontWeight.bold,
   lineHeight: 1,
   color: "#FDFDFD",
-});
+}));
