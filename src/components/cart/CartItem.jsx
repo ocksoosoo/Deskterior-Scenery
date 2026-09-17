@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "@emotion/react";
 import { Link } from "react-router";
 import Badge from "../common/Badge";
+import { toResizedImageUrl } from "../../utils/imageProxy";
 import {
   ItemWrapper,
   ItemLeft,
@@ -29,6 +30,7 @@ const CartItem = ({
   isSoldOut,
   isBest,
   isNew,
+  isPriority,
   onToggleCheck,
   onIncrease,
   onDecrease,
@@ -68,10 +70,10 @@ const CartItem = ({
           <ImageBox>
             {!imageLoaded && <ImageLoading>상품 불러오는 중...</ImageLoading>}
             <ItemImage
-              src={item.imageUrl}
+              src={toResizedImageUrl(item.imageUrl, 100)}
               alt={item.name}
-              fetchpriority="high"
-              loading="eager" // 즉시 실행
+              fetchPriority={isPriority ? "high" : "auto"}
+              loading={isPriority ? "eager" : "lazy"}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageLoaded(true)}
               $isLoaded={imageLoaded}

@@ -6,9 +6,9 @@ import { getProduct } from "../../api/productsApi";
 import CartItem from "../../components/cart/CartItem";
 import CartSummary from "../../components/cart/CartSummary";
 import EmptyCart from "../../components/cart/EmptyCart";
-import RecommendItems from "../../components/cart/RecommendItems";
 import Modal from "../../components/common/Modal";
 import PaymentModal from "../../components/common/PaymentModal";
+import RecommendItems from "../../components/cart/RecommendItems";
 import FailToast from "../../components/common/FailToast";
 import SuccessToast from "../../components/common/SuccessToast";
 import useLoadingStore from "../../store/UseLoadingStore";
@@ -276,11 +276,12 @@ const CartPage = () => {
         ) : (
           <div>
             <ItemListSection>
-              {cartItems.map((item) => (
+              {cartItems.map((item, index) => (
                 <CartItem
                   key={item.cartItemId}
                   item={item}
                   isChecked={checkedItems.includes(item.cartItemId)}
+                  isPriority={index === 0}
                   isSoldOut={isSoldOutProduct(item.productId)}
                   isBest={Boolean(productInfoMap[item.productId]?.isBest)}
                   isNew={Boolean(productInfoMap[item.productId]?.isNew)}
