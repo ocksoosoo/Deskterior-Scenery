@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { toast } from "react-toastify";
-import SuccessToast from "../../components/common/SuccessToast";
-import FailToast from "../../components/common/FailToast";
+import {
+  showSuccessToast,
+  showFailToast,
+} from "../../components/common/ShowToast";
 import { getProducts } from "../../api/productsApi";
 import ProductCard from "../product/ProductCard";
 import useCartStore from "../../store/cartStore";
@@ -81,9 +82,9 @@ const RecommendItems = ({ cartLoaded }) => {
         imageUrl: product.images?.[0] || product.imageUrl,
       };
       await addToCart(cartProduct, 1);
-      toast(<SuccessToast message="장바구니에 담았습니다." />);
+      showSuccessToast("장바구니에 담았습니다.");
     } catch (error) {
-      toast(<FailToast message="장바구니 담기에 실패했습니다." />);
+      showFailToast("장바구니 담기에 실패했습니다.");
     }
   };
 
