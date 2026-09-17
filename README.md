@@ -39,7 +39,7 @@ SCENERY는 조명, 수납, 디지털/전자기기, 데스크 액세서리, 문�
 | ------ | ------------------------------------------------------ | ----------------------------------------- |
 | 최우원 | [@singthesong2](https://github.com/singthesong2)       | 로그인/회원가입, 404 페이지, 마이페이지   |
 | 김양왕 | [@gimyangwang-bit](https://github.com/gimyangwang-bit) | 카테고리/상품 목록 페이지, README.MD 작성 |
-| 나민우 | [@Naminwoo](https://github.com/Naminwoo)               | 장바구니 페이지, 마이페이지 찜 기능       |
+| 나민우 | [@Naminwoo](https://github.com/buriburi-king)          | 장바구니 페이지, 마이페이지 찜 기능       |
 | 김채가 | [@chaegagim-code](https://github.com/chaegagim-code)   | 상세 페이지, 회의록 작성, PPT 제작        |
 | 최현옥 | [@hyunock](https://github.com/hyunock)                 | 디자인, 홈 페이지, 마이페이지             |
 
