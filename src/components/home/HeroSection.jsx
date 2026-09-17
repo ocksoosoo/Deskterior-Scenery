@@ -259,7 +259,7 @@ function AnimateHeroSection() {
         src={deskLamp}
         alt="데스크 스탠드"
         className="floating-lamp"
-        fetchpriority="high"
+        fetchPriority="high"
         onLoad={handleImageLoad}
         onError={handleImageLoad}
         />
