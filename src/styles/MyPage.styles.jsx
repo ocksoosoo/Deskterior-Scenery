@@ -373,7 +373,7 @@ export const PasswordFormBox = styled.div(({ theme }) => ({
   flexDirection: "column",
   gap: theme.spacing.lg,
   width: "100%",
-  padding: `${theme.spacing.lg} 0`,
+  padding: `${theme.spacing.lg} ${theme.spacing.md}`,
   marginTop: theme.spacing.lg,
   marginBottom: "36px",
   boxSizing: "border-box",
