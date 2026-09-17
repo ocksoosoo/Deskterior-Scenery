@@ -18,12 +18,8 @@ import {
 } from "../../styles/MainStyles/DeskCurationSection.styles";
 import { getProductRaw } from "../../api/productsApi";
 import { preloadingImages } from "../../utils/preloadingImages";
-import { toResizedImageUrl } from "../../utils/imageProxy";
-import {
-  SelectedProductCard,
-  PRODUCT_SHOWCASE_WIDTH,
-} from "./SelectedProductCard";
-import { DeskProductMap, DESK_IMAGE_WIDTH } from "./DeskProductMap";
+import { SelectedProductCard } from "./SelectedProductCard";
+import { DeskProductMap } from "./DeskProductMap";
 import { ChevronDownIcon } from "../icons/Icons";
 
 const STYLE_NAME_KO = {
@@ -82,9 +78,7 @@ function DeskCurationSection({ items = [], categories = [], }) {
       try {
         const product = await getProductRaw(activeProductNumber);
 
-        await preloadingImages([
-          toResizedImageUrl(product.imageUrl, PRODUCT_SHOWCASE_WIDTH),
-        ]);
+        await preloadingImages([product.imageUrl]);
 
         if (!ignore) {
           setProductData(product);
@@ -109,9 +103,7 @@ function DeskCurationSection({ items = [], categories = [], }) {
   }, [activeProductNumber]);
 
   useEffect(() => {
-    const imageUrls = items.map((item) =>
-      toResizedImageUrl(item.imageUrl, DESK_IMAGE_WIDTH),
-    );
+    const imageUrls = items.map((item) => item.imageUrl);
 
     preloadingImages(imageUrls);
   }, [items]);
@@ -125,13 +117,11 @@ function DeskCurationSection({ items = [], categories = [], }) {
       setIsProductLoading(true);
 
       const [, product] = await Promise.all([
-        preloadingImages([toResizedImageUrl(item.imageUrl, DESK_IMAGE_WIDTH)]),
+        preloadingImages([item.imageUrl]),
         getProductRaw(firstProductId),
       ]);
 
-      await preloadingImages([
-        toResizedImageUrl(product.imageUrl, PRODUCT_SHOWCASE_WIDTH),
-      ]);
+      await preloadingImages([product.imageUrl]);
 
       setProductData(product);
       setSelectedStyleId(item.styleId);
