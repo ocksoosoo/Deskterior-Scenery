@@ -11,10 +11,26 @@ export const reset = css`
      (한 번 캐시되면 다음 방문부터는 바로 Pretendard로 보인다) */
   @font-face {
     font-family: "Pretendard";
-    font-weight: 300 700;
+    font-weight: 400;
     font-display: optional;
-    src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
-      format("woff2-variations");
+    src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2")
+      format("woff2");
+  }
+
+  @font-face {
+    font-family: "Pretendard";
+    font-weight: 500;
+    font-display: optional;
+    src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-Medium.woff2")
+      format("woff2");
+  }
+
+  @font-face {
+    font-family: "Pretendard";
+    font-weight: 600;
+    font-display: optional;
+    src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-SemiBold.woff2")
+      format("woff2");
   }
 
   /* 🌟 DM Serif Text */
