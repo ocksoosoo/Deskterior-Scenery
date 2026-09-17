@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import useAuthStore from "../../store/UseAuthStore";
 import { Link, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import useCartStore from "../../store/cartStore";
@@ -28,6 +29,7 @@ import {
 } from "../../styles/CartStyles/CartPage.styles";
 
 const CartPage = () => {
+  const user = useAuthStore((s) => s.user);
   const cartItems = useCartStore((s) => s.cartItems);
   const error = useCartStore((s) => s.error);
   const fetchCart = useCartStore((s) => s.fetchCart);
@@ -300,6 +302,10 @@ const CartPage = () => {
               isAllSoldOut={isAllSoldOut}
               isCheckoutDisabled={isAllSoldOut || checkedItems.length === 0}
               onCheckout={() => {
+                if (!user) {
+                  showFailToast("로그인이 필요한 서비스입니다.");
+                  return;
+                }
                 if (isAllSoldOut) {
                   showFailToast("품절된 상품은 결제할 수 없습니다.");
                   return;

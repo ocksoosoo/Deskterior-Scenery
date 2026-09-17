@@ -32,7 +32,7 @@ const CartSummary = ({
         <DeliveryRow>
           <LabelText>
             Delivery Fee
-            <IconWrapper>
+            <IconWrapper tabIndex="0">
               <svg
                 width="18"
                 height="18"

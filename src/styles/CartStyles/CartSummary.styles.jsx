@@ -66,12 +66,12 @@ export const IconWrapper = styled.div(({ theme }) => ({
   paddingRight: "4px",
   cursor: "pointer",
   [theme.media.wide]: {
-    "&:hover > div": {
+    "&:hover > div, &:focus-within > div": {
       display: "block",
     },
   },
   [theme.media.pc]: {
-    "&:hover > div": {
+    "&:hover > div, &:focus-within > div": {
       display: "block",
     },
   },
@@ -160,5 +160,9 @@ export const CheckoutButton = styled.button(({ theme }) => ({
   },
   "&:hover": {
     filter: "brightness(1.5)",
+  },
+  "&:focus-visible": {
+    outline: `${theme.borderWidth.focus} solid ${theme.colors.emphasis}`,
+    outlineOffset: "2px",
   },
 }));
