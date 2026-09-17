@@ -4,3 +4,5 @@ export const SORT_OPTIONS = [
   { value: "priceLow", label: "가격낮은순" },
   { value: "reviewCount", label: "리뷰많은순" },
 ];
+
+export const DEFAULT_SORT = "name";

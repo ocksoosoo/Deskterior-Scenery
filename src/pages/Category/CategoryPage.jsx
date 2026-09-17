@@ -15,9 +15,14 @@ import { EmptyBoxIcon } from "../../components/icons/Icons";
 import useResponsiveRowSize from "../../hook/useResponsiveRowSize";
 import useCategoryPageParams from "../../hook/useCategoryPageParams";
 import useCategoryProducts from "../../hook/useCategoryProducts";
+import {
+  CATEGORY_PAGE_SIZE,
+  fetchCategoryProducts,
+} from "../../utils/categoryProductsCache";
 import * as S from "../../styles/ListPageStyles/CategoryPage.styles";
 
-const PAGE_SIZE = 6;
+// 헤더 hover 프리페치와 캐시 키가 어긋나지 않도록 같은 상수를 공유
+const PAGE_SIZE = CATEGORY_PAGE_SIZE;
 // theme.media.mobile(768px)과 반드시 같은 값으로 유지 (theme 쪽 기준이 바뀌면 여기도 함께 변경)
 const MOBILE_BREAKPOINT = 768;
 // 리사이즈 이벤트가 너무 잦아 매번 리렌더되지 않도록 디바운스
@@ -238,6 +243,15 @@ const CategoryPage = ({ categoryId = "lighting" }) => {
               updateSearchParams({ page });
               window.scrollTo(0, 0);
             }}
+            onPageHover={(page) =>
+              fetchCategoryProducts({
+                categoryId,
+                page,
+                sort: sortBy,
+                search,
+                pageSize: PAGE_SIZE,
+              }).catch(() => {})
+            }
           />
         </S.Content>
       </S.Main>

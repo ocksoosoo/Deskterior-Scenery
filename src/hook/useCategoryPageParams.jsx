@@ -1,28 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { SORT_OPTIONS } from "../data/sortOptions";
-
-// 카테고리별 마지막 조회 페이지 기억 (새로고침에도 유지되도록 sessionStorage 사용)
-const LAST_PAGE_STORAGE_KEY = "categoryLastPage";
-
-function readLastPageMap() {
-  try {
-    const saved = sessionStorage.getItem(LAST_PAGE_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeLastPage(categoryId, page) {
-  try {
-    const map = readLastPageMap();
-    map[categoryId] = page;
-    sessionStorage.setItem(LAST_PAGE_STORAGE_KEY, JSON.stringify(map));
-  } catch {
-    // sessionStorage 접근 불가(프라이빗 모드 등)면 다음 방문 때 1페이지로 시작됨
-  }
-}
+import { SORT_OPTIONS, DEFAULT_SORT } from "../data/sortOptions";
+import { readLastPageMap, writeLastPage } from "../utils/categoryLastPage";
 
 // URL의 page 값 검증 (숫자 아님/정수 아님/1 미만이면 1페이지로 취급)
 function parsePageParam(value) {
@@ -34,7 +13,7 @@ function parsePageParam(value) {
 function parseSortParam(value) {
   return SORT_OPTIONS.some((option) => option.value === value)
     ? value
-    : "name";
+    : DEFAULT_SORT;
 }
 
 // 카테고리 목록 페이지의 URL 상태(page/sort/q)를 읽고 검증하고, "마지막으로
