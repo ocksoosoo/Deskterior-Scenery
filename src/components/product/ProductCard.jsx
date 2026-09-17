@@ -7,14 +7,9 @@ import { wishlistApi } from "../../api/wishlistApi";
 import useWishlistStore from "../../store/wishlistStore";
 import useCartStore from "../../store/cartStore";
 import PRODUCT_NAME_KO from "../../data/productNamesKo";
-import { toResizedImageUrl } from "../../utils/imageProxy";
 import * as S from "../../styles/ListPageStyles/ProductCard.styles";
 
-// 바구니 아이콘 안쪽 창(구멍) 영역 - 아이콘 자체 path의 안쪽 사각형 좌표와 동일
 const BASKET_WINDOW_POINTS = "19.04,8.25 7.44,8.25 8.62,14.75 17.41,14.75";
-
-// 카드 이미지 표시 크기(약 186px)의 2배(레티나 대응)로 리사이징
-const CARD_IMAGE_WIDTH = 400;
 
 const ProductCard = ({
   product,
@@ -23,7 +18,7 @@ const ProductCard = ({
   showCategory = false,
   isBest = false,
   isNew = false,
-  // 카드 배경색을 바깥에서 직접 지정 (기본값은 스타일 쪽에서 처리)
+
   background,
   imagePriority = false,
 }) => {
@@ -48,31 +43,31 @@ const ProductCard = ({
 
   const handleToggleLike = async () => {
     // 연속 클릭으로 요청이 중복되는 것을 방지
-    if(isWishlistPending) return;
+    if (isWishlistPending) return;
 
     setIsWishlitPending(true);
 
     try {
       const response = liked
-      ? await wishlistApi.removeWishlistItem(product.id)
-      : await wishlistApi.addWishlistItem(product.id);
+        ? await wishlistApi.removeWishlistItem(product.id)
+        : await wishlistApi.addWishlistItem(product.id);
 
-      if(!response.success) {
+      if (!response.success) {
         throw new Error(response.message || "위시리스트 등록에 실패했습니다.");
       }
-      
+
       toggleLike(product.id);
 
-      if(liked) {
+      if (liked) {
         onWishlistRemove?.(product.id);
       }
 
       showSuccessToast(
         liked
-        ? "위시리스트에서 삭제되었습니다."
-        : "위시리스트에 추가되었습니다.",
+          ? "위시리스트에서 삭제되었습니다."
+          : "위시리스트에 추가되었습니다.",
       );
-    } catch(error) {
+    } catch (error) {
       console.error("위시리스트 변경 실패:", error);
       showFailToast("로그인 후 이용할 수 있습니다.");
     } finally {
@@ -107,7 +102,7 @@ const ProductCard = ({
               aria-label={`${product.name} 상세 보기`}
             >
               <S.ProductImage
-                src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
+                src={product.imageUrl}
                 alt={product.name}
                 loading={imagePriority ? "eager" : "lazy"}
                 fetchPriority={imagePriority ? "high" : "auto"}
@@ -116,7 +111,7 @@ const ProductCard = ({
             </S.ImageLink>
           ) : (
             <S.ProductImage
-              src={toResizedImageUrl(product.imageUrl, CARD_IMAGE_WIDTH)}
+              src={product.imageUrl}
               alt={product.name}
               loading={imagePriority ? "eager" : "lazy"}
               fetchPriority={imagePriority ? "high" : "auto"}

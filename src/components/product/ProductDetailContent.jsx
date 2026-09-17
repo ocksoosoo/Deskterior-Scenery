@@ -1,19 +1,8 @@
 import SceneryBox from "../common/SceneryBox";
-import { toResizedImageUrl } from "../../utils/imageProxy";
-import useIsMobile from "../../hook/useIsMobile";
 import * as S from "../../styles/ProductDetail/ProductDetailContent.styles";
 
-const DETAIL_IMAGE_WIDTH_MOBILE = 700;
-const DETAIL_IMAGE_WIDTH = 1000;
-
 const ProductDetailContent = ({ sections = [] }) => {
-  const isMobile = useIsMobile();
-
   if (!sections.length) return null;
-
-  const detailImageWidth = isMobile
-    ? DETAIL_IMAGE_WIDTH_MOBILE
-    : DETAIL_IMAGE_WIDTH;
 
   return (
     <S.Section>
@@ -24,7 +13,7 @@ const ProductDetailContent = ({ sections = [] }) => {
           <S.Article key={section.id}>
             {section.image && (
               <S.DetailImage
-                src={toResizedImageUrl(section.image, detailImageWidth)}
+                src={section.image}
                 alt={section.title || ""}
                 loading="lazy"
                 fallback={
