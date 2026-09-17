@@ -21,15 +21,10 @@ function DeskProductMap({
 
     const x = ((event.clientX - rect.left) / rect.width) * 100;
     const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    console.log({
-      x: Number(x.toFixed(1)),
-      y: Number(y.toFixed(1)),
-    });
   };
 
     return (
-          <DeskArea onClick={handleCoordinate}>
+          <DeskArea>
             {selectedStyle && (
               <>
                 <DeskImage
@@ -43,16 +38,13 @@ function DeskProductMap({
                     key={product.productId}
                     type="button"
                     isSelected={product.productId === activeProductNumber}
+                    aria-pressed={product.productId === activeProductNumber}
                     aria-label={`${index + 1}번 상품 보기`}
                     style={{
                       left: `${product.x}%`,
                       top: `${product.y}%`,
                     }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onProductSelect(product.productId);
-                    }}
-                    >
+                    onClick={() => onProductSelect(product.productId)}                    >
                       {index + 1}
                   </HotspotButton>
                 ))}

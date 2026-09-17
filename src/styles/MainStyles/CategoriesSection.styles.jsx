@@ -88,7 +88,14 @@ export const CategoryItem = styled.div(({ theme }) => ({
   width: "150px",
   alignItems: "center",
   gap: theme.spacing.md, // 16px
+  color: "inherit",
+  textDecoration: "none'",
   cursor: "pointer",
+
+  "&:focus-visible": {
+  outline: `${theme.borderWidth.focus} solid ${theme.colors.textMain}`,
+  outlineOffset: "4px",
+},
 
   [theme.media.mobile]: {
     width: `calc((100% - ${theme.spacing.md} * 2) / 3)`,

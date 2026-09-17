@@ -45,15 +45,23 @@ function SelectedProductCard({
     navigate(`/products/${selectedProduct.id}`);
   }
 
+  const price = selectedProduct?.price;
+
+  const formattedprice = typeof price === "number" && Number.isFinite(price)
+  ? `₩ ${price.toLocaleString("ko-KR")}`
+  : "가격 정보 없음";
+
   return (
     <ProductArea>
       {isProductLoading ? (
-        <ProductLoading>
-          <FadeLoader />
+        <ProductLoading role="status">
+          <span aria-hidden="true">
+            <FadeLoader />
+          </span>
           <span>상품을 불러오는 중...</span>
           </ProductLoading>
       ) : productError ? (
-        <ProductLoading>{productError}</ProductLoading>
+        <ProductLoading role="alert">{productError}</ProductLoading>
       ) : (
         selectedProduct && (
           <>
@@ -78,7 +86,7 @@ function SelectedProductCard({
                 <ProductName>{selectedProduct.name}</ProductName>
 
                 <ProductPrice>
-                  ₩ {selectedProduct.price.toLocaleString()}
+                  {formattedprice}
                 </ProductPrice>
 
                 <ProductDescription>
@@ -109,6 +117,7 @@ function SelectedProductCard({
                   type="button"
                   onClick={onPrevious}
                   aria-label="이전 상품"
+                  disabled={totalProducts <= 1}
                 >
                   <ChevronLeftIcon width={24} height={24} />
                 </PaginationButton>

@@ -32,20 +32,17 @@ import penTray from "../../assets/obj_pen_tray.webp";
 import heroPoster from "../../assets/Hero.png"
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { useAnimate, motion } from "motion/react";
-import mobileHeroVideo from "../../assets/hero-tangled-objects.webm";
-import heroVideoWebm from "../../assets/hero-tangled-objects.mp4"
+import { useAnimate } from "motion/react";
+import heroVideoWebm from "../../assets/hero-tangled-objects.webm"
 import heroVideoMP4 from "../../assets/hero-tangled-objects.mp4";
 import useIsMobile from "../../hook/useIsMobile";
 
-// 각 오브젝트와 이름이 가장 비슷한 실제 상품으로 연결 (이미지 자체는 상품
-// 데이터와 연결되어 있지 않은 정적 에셋이라 수동으로 매핑)
 const HERO_PRODUCT_IDS = {
-  deskLamp: 8, // Wood Shade Articulated Desk Lamp
-  headphones: 16, // Matte Gray Wireless Headphones
-  penTray: 39, // Gunmetal Aluminum Pen Tray
-  diary: 40, // Classic Gold Fountain Pen
-  flowerVase: 30, // Clear Cylinder Glass Vase
+  deskLamp: 8, 
+  headphones: 16,
+  penTray: 39, 
+  diary: 40, 
+  flowerVase: 30,
 };
 
 function AnimateHeroSection() {
@@ -136,16 +133,12 @@ function AnimateHeroSection() {
 
   // 아직 안 펼쳐진 상태면 먼저 펼치고, 이미 펼쳐진 상태에서 다시 누르면 그
   // 상품의 상세페이지로 이동한다
-  function handleObjectClick(event, key) {
+  function handleObjectClick(key) {
     if (!isReady) return;
 
-    // 두 경우(펼치기/이동) 모두 이 클릭 직후 버튼이 aria-hidden 처리되므로,
-    // 포커스가 aria-hidden 요소에 남아있지 않도록 먼저 blur 처리한다
-    event.currentTarget.blur();
-
     if (!isExpanded) {
-      setIsexpanded(true);
       pendingFocusKey.current = key;
+      setIsexpanded(true);
       return;
     }
 
@@ -241,8 +234,7 @@ function AnimateHeroSection() {
 
         <DeskLampButton
         type="button"
-        aria-label="물건 펼치기"
-        aria-hidden="true"
+        aria-label={isExpanded ? "데스크 스탠드 상세 보기" : "물건 펼치기"}
         tabIndex={-1}
         initial={{
           x: "130%",
@@ -259,7 +251,7 @@ function AnimateHeroSection() {
           duration: isExpanded ? 1.35 : 0.4,
           ease: "easeInOut",
         }}
-        onClick={(event) => handleObjectClick(event, "deskLamp")}
+        onClick={() => handleObjectClick("deskLamp")}
         onHoverStart={() => handleObjectHoverStart(".floating-lamp")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-lamp")}
         >
@@ -294,8 +286,7 @@ function AnimateHeroSection() {
         </DeskLampLabel>
         <HeadphonesButton
         type="button"
-        aria-label="물건 펼치기"
-        aria-hidden="true"
+        aaria-label={isExpanded ? "헤드폰 상세 보기" : "물건 펼치기"}
         tabIndex={-1}
         initial={{
           x: "-130%",
@@ -313,7 +304,7 @@ function AnimateHeroSection() {
           duration: 1.35,
           ease: "easeInOut",
         }}
-        onClick={(event) => handleObjectClick(event, "headphones")}
+        onClick={() => handleObjectClick("headphones")}
         onHoverStart={() => handleObjectHoverStart(".floating-headphones")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-headphones")}
         >
@@ -350,10 +341,9 @@ function AnimateHeroSection() {
         
         <PenTrayButton
         type="button"
-        aria-label="물건 펼치기"
-        aria-hidden="true"
+        aria-label={isExpanded ? "펜 트레이 상세 보기" : "물건 펼치기"}
         tabIndex={-1}
-        onClick={(event) => handleObjectClick(event, "penTray")}
+        onClick={() => handleObjectClick("penTray")}
         onHoverStart={() => handleObjectHoverStart(".floating-penTray")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-penTray")}
         initial={{
@@ -404,10 +394,9 @@ function AnimateHeroSection() {
         </PenTrayLabel>
         <DiaryButton
         type="button"
-        aria-label="물건 펼치기"
-        aria-hidden="true"
+        aria-label={isExpanded ? "다이어리 펜 상세 보기" : "물건 펼치기"}
         tabIndex={-1}
-        onClick={(event) => handleObjectClick(event, "diary")}
+        onClick={() => handleObjectClick("diary")}
         onHoverStart={() => handleObjectHoverStart(".floating-diary")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-diary")}
         initial={{
@@ -458,10 +447,9 @@ function AnimateHeroSection() {
         </DiaryLabel>
         <FlowerVaseButton
         type="button"
-        aria-label="물건 펼치기"
-        aria-hidden="true"
+        aria-label={isExpanded ? "꽃병 상세 보기" : "물건 펼치기"}
         tabIndex={-1}
-        onClick={(event) => handleObjectClick(event, "flowerVase")}
+        onClick={() => handleObjectClick("flowerVase")}
         onHoverStart={() => handleObjectHoverStart(".floating-flowerVase")}
         onHoverEnd={() => handleObjectHoverEnd(".floating-flowerVase")}
         initial={{
@@ -522,17 +510,17 @@ function HeroSection() {
     return (
       <HeroContainer>
         <MobileHeroVideo
-          src={mobileHeroVideo}
           poster={heroPoster}
           autoPlay
           muted
           playsInline
           controls
           preload="metadata"
-          aria-label="SCENERY 모바일 히어로 영상"
-        />
-        <source src={heroVideoWebm} type="video/webm" />
-        <source src={heroVideoMP4} type="video/mp4" />
+          aria-label="SCENERY 모바일 히어로 영상">
+  
+          <source src={heroVideoWebm} type="video/webm" />
+          <source src={heroVideoMP4} type="video/mp4" />
+        </MobileHeroVideo>
       </HeroContainer>
     );
   }

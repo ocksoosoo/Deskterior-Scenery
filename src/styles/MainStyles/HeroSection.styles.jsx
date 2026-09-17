@@ -62,7 +62,7 @@ export const HeroTitle = styled(motion.h2)(({theme}) => ({
 
   [theme.media.mobile]: {
     top: "40%",
-    fontSize: "clamp(48px, 10vw, 76px",
+    fontSize: "clamp(48px, 10vw, 76px)",
     margin: 0,
   },
 

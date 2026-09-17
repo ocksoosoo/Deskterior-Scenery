@@ -71,7 +71,7 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <CategoriesSection items={categoryItems} categories={categories} />
-        <DeskCurationSection items={styleItems} />
+        <DeskCurationSection items={styleItems} categories={categories} />
         <ProductSection onInitialLoadComplete={setProductsReady} />
       </main>
     </>

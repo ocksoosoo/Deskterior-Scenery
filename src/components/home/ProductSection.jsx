@@ -27,17 +27,11 @@ const ITEMS_PER_PAGE = 3;
 // 새로고침 전까지만 모바일 표시 개수 기억
 const mobileVisibleCounts = new Map();
 
-// 카드 이동(트랙)과 확대/축소(가운데 카드 강조)를 같은 스프링 설정으로 움직여서
-// 서로 다른 애니메이션 엔진(타이밍/이징 곡선)을 쓸 때 생기던 어긋남을 없앤다.
-// 기존 damping(70)이 이 stiffness/mass 기준 임계감쇠(약 22)의 3배가 넘어서
-// 실제로 멈추기까지 1.6초 가까이 걸렸음 - 임계감쇠에 가깝게 낮춰서 훨씬 빨리 멈추게 함
 const SLIDE_SPRING = {
   type: "spring",
   stiffness: 300,
   damping: 26,
   mass: 0.4,
-  // 순간 이동(duration:0) 리셋 직후 이어지는 스프링이, 그 직전 애니메이션의
-  // 속도를 이어받아 반대 방향으로 크게 튕겨나가는 것을 방지 (항상 정지 상태에서 시작)
   velocity: 0,
 };
 
@@ -54,11 +48,8 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
   const [isResetting, setIsResetting] = useState(false);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
-  // 끝(경계)에 도달하는 애니메이션이 아직 끝나지 않았는데 화살표를 또 눌렀을 때,
-  // 그 클릭을 버리지 않고 리셋이 끝난 직후 이어서 처리하기 위한 예약
+
   const pendingDirectionRef = useRef(null);
-  // 상품이 로드되기 전 currentIndex 초기값(1)은 두 번째 상품을 가리키므로,
-  // 실제 상품이 도착하면 첫 번째 상품이 가운데에서 시작하도록 한 번만 보정
   const didInitRef = useRef(false);
 
   const [sliderSize, setSliderSize] = useState({
@@ -66,9 +57,6 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
     sideSpace: 0, // 카드를 가운데 두기 위한 왼쪽 여백
   });
 
-  // 어느 페이지에 있었든 홈으로 돌아오면(헤더 로고 클릭, 뒤로가기, 새로고침
-  // 등 경로에 상관없이) 항상 첫 상품이 가운데에 오도록, 이전 위치를 기억하지
-  // 않고 매번 items.length(첫 상품 위치)로 초기화한다
   useEffect(() => {
     if (items.length > 0 && !didInitRef.current) {
       didInitRef.current = true;
@@ -83,7 +71,6 @@ function DesktopProductGroup({ title, items, isBest = false, onAddToCart }) {
     const frameId = requestAnimationFrame(() => {
       setIsResetting(false);
 
-      // 리셋(순간 이동)이 끝나자마자, 그동안 밀려 있던 클릭이 있으면 정상 애니메이션으로 이어서 처리
       const pendingDirection = pendingDirectionRef.current;
       if (pendingDirection) {
         pendingDirectionRef.current = null;
@@ -474,8 +461,6 @@ function ProductSection({ onInitialLoadComplete }) {
   // 서버 API 호출 및 상태 업데이트
   useEffect(() => {
     let alive = true;
-    // 이미지 미리 로딩 중 페이지를 떠나도(unmount) 전역 로딩 카운트가 남지 않도록,
-    // 자연 완료/언마운트 둘 중 먼저 오는 시점에 한 번만 endLoading을 호출한다
 
     const fetchMainProducts = async () => {
       try {
