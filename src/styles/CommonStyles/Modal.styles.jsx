@@ -71,6 +71,8 @@ export const ModalDescription = styled.p(({ theme }) => ({
   },
   [theme.media.smallMobile]: {
     fontSize: "13px",
+    wordBreak: "keep-all",
+    letterSpacing: "-0.5px",
   },
 }));
 

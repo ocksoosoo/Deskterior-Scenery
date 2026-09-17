@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import useAuthStore from "../../store/UseAuthStore";
 import { Link, useLocation } from "react-router";
 import { toast } from "react-toastify";
+import { FailToastStyle } from "../../styles/FailToast.styles";
+import { SuccessToastStyle } from "../../styles/SuccessToast.styles";
 import useCartStore from "../../store/cartStore";
 import { getProduct } from "../../api/productsApi";
 import CartItem from "../../components/cart/CartItem";
@@ -120,9 +122,10 @@ const CartPage = () => {
     finishPageLoading(pathname);
   }, [cartLoaded, productInfoReady, pathname, finishPageLoading]);
 
-  const showFailToast = (message) => toast(<FailToast message={message} />);
+  const showFailToast = (message) =>
+    toast(<FailToast message={message} />, { style: FailToastStyle });
   const showSuccessToast = (message) =>
-    toast(<SuccessToast message={message} />);
+    toast(<SuccessToast message={message} />, { style: SuccessToastStyle });
 
   useEffect(() => {
     if (error) {
