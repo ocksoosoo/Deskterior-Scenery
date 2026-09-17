@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const LoadingBox = styled.div({
+export const LoadingBox = styled.div(({ theme }) => ({
   position: "fixed",
   inset: 0,
   zIndex: 9999,
@@ -8,12 +8,12 @@ export const LoadingBox = styled.div({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: "16px",
-  backgroundColor: "#FDFDFD",
-});
+  gap: theme.spacing.md,
+  backgroundColor: theme.colors.cards,
+}));
 
-export const LoadingText = styled.p({
+export const LoadingText = styled.p(({ theme }) => ({
   margin: 0,
-  fontSize: "14px",
+  fontSize: theme.fontSize.sm,
   color: "#74766F",
-});
+}));
