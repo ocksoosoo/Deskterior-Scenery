@@ -61,6 +61,7 @@ const CartItem = ({
           checked={isChecked}
           onChange={() => onToggleCheck(item.cartItemId)}
           disabled={isSoldOut}
+          aria-label={`${item.name} 선택`}
         />
 
         <Link to={`/products/${item.productId}`}>
@@ -100,6 +101,7 @@ const CartItem = ({
           <QuantityButton
             onClick={() => onDecrease(item.cartItemId)}
             disabled={isSoldOut || item.quantity <= 1}
+            aria-label={`${item.name} 수량 감소`}
           >
             -
           </QuantityButton>
@@ -107,6 +109,7 @@ const CartItem = ({
           <QuantityButton
             onClick={() => onIncrease(item.cartItemId)}
             disabled={isSoldOut}
+            aria-label={`${item.name} 수량 증가`}
           >
             +
           </QuantityButton>
