@@ -12,8 +12,8 @@ export const PaginationWrapper = styled.div(({ theme }) => ({
 const forwardNonTransientProp = (prop) => !prop.startsWith("$");
 
 const chevronStyle = ({ theme, $disabled }) => ({
-  width: "22px",
-  height: "22px",
+  width: "20px",
+  height: "20px",
   cursor: $disabled ? "default" : "pointer",
   pointerEvents: $disabled ? "none" : "auto",
   color: $disabled ? theme.colors.secondText : theme.colors.textMain,

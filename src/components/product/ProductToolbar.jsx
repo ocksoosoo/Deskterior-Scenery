@@ -162,7 +162,7 @@ const ProductToolbar = ({
       >
         <S.SortLabel>정렬</S.SortLabel>
         <strong>{currentOption.label}</strong>
-        <S.SortChevronIcon width={14} height={14} $open={isOpen} />
+        <S.SortChevronIcon width={12} height={12} $open={isOpen} />
 
         <S.SortMenu role="listbox" $open={isOpen} aria-hidden={!isOpen}>
           {SORT_OPTIONS.map((option) => (
