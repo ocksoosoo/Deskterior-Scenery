@@ -12,9 +12,7 @@ import ScrollRestoration from "./components/common/ScrollRestoration.jsx";
 // 컨벤션이라, 앱이 그리기 시작하기 전에 여기서 직접 preload 힌트를 추가해
 // 실제 폰트 요청을 최대한 앞당긴다
 [
-  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2",
-  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-Medium.woff2",
-  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/woff2/Pretendard-SemiBold.woff2",
+  "https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2",
   "https://cdn.jsdelivr.net/fontsource/fonts/dm-serif-text@latest/latin-400-normal.woff2",
 ].forEach((href) => {
   const preload = document.createElement("link");
