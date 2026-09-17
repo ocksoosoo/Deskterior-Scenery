@@ -14,11 +14,12 @@ const HomePage = lazy(() => import("./pages/Home/HomePage"));
 import LoginForm from "./pages/LoginForm";
 import SignupForm from "./pages/SignupForm";
 import MyPage from "./pages/MyPage";
+import CartPage from "./pages/Cart/CartPage";
 const CategoryPage = lazy(() => import("./pages/Category/CategoryPage"));
 const ProductDetailPage = lazy(
   () => import("./pages/Product/ProductDetailPage"),
 );
-const CartPage = lazy(() => import("./pages/Cart/CartPage"));
+
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function App() {
