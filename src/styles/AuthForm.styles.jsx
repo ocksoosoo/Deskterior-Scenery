@@ -46,12 +46,12 @@ export const Input = styled.input(({ theme }) => ({
 
   "@media (min-width: 768px) and (width < 1024px)": {
     "&.id-input::placeholder": {
-      fontSize: "clamp(10px, calc(2.352941vw - 9.070588px), 15px)",
+      fontSize: "clamp(9.5px, calc(2.352941vw - 9.070588px), 15px)",
     },
   },
   [theme.media.smallMobile]: {
     "&.id-input::placeholder": {
-      fontSize: "clamp(10px, calc(2px + 2.5vw), 14px)",
+      fontSize: "clamp(7.5px, calc(4.0625vw - 5.5px), 14px)",
     },
   },
 }));
