@@ -12,7 +12,7 @@ export const reset = css`
   @font-face {
     font-family: "Pretendard";
     font-weight: 400 700;
-    font-display: swap;
+    font-display: optional;
     src: url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
       format("woff2-variations");
   }
@@ -22,7 +22,7 @@ export const reset = css`
     font-family: "DM Serif Text";
     font-style: normal;
     font-weight: 400;
-    font-display: swap;
+    font-display: optional;
     src: url("https://cdn.jsdelivr.net/fontsource/fonts/dm-serif-text@latest/latin-400-normal.woff2")
       format("woff2");
   }
