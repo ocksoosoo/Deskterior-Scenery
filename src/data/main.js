@@ -30,7 +30,7 @@ const main = [
     id: 6,
     styleId: "minimal",
     name: "Minimal",
-    imageUrl: "https://i.ibb.co/XZwBHb6M/minimal-2.webp",
+    imageUrl: "https://i.ibb.co/r2tfSDX8/minimal.webp",
     coordinate: [
       {
         productId: 7, 
@@ -55,7 +55,7 @@ const main = [
     id: 7,
     styleId: "natural",
     name: "Natural",
-    imageUrl: "https://i.ibb.co/5WmKLLt1/natural.webp",
+    imageUrl: "https://i.ibb.co/KSy5mV7/Natural.webp",
     coordinate: [
       {
         productId: 7,
@@ -83,7 +83,7 @@ const main = [
     id: 8,
     styleId: "hip",
     name: "Hip",
-    imageUrl: "https://i.ibb.co/C3SKrd3p/hip.webp",
+    imageUrl: "https://i.ibb.co/67C5Yd0S/hip.webp",
     coordinate: [
       {
         productId: 19,
@@ -101,7 +101,7 @@ const main = [
     id: 9,
     styleId: "metallic",
     name: "Metallic",
-    imageUrl: "https://i.ibb.co/G4xmxMTR/metallic.webp",
+    imageUrl: "https://i.ibb.co/G3f53vny/Metallic.webp",
     objectPosition: "center top",
     coordinate: [
       {
@@ -130,7 +130,7 @@ const main = [
     id: 10,
     styleId: "vintage",
     name: "Vintage",
-    imageUrl: "https://i.ibb.co/svLS7jCq/vintage.webp",
+    imageUrl: "https://i.ibb.co/SXrCSxqT/vintage.webp",
     coordinate: [
       {
         productId: 26,
@@ -153,7 +153,7 @@ const main = [
     id: 11,
     styleId: "cozy",
     name: "Cozy",
-    imageUrl: "https://i.ibb.co/prG57hG4/cozy.webp",
+    imageUrl: "https://i.ibb.co/bjRncBGc/cozy.webp",
     coordinate: [
       {
         productId: 9,
@@ -181,7 +181,7 @@ const main = [
     id: 12,
     styleId: "pastel",
     name: "Pastel",
-    imageUrl: "https://i.ibb.co/qMqDjnKS/pastel.webp",
+    imageUrl: "https://i.ibb.co/zHVVF0PT/Pastel.webp",
     coordinate: [
       {
         productId: 23,
