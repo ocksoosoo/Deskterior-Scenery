@@ -513,12 +513,13 @@ function HeroSection() {
         <MobileHeroVideo
           poster={heroPoster}
           autoPlay
+          loop
           muted
           playsInline
-          controls
-          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+          preload="auto"
           aria-label="SCENERY 모바일 히어로 영상">
-            <track kind="captions" src="" label="자막 없음" />
           <source src={heroVideoWebm} type="video/webm" />
           <source src={heroVideoMP4} type="video/mp4" />
         </MobileHeroVideo>
