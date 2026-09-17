@@ -35,11 +35,9 @@ const fontSize = {
 
 // 폰트 굵기
 const fontWeight = {
-  light: 300, // (base)
   regular: 400,
   medium: 500,
   semiBold: 600,
-  bold: 700,
 };
 
 //  간격 & 패딩 (공통 사용)
