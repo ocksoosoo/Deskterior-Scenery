@@ -26,7 +26,7 @@
 
 ## 프로젝트 소개
 
-**SCENERY**는 조명, 수납, 디지털/전자기기, 데스크 액세서리, 문구 등 책상 주변을 꾸미는 소품을 카테고리별로 둘러보고 구매할 수 있는 이커머스 웹 서비스입니다. 상품 탐색부터 장바구니, 위시리스트(찜), 리뷰 작성, 결제 확인까지 일반적인 쇼핑몰의 핵심 구매 흐름을 구현했습니다.
+'경치'를 뜻하는 **SCENERY**는, 책상 위 공간도 하나의 경치처럼 취향껏 채워나갈 수 있다는 의미를 담은 이름입니다. 조명, 수납, 디지털/전자기기, 데스크 액세서리, 문구 등 책상 주변을 꾸미는 소품을 카테고리별로 둘러보고 구매할 수 있는 이커머스 웹 서비스로, 상품 탐색부터 장바구니, 위시리스트(찜), 리뷰 작성까지 일반적인 쇼핑몰의 핵심 흐름을 구현했습니다.
 
 - 배포 URL: `[ ]`
 - 테스트 계정: `[ ]`
@@ -35,13 +35,13 @@
 
 ## 팀원 및 역할
 
-| 이름 | GitHub | 역할 |
-| --- | --- | --- |
-| 최우원 | [@singthesong2](https://github.com/singthesong2) | 팀장, 로그인/회원가입, 마이페이지 |
-| 김양왕 | [@gimyangwang-bit](https://github.com/gimyangwang-bit) | 카테고리/상품 목록 페이지 |
-| 나민우 | [@Naminwoo](https://github.com/Naminwoo) | 장바구니 페이지, 마이페이지 찜 기능 |
-| 김채가 | [@chaegagim-code](https://github.com/chaegagim-code) | 상세 페이지, 회의록 작성, PPT 초안 |
-| 최현옥 | [@hyunock](https://github.com/hyunock) | 디자인, 홈 페이지 |
+| 이름   | GitHub                                                 | 역할                                      |
+| ------ | ------------------------------------------------------ | ----------------------------------------- |
+| 최우원 | [@singthesong2](https://github.com/singthesong2)       | 로그인/회원가입, 404 페이지, 마이페이지   |
+| 김양왕 | [@gimyangwang-bit](https://github.com/gimyangwang-bit) | 카테고리/상품 목록 페이지, README.MD 작성 |
+| 나민우 | [@Naminwoo](https://github.com/Naminwoo)               | 장바구니 페이지, 마이페이지 찜 기능       |
+| 김채가 | [@chaegagim-code](https://github.com/chaegagim-code)   | 상세 페이지, 회의록 작성, PPT 제작        |
+| 최현옥 | [@hyunock](https://github.com/hyunock)                 | 디자인, 홈 페이지, 마이페이지             |
 
 > 각자 담당한 화면/기능(예: 로그인·회원가입, 상품 목록/상세, 장바구니, 리뷰, 공통 컴포넌트 등)을 적어주세요.
 
@@ -50,8 +50,6 @@
 ## 개발 기간
 
 `2026.08.25 ~ 2026.09.15` (약 3주)
-
-> 최초 커밋(`first commit`) 기준 시작일이며, 실제 기획/디자인 기간이 있었다면 함께 적어주세요.
 
 <br>
 
@@ -65,74 +63,111 @@
 - **Desk Accessories** (데스크 액세서리)
 - **Stationery** (문구)
 
-`[ ]` 서비스가 해결하고자 한 문제, 타겟 사용자, 차별화 포인트 등을 추가해주세요.
+- **해결하려는 문제**: 재택근무·홈오피스가 늘면서 책상 꾸미기(데스크테리어) 수요는 커졌는데, 조명/수납/문구/전자기기가 카테고리별로 흩어진 쇼핑몰이 많아 한 번에 취향대로 데스크 셋업을 완성하기 어렵다는 점
+- **타겟 사용자**: 재택·1인 오피스 환경을 꾸미고 싶은 2030 자취생/직장인, 미니멀하고 톤온톤인 데스크테리어를 선호하는 사용자
+- **차별화 포인트**: 조명·수납·전자기기·액세서리·문구를 하나의 "책상 위 풍경"이라는 콘셉트로 묶어 카테고리 간 자연스러운 연계 쇼핑을 유도하는 큐레이션형 구성
 
 <br>
 
 ## 주요 기능
 
 ### 인증
+
 - 회원가입 / 아이디 중복 확인 / 로그인 / 로그아웃
 - 새로고침 시 토큰(localStorage) 기반 로그인 상태 자동 복구
+- Zod 기반 폼 유효성 검사, 실패 시 흔들림 애니메이션으로 에러 피드백
+- 아이디 중복 확인 필수 처리 (미확인 시 가입 불가, 응답 지연 중 값이 바뀌면 stale 응답 무시)
 
 ### 상품
-- 카테고리별 상품 목록 조회 (페이지네이션, 정렬/필터 툴바)
+
+- 카테고리별 상품 목록 조회 (페이지네이션, 검색, 정렬/필터 툴바)
+- 반응형 상품 그리드 (모바일 2열 / PC·태블릿 3열)
 - 상품 상세 페이지 (이미지 갤러리, 상세 설명, BEST/NEW/품절 뱃지)
 - 상품 리뷰 목록 조회, 평점 요약(평균 별점)
 
 ### 리뷰
+
 - 로그인 사용자의 리뷰 작성 / 수정 / 삭제 (본인 리뷰만)
+- 리뷰 4개 이상이면 처음엔 3개만 보여주고 "+"로 전체 펼치기
+- 비로그인 상태로 별점/작성 시도 시 로그인 안내 모달로 유도
+- 수정한 리뷰는 "(수정됨)" 표시, 작성자가 탈퇴한 리뷰는 "알수없는 회원"으로 익명 처리
 
 ### 장바구니
+
 - 상품 담기, 수량 변경, 개별/선택 삭제, 전체 비우기
 - 비회원도 장바구니 이용 가능, 로그인 시 서버와 자동 동기화
 - 헤더 아이콘에 담긴 상품 개수 뱃지 표시
+- 배송비 규칙: 선택 상품 합계 8만원 이상 무료배송, 미만이면 3,000원 부과
+- 선택한 상품만 합계 계산해서 결제, 미선택/전체 품절 시 결제 제한 및 안내
+- 품절 상품은 전체선택/합계 계산에서 자동 제외
+- 장바구니 하단 추천 상품 노출
 
 ### 위시리스트(찜)
+
 - 상품 찜하기/취소 (비회원도 가능, 로컬 저장)
 - 로그아웃 시 찜 목록 초기화
+- 처음엔 6개만 보여주고 "+"로 3개씩 더보기
+- 위시리스트 전체 삭제 (확인 모달)
+- 목록 조회 실패 시 에러 안내 + Retry 재시도 버튼
 
 ### 결제
+
 - 구매 확인 모달을 통한 결제 진행 플로우
+- 상세 페이지에서 장바구니 없이 바로 구매(즉시 결제) 가능
+- 실제 PG 연동 없이 확인 모달 기반의 결제 시뮬레이션 플로우
 
 ### 마이페이지
-- `[ ]` 마이페이지에서 제공하는 기능(주문 내역, 회원 정보 수정 등)을 적어주세요.
+
+- 회원 정보 조회 및 이름/연락처/주소 수정 (Zod 검증, 저장 실패 시 흔들림 애니메이션)
+- 비밀번호 변경 (현재/새 비밀번호 입력, 각각 표시/숨기기 토글, 현재와 동일한 비밀번호로는 변경 불가)
+- 회원 탈퇴 (확인 모달, 탈퇴 시 장바구니/위시리스트/로그인 정보 초기화)
+- 위시리스트(찜) 목록 확인 및 관리 (자세한 기능은 [위시리스트(찜)](#위시리스트찜) 참고)
 
 ### 공통 UX
+
 - 반응형 헤더 및 모바일 햄버거 메뉴
 - 전역 토스트 알림(성공/실패), 페이지 전환 로딩 인디케이터
 - 스크롤 위치 복원, 맨 위로 가기 버튼
+- 커스텀 404 페이지 (5초 카운트다운 후 자동 홈 이동)
+- OS "동작 줄이기(reduce motion)" 설정을 존중하는 전역 애니메이션 처리
+- 키보드 접근성 (커스텀 드롭다운 등에 focus-visible 아웃라인, aria-expanded/aria-hidden 처리)
 
 <br>
 
 ## 기술 스택
 
 **Frontend**
+
 - React 19 (React Compiler 적용)
-- Vite 8
+- Vite 8 (Rolldown 기반)
 - React Router 8
 
 **상태 관리 / 데이터 패칭**
+
 - Zustand (+ `persist` 미들웨어)
-- TanStack Query (React Query)
 
 **스타일링**
+
 - Emotion (`@emotion/react`, `@emotion/styled`)
 
 **폼 / 검증**
+
 - Zod
 
 **UI / 기타**
+
 - Tabler Icons React
 - Motion (애니메이션)
 - React Spinners (로딩 인디케이터)
 - React Toastify (토스트 알림)
+- Pretendard / DM Serif Text 웹폰트 (CDN)
 
 **Lint / 개발 도구**
+
 - ESLint (`eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`)
 - Babel + `babel-plugin-react-compiler`
 
-`[ ]` 백엔드/DB/배포 관련 스택(사용 중인 서버, 데이터베이스, 배포 플랫폼 등)을 추가해주세요.
+- API 문서화: Swagger (OpenAPI)
 
 <br>
 
@@ -140,9 +175,12 @@
 
 ```
 Deskterior-Scenery/
+├── docs/
+│   └── screenshots/                # README에 쓰인 스크린샷
 ├── public/
 │   ├── favicon.svg
-│   └── icons.svg
+│   ├── icons.svg
+│   └── robots.txt
 ├── src/
 │   ├── api/                     # 서버 통신 (fetch 래퍼 + 도메인별 API)
 │   │   ├── authApi.js
@@ -151,7 +189,8 @@ Deskterior-Scenery/
 │   │   ├── clientApi.js         # 공통 fetch 래퍼 (인증 헤더, 에러 처리)
 │   │   ├── mainApi.js
 │   │   ├── productsApi.js
-│   │   └── reviewsApi.js
+│   │   ├── reviewsApi.js
+│   │   └── wishlistApi.js
 │   ├── assets/                  # 이미지 / 영상 리소스
 │   ├── components/
 │   │   ├── cart/                # 장바구니 아이템, 요약, 추천 상품
@@ -163,8 +202,13 @@ Deskterior-Scenery/
 │   │   ├── review/                 # 리뷰 작성/목록/요약
 │   │   └── AuthForm.jsx
 │   ├── constants/                 # 목업 상수 데이터
-│   ├── data/                      # 카테고리, 상품명 매핑 등 정적 데이터
-│   ├── hooks/
+│   ├── data/                      # 카테고리, 상품, 정렬 옵션 등 정적 데이터
+│   ├── hook/                      # 커스텀 훅
+│   │   ├── useCategoryPageParams.jsx
+│   │   ├── useCategoryProducts.jsx
+│   │   ├── useIsMobile.jsx
+│   │   ├── usePageLoading.jsx
+│   │   └── useResponsiveRowSize.jsx
 │   ├── pages/
 │   │   ├── Cart/CartPage.jsx
 │   │   ├── Category/CategoryPage.jsx
@@ -173,12 +217,14 @@ Deskterior-Scenery/
 │   │   ├── LoginForm.jsx
 │   │   ├── SignupForm.jsx
 │   │   ├── MyPage.jsx
+│   │   ├── WishListSection.jsx     # 마이페이지 내 위시리스트 섹션
 │   │   ├── NotFoundPage.jsx
 │   │   └── commonLayout.jsx        # 공통 레이아웃 (Header/Footer + Outlet)
 │   ├── schema/                     # Zod 스키마 (회원가입/로그인 검증)
-│   ├── store/                      # Zustand 스토어 (인증, 로딩, 장바구니, 카테고리, 위시리스트)
+│   ├── store/                      # Zustand 스토어 (인증, 로딩, 장바구니, 카테고리, 상품 카탈로그, 위시리스트)
 │   ├── styles/                     # Emotion 스타일 (기능별 하위 폴더로 분리)
 │   ├── utils/
+│   │   └── preloadingImages.jsx
 │   ├── App.jsx                     # 라우트 정의
 │   └── main.jsx                    # 엔트리 포인트
 ├── .env.example
@@ -221,9 +267,9 @@ npm run lint      # ESLint 검사
 
 `.env.example`을 참고하여 프로젝트 루트에 `.env` 파일을 생성합니다.
 
-| 변수명 | 설명 | 예시 |
-| --- | --- | --- |
-| `VITE_API_BASE_URL` | 백엔드 API 서버의 base URL | `https://api.example.com/api/14/team1` |
+| 변수명              | 설명                       | 예시                                   |
+| ------------------- | -------------------------- | -------------------------------------- |
+| `VITE_API_BASE_URL` | 백엔드 API 서버의 base URL | `https://api.example.com/api/{기수}/{team}` |
 
 > 민감한 실제 값을 README에 작성하지 않도록 주의합니다. 실제 값은 `.env` 파일에만 두고 커밋하지 않습니다.
 
@@ -231,15 +277,16 @@ npm run lint      # ESLint 검사
 
 ## 주요 화면
 
-| 화면 | 이미지 |
-| --- | --- |
-| 홈 | ![홈](docs/screenshots/01-home.png) |
-| 카테고리(상품 목록) | ![카테고리](docs/screenshots/02-category.png) |
-| 상품 상세 | ![상품 상세](docs/screenshots/03-product-detail.png) |
-| 장바구니 | ![장바구니](docs/screenshots/04-cart.png) |
-| 로그인 | ![로그인](docs/screenshots/05-login.png) |
-| 회원가입 | ![회원가입](docs/screenshots/06-signup.png) |
-| 모바일 반응형(홈) | ![모바일 홈](docs/screenshots/07-home-mobile.png) |
+| 화면                | 이미지                                               |
+| ------------------- | ---------------------------------------------------- |
+| 홈                  | ![홈](docs/screenshots/01-home.png)                  |
+| 카테고리(상품 목록) | ![카테고리](docs/screenshots/02-category.png)        |
+| 상품 상세           | ![상품 상세](docs/screenshots/03-product-detail.png) |
+| 장바구니            | ![장바구니](docs/screenshots/04-cart.png)            |
+| 로그인              | ![로그인](docs/screenshots/05-login.png)             |
+| 회원가입            | ![회원가입](docs/screenshots/06-signup.png)          |
+| 모바일 반응형(홈)   | ![모바일 홈](docs/screenshots/07-home-mobile.png)    |
+| 마이페이지(위시리스트 포함) | `[ ]` 로그인 후 마이페이지 화면을 캡처해서 추가해주세요. |
 
 > 결제 확인 모달 화면은 실제 로그인 후 구매 흐름에서 캡처해야 해서 아직 비어 있습니다. `[ ]` 로그인 → 장바구니 담기 → 체크아웃 화면을 캡처해서 추가해주세요.
 
@@ -253,42 +300,42 @@ Swagger 문서: 팀 노션/Swagger는 별도 공유
 
 ### 인증 (`/auth`)
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| POST | `/auth/signup` | 회원가입 |
-| POST | `/auth/check-id` | 아이디 중복 확인 |
-| POST | `/auth/login` | 로그인 |
-| POST | `/auth/logout` | 로그아웃 |
-| GET | `/auth/me` | 로그인한 사용자 정보 조회 |
+| Method | Endpoint         | 설명                      |
+| ------ | ---------------- | ------------------------- |
+| POST   | `/auth/signup`   | 회원가입                  |
+| POST   | `/auth/check-id` | 아이디 중복 확인          |
+| POST   | `/auth/login`    | 로그인                    |
+| POST   | `/auth/logout`   | 로그아웃                  |
+| GET    | `/auth/me`       | 로그인한 사용자 정보 조회 |
 
 ### 상품 (`/products`)
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| GET | `/products?category=&page=&limit=` | 상품 목록 조회 |
-| GET | `/products/{productId}` | 상품 상세 조회 |
-| POST | `/products` | 상품 등록 `[ ]` |
+| Method | Endpoint                           | 설명            |
+| ------ | ---------------------------------- | --------------- |
+| GET    | `/products?category=&page=&limit=` | 상품 목록 조회  |
+| GET    | `/products/{productId}`            | 상품 상세 조회  |
+| POST   | `/products`                        | 상품 등록 `[ ]` |
 
 ### 리뷰 (`/products/{productId}/reviews`, `/reviews`)
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| GET | `/products/{productId}/reviews` | 리뷰 목록 + 평균 평점 조회 |
-| POST | `/products/{productId}/reviews` | 리뷰 작성 (로그인 필요) |
-| PATCH | `/reviews/{reviewId}` | 리뷰 수정 (작성자만) |
-| DELETE | `/reviews/{reviewId}` | 리뷰 삭제 (작성자만) |
+| Method | Endpoint                        | 설명                       |
+| ------ | ------------------------------- | -------------------------- |
+| GET    | `/products/{productId}/reviews` | 리뷰 목록 + 평균 평점 조회 |
+| POST   | `/products/{productId}/reviews` | 리뷰 작성 (로그인 필요)    |
+| PATCH  | `/reviews/{reviewId}`           | 리뷰 수정 (작성자만)       |
+| DELETE | `/reviews/{reviewId}`           | 리뷰 삭제 (작성자만)       |
 
 ### 장바구니 (`/cart`)
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| GET | `/cart` | 장바구니 전체 조회 |
-| POST | `/cart/items` | 상품 담기 |
-| PATCH | `/cart/items/{cartItemId}` | 수량 변경 |
-| DELETE | `/cart/items/{cartItemId}` | 개별 상품 삭제 |
-| DELETE | `/cart/items` | 선택 상품 삭제 |
-| DELETE | `/cart` | 장바구니 전체 삭제 |
-| GET | `/cart/count` | 장바구니 상품 개수 조회 |
+| Method | Endpoint                   | 설명                    |
+| ------ | -------------------------- | ----------------------- |
+| GET    | `/cart`                    | 장바구니 전체 조회      |
+| POST   | `/cart/items`              | 상품 담기               |
+| PATCH  | `/cart/items/{cartItemId}` | 수량 변경               |
+| DELETE | `/cart/items/{cartItemId}` | 개별 상품 삭제          |
+| DELETE | `/cart/items`              | 선택 상품 삭제          |
+| DELETE | `/cart`                    | 장바구니 전체 삭제      |
+| GET    | `/cart/count`              | 장바구니 상품 개수 조회 |
 
 <br>
 
