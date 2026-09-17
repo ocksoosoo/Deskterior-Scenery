@@ -257,6 +257,7 @@ const CartPage = () => {
                   type="checkbox"
                   checked={isAllChecked}
                   onChange={handleToggleAllCheck}
+                  aria-label="전체 상품 선택"
                 />
                 Selected All
               </SelectAllLabel>

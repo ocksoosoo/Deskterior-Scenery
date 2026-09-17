@@ -133,7 +133,7 @@ export const InfoBox = styled.div(({ theme }) => ({
 }));
 
 // 상품명
-export const ItemName = styled.h4(({ theme }) => ({
+export const ItemName = styled.h3(({ theme }) => ({
   margin: 0,
   width: "100%",
   textAlign: "left",
