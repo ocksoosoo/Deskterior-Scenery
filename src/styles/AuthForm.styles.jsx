@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Form = styled.form(({theme}) => ({
+export const Form = styled.form(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   width: "100%",
@@ -17,7 +17,7 @@ export const AllTerms = styled.div(({ theme }) => ({
   marginBottom: theme.spacing.md,
 }));
 
-export const Label = styled.label(({theme}) => ({
+export const Label = styled.label(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -70,7 +70,7 @@ export const InputIdGroup = styled.div(({ theme }) => ({
   },
   "&:focus-within": {
     borderBottomColor: theme.colors.textMain,
-  }
+  },
 }));
 
 export const IdCheckButton = styled.button(({ theme }) => ({
@@ -84,6 +84,8 @@ export const IdCheckButton = styled.button(({ theme }) => ({
   fontWeight: theme.fontWeight.medium,
   lineHeight: 1,
   cursor: "pointer",
+  willChange: "transform",
+
   "&:hover": {
     filter: "brightness(1.5)",
   },
@@ -189,7 +191,7 @@ const messageStyle = {
   textAlign: "left",
 };
 
-export const SuccessMessage = styled.div(({theme}) => ({
+export const SuccessMessage = styled.div(({ theme }) => ({
   ...messageStyle,
   color: theme.colors.textMain,
   backgroundColor: "#d9f3df",
@@ -211,7 +213,7 @@ export const ErrorMessage = styled.div(({ theme }) => ({
   },
 }));
 
-export const ErrorIcon = styled.span(({theme}) => ({
+export const ErrorIcon = styled.span(({ theme }) => ({
   position: "relative",
   width: "20px",
   height: "20px",
@@ -256,6 +258,8 @@ export const Button = styled.button(({ theme }) => ({
   fontWeight: theme.fontWeight.medium,
   color: theme.colors.cards,
   cursor: "pointer",
+  willChange: "transform",
+
   "&:hover": {
     filter: "brightness(1.5)",
   },

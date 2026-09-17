@@ -11,7 +11,7 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
   alignItems: "center",
 
   // tablet(768-1023)
-  [theme.media.tablet] : {
+  [theme.media.tablet]: {
     padding: `${theme.spacing["2xl"]} ${theme.spacing.xl}`,
   },
 
@@ -20,11 +20,11 @@ export const CategoriesContainer = styled.section(({ theme }) => ({
   },
 
   [theme.media.smallMobile]: {
-  padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
-  }
+    padding: `${theme.spacing["2xl"]} ${theme.spacing.md}`,
+  },
 }));
 
-export const CategoriesInner = styled.div(({theme}) => ({
+export const CategoriesInner = styled.div(({ theme }) => ({
   width: "100%",
   maxWidth: "896px",
   marginInline: "auto",
@@ -36,8 +36,7 @@ export const CategoriesInner = styled.div(({theme}) => ({
   [theme.media.mobile]: {
     gap: theme.spacing.lg,
   },
-}))
-
+}));
 
 export const SectionTitle = styled.h2(({ theme }) => ({
   alignSelf: "flex-start",
@@ -57,7 +56,7 @@ export const SectionTitle = styled.h2(({ theme }) => ({
 
 export const CategoryList = styled.div(({ theme }) => ({
   display: "flex",
-  gap: theme.spacing["2xl"], 
+  gap: theme.spacing["2xl"],
   width: "100%",
 
   // tablet(768-1023)
@@ -79,7 +78,7 @@ export const CategoryList = styled.div(({ theme }) => ({
 
   [theme.media.smallMobile]: {
     columnGap: theme.spacing.sm,
-  }
+  },
 }));
 
 export const CategoryItem = styled.div(({ theme }) => ({
@@ -93,9 +92,9 @@ export const CategoryItem = styled.div(({ theme }) => ({
   cursor: "pointer",
 
   "&:focus-visible": {
-  outline: `${theme.borderWidth.focus} solid ${theme.colors.textMain}`,
-  outlineOffset: "4px",
-},
+    outline: `${theme.borderWidth.focus} solid ${theme.colors.textMain}`,
+    outlineOffset: "4px",
+  },
 
   [theme.media.mobile]: {
     width: `calc((100% - ${theme.spacing.md} * 2) / 3)`,
@@ -115,6 +114,7 @@ export const CategoryImage = styled.img(({ theme }) => ({
   // 은은한 그림자로 항상 원과 배경이 구분되게 함
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
   transition: "transform 0.2s ease, box-shadow 0.2s ease",
+  willChange: "transform",
 
   "&:hover": {
     transform: "scale(1.03)",

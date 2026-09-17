@@ -50,7 +50,7 @@ export const ErrorText = styled.p(({ theme }) => ({
   color: "#D0D0D0",
 
   [theme.media.smallMobile]: {
-    fontSize: "clamp(12px, calc(1.25vw + 8px), 14px)",
+    fontSize: `clamp(${theme.fontSize.xs}, calc(1.25vw + 8px), ${theme.fontSize.sm})`,
   },
 }));
 

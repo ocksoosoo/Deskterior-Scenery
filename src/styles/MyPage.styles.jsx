@@ -54,7 +54,7 @@ export const UserName = styled.p(({ theme }) => ({
   overflowWrap: "anywhere",
 
   [theme.media.smallMobile]: {
-    fontSize: "clamp(20px, calc(7.5vw - 4px), 32px)",
+    fontSize: `clamp(${theme.fontSize.xl}, calc(7.5vw - 4px), ${theme.fontSize["4xl"]})`,
   },
 }));
 
@@ -117,7 +117,7 @@ export const AccountTitle = styled.h2(({ theme }) => ({
   lineHeight: 1.2,
 
   [theme.media.smallMobile]: {
-    fontSize: "clamp(20px, calc(5vw + 4px), 28px)",
+    fontSize: `clamp(${theme.fontSize.xl}, calc(5vw + 4px), ${theme.fontSize["3xl"]})`,
   },
 }));
 
@@ -329,7 +329,7 @@ export const Settingstext = styled.p(({ theme }) => ({
   color: theme.colors.secondText,
 
   "@media (width < 506px)": {
-    fontSize: "12px",
+    fontSize: theme.fontSize.xs,
   },
 }));
 
