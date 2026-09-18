@@ -18,6 +18,7 @@ import {
 import { getProduct } from "../../api/productsApi";
 import useCartStore from "../../store/cartStore";
 import useWishlistStore from "../../store/wishlistStore";
+import { wishlistApi } from "../../api/wishlistApi";
 import {
   getReviews,
   createReview,
@@ -50,6 +51,7 @@ const ProductDetailPage = () => {
 
   const isWished = useWishlistStore((state) => state.likedIds.has(product?.id));
   const toggleWish = useWishlistStore((state) => state.toggleLike);
+  const [isWishlistPending, setIsWishlistPending] = useState(false);
 
   const [loadedProductForId, setLoadedProductForId] = useState(null);
 
@@ -174,9 +176,30 @@ const ProductDetailPage = () => {
     }
   };
 
-  const handleToggleWish = () => {
-    if (!product) return;
-    toggleWish(product.id);
+  const handleToggleWish = async () => {
+    if (!product || isWishlistPending) return;
+
+    setIsWishlistPending(true);
+
+    try {
+      const response = isWished
+        ? await wishlistApi.removeWishlistItem(product.id)
+        : await wishlistApi.addWishlistItem(product.id);
+
+      if (!response.success) {
+        throw new Error(response.message || "위시리스트 등록에 실패했습니다.");
+      }
+
+      toggleWish(product.id);
+      showSuccessToast(
+        isWished ? "위시리스트에서 삭제되었습니다." : "위시리스트에 추가되었습니다.",
+      );
+    } catch (err) {
+      console.error("위시리스트 변경 실패:", err);
+      showFailToast("로그인 후 이용할 수 있습니다.");
+    } finally {
+      setIsWishlistPending(false);
+    }
   };
 
   const handleCheckout = () => {
@@ -288,6 +311,7 @@ const ProductDetailPage = () => {
                 onCheckout={handleCheckout}
                 isWished={isWished}
                 onToggleWish={handleToggleWish}
+                wishPending={isWishlistPending}
                 soldOut={product.soldOut}
               />
             </S.InfoColumn>
@@ -308,6 +332,7 @@ const ProductDetailPage = () => {
           <MobileCtaBar
             isWished={isWished}
             onToggleWish={handleToggleWish}
+            wishPending={isWishlistPending}
             onAddToCart={handleAddToCart}
             onCheckout={handleCheckout}
             soldOut={product.soldOut}

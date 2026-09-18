@@ -9,6 +9,7 @@ const PurchaseBox = ({
   onCheckout,
   isWished = false,
   onToggleWish,
+  wishPending = false,
   maxQuantity = 99,
   isSubmitting = false,
   soldOut = false,
@@ -57,6 +58,7 @@ const PurchaseBox = ({
         <S.WishButton
           type="button"
           onClick={onToggleWish}
+          disabled={wishPending}
           aria-label={getWishLabel(isWished)}
           aria-pressed={isWished}
           title={getWishLabel(isWished)}

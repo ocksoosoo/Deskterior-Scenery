@@ -7,6 +7,7 @@ import * as S from "../../styles/ProductDetail/MobileCtaBar.styles";
 const MobileCtaBar = ({
   isWished = false,
   onToggleWish,
+  wishPending = false,
   onAddToCart,
   onCheckout,
   soldOut = false,
@@ -16,6 +17,7 @@ const MobileCtaBar = ({
     <S.WishButton
       type="button"
       onClick={onToggleWish}
+      disabled={wishPending}
       aria-label={getWishLabel(isWished)}
       aria-pressed={isWished}
       title={getWishLabel(isWished)}
