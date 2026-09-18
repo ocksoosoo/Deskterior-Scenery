@@ -181,6 +181,10 @@ const ProductDetailPage = () => {
 
   const handleCheckout = () => {
     if (!product || product.soldOut) return;
+    if (!user) {
+      showFailToast("로그인이 필요한 서비스입니다.");
+      return;
+    }
     setIsPaymentModalOpen(true);
   };
 
