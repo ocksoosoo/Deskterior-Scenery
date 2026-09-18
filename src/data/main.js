@@ -19,7 +19,7 @@ const main = [
   {
     id: 4,
     categoryId: "desk-accessories",
-    imageUrl: "https://i.ibb.co/jKzWGzh/Desk-Accessories.webp",
+    imageUrl: "https://i.ibb.co/qYXFXfZW/25.webp",
   },
   {
     id: 5,
