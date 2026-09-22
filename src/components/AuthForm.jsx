@@ -28,6 +28,7 @@ const inputForm = {
   lastName: "",
   id: "",
   password: "",
+  passwordConfirm: "",
   contact: "",
   address: "",
   terms: false,
@@ -41,6 +42,7 @@ function AuthForm({ mode, onSubmit }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [shakingButton, setShakingButton] = useState(false);
   const [idShakingButton, setIdShakingButton] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +51,7 @@ function AuthForm({ mode, onSubmit }) {
   const lastNameRef = useRef(null);
   const idRef = useRef(null);
   const passwordRef = useRef(null);
+  const passwordConfirmRef = useRef(null);
   const contactRef = useRef(null);
   const termsRef = useRef(null);
   const privacyRef = useRef(null);
@@ -73,6 +76,7 @@ function AuthForm({ mode, onSubmit }) {
       if (data.contact) {
         data.contact = formatPhoneNumber(data.contact);
       }
+      delete data.passwordConfirm;
     }
 
     try {
@@ -124,6 +128,7 @@ function AuthForm({ mode, onSubmit }) {
         lastName: lastNameRef,
         id: idRef,
         password: passwordRef,
+        passwordConfirm: passwordConfirmRef,
         contact: contactRef,
       };
 
@@ -134,6 +139,11 @@ function AuthForm({ mode, onSubmit }) {
     if (mode === "signup") {
       if (idCheck !== data.id) {
         showError("아이디 중복 확인을 해주세요.", idRef);
+        return false;
+      }
+
+      if (data.password !== data.passwordConfirm) {
+        showError("비밀번호가 일치하지 않습니다.", passwordConfirmRef);
         return false;
       }
 
@@ -319,6 +329,45 @@ function AuthForm({ mode, onSubmit }) {
             </PasswordHidenButton>
           </PasswordGroup>
         </Label>
+
+        {mode === "signup" && (
+          <Label>
+            <span>
+              Password Confirm <Required>*</Required>
+            </span>
+            <PasswordGroup>
+              <Input
+                ref={passwordConfirmRef}
+                name="passwordConfirm"
+                type={showPasswordConfirm ? "text" : "password"}
+                placeholder="Password (4자 이상)"
+                value={formData.passwordConfirm}
+                onChange={handleChange}
+              />
+
+              <PasswordHidenButton
+                type="button"
+                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                aria-label={
+                  showPasswordConfirm
+                    ? "비밀번호 재확인 숨기기"
+                    : "비밀번호 재확인 보기"
+                }
+                title={
+                  showPasswordConfirm
+                    ? "비밀번호 재확인 숨기기"
+                    : "비밀번호 재확인 보기"
+                }
+              >
+                {showPasswordConfirm ? (
+                  <IconEyeClosed size={25} />
+                ) : (
+                  <IconEye size={25} />
+                )}
+              </PasswordHidenButton>
+            </PasswordGroup>
+          </Label>
+        )}
 
         {mode === "signup" && (
           <>

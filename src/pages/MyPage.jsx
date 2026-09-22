@@ -90,6 +90,7 @@ function Mypage() {
     useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [errors, setErrors] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [shakingButton, setShakingButton] = useState(false);
@@ -99,6 +100,7 @@ function Mypage() {
 
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewPasswordConfirm, setShowNewPasswordConfirm] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -256,6 +258,16 @@ function Mypage() {
       return;
     }
 
+    if (!newPasswordConfirm) {
+      setPasswordError("새 비밀번호를 다시 입력해주세요.");
+      return;
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+      setPasswordError("새 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     if (currentPassword === newPassword) {
       setPasswordError("현재 비밀번호와 변경할 비밀번호가 일치합니다.");
       return;
@@ -292,6 +304,9 @@ function Mypage() {
 
     setShowCurrentPassword(false);
     setShowNewPassword(false);
+
+    setNewPasswordConfirm("");
+    setShowNewPasswordConfirm(false);
   };
 
   const handlePasswordModalClose = () => {
@@ -566,14 +581,56 @@ function Mypage() {
                         )}
                       </NewPasswordHidenButton>
                     </NewPasswordGroup>
-
-                    {passwordError && (
-                      <PasswordError>
-                        <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
-                        {passwordError}
-                      </PasswordError>
-                    )}
                   </PasswordField>
+
+                  <PasswordField>
+                    <PasswordLabel htmlFor="newPasswordConfirm">
+                      New Password Confirm
+                    </PasswordLabel>
+
+                    <NewPasswordGroup>
+                      <PasswordInput
+                        id="newPasswordConfirm"
+                        type={showNewPasswordConfirm ? "text" : "password"}
+                        placeholder="New Password Confirm"
+                        value={newPasswordConfirm}
+                        onChange={(e) => {
+                          setNewPasswordConfirm(e.target.value);
+                          setPasswordError("");
+                        }}
+                      />
+
+                      <NewPasswordHidenButton
+                        type="button"
+                        onClick={() =>
+                          setShowNewPasswordConfirm(!showNewPasswordConfirm)
+                        }
+                        aria-label={
+                          showNewPasswordConfirm
+                            ? "비밀번호 숨기기"
+                            : "비밀번호 보기"
+                        }
+                        title={
+                          showNewPasswordConfirm
+                            ? "비밀번호 숨기기"
+                            : "비밀번호 보기"
+                        }
+                      >
+                        {showNewPasswordConfirm ? (
+                          <IconEyeClosed size={25} />
+                        ) : (
+                          <IconEye size={25} />
+                        )}
+                      </NewPasswordHidenButton>
+                    </NewPasswordGroup>
+                  </PasswordField>
+
+                  {passwordError && (
+                    <PasswordError>
+                      <IconCircleX size={18} stroke={1.5} color="#e64b3c" />
+                      {passwordError}
+                    </PasswordError>
+                  )}
                 </PasswordFormBox>
               </Modal>
             )}
