@@ -25,6 +25,8 @@ export const signupSchema = z.object({
       message: "비밀번호에 공백을 입력할 수 없습니다.",
     }),
 
+  passwordConfirm: z.string().min(1, "비밀번호를 다시 입력해주세요."),
+
   contact: z
     .string()
     .refine(
@@ -33,11 +35,22 @@ export const signupSchema = z.object({
         /^010\d{8}$/.test(data) ||
         /^010-\d{4}-\d{4}$/.test(data),
       {
-        message: "010-0000-0000 형식으로 입력해주세요.",
+        message: "알맞은 전화번호 형식으로 입력해주세요.",
       },
     ),
 
-  address: z.string(),
+  address: z
+    .string()
+    .refine(
+      (data) =>
+        data === "" ||
+        /(?:특별시|광역시|특별자치시|특별자치도|시|도).+(?:시|군|구).+(?:동|읍|면|리)/.test(
+          data,
+        ),
+      {
+        message: "올바른 주소 형식으로 입력해주세요.",
+      },
+    ),
 
   terms: z.boolean(),
   privacy: z.boolean(),
