@@ -41,6 +41,7 @@ function AuthForm({ mode, onSubmit }) {
   const [idCheck, setIdCheck] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [message, setMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [shakingButton, setShakingButton] = useState(false);
@@ -53,6 +54,7 @@ function AuthForm({ mode, onSubmit }) {
   const passwordRef = useRef(null);
   const passwordConfirmRef = useRef(null);
   const contactRef = useRef(null);
+  const addressRef = useRef(null);
   const termsRef = useRef(null);
   const privacyRef = useRef(null);
   const currentIdRef = useRef("");
@@ -105,12 +107,20 @@ function AuthForm({ mode, onSubmit }) {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    clearMessage();
+    setFieldErrors((errors) => ({
+      ...errors,
+      [name]: "",
+      ...((name === "terms" || name === "privacy") && {
+        agreement: "",
+      }),
+    }));
+
     setShakingButton(false);
 
     if (name === "id") {
       currentIdRef.current = value;
       setIdCheck("");
+      setSuccessMessage("");
     }
   };
 
@@ -119,9 +129,35 @@ function AuthForm({ mode, onSubmit }) {
 
     const result = zodCheck.safeParse(data);
 
+    const errors = {};
+
     if (!result.success) {
-      const error = result.error.issues[0];
-      const field = error.path[0];
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0];
+
+        if (!errors[field]) {
+          errors[field] = issue.message;
+        }
+      });
+    }
+
+    if (mode === "signup") {
+      if (!errors.id && idCheck !== data.id) {
+        errors.id = "아이디 중복 확인을 해주세요.";
+      }
+
+      if (data.password !== data.passwordConfirm) {
+        errors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
+      }
+
+      if (!data.terms || !data.privacy) {
+        errors.agreement = "필수 약관에 동의해 주세요.";
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setShakingButton(true);
 
       const refs = {
         firstName: firstNameRef,
@@ -130,30 +166,17 @@ function AuthForm({ mode, onSubmit }) {
         password: passwordRef,
         passwordConfirm: passwordConfirmRef,
         contact: contactRef,
+        address: addressRef,
       };
 
-      showError(error.message, refs[field]);
+      const firstField = Object.keys(errors)[0];
+
+      if (firstField === "agreement") {
+        (!data.terms ? termsRef : privacyRef).current?.focus();
+      } else {
+        refs[firstField]?.current?.focus();
+      }
       return false;
-    }
-
-    if (mode === "signup") {
-      if (idCheck !== data.id) {
-        showError("아이디 중복 확인을 해주세요.", idRef);
-        return false;
-      }
-
-      if (data.password !== data.passwordConfirm) {
-        showError("비밀번호가 일치하지 않습니다.", passwordConfirmRef);
-        return false;
-      }
-
-      if (!data.terms || !data.privacy) {
-        showError(
-          "필수 약관에 동의해 주세요.",
-          !data.terms ? termsRef : privacyRef,
-        );
-        return false;
-      }
     }
 
     return true;
@@ -163,8 +186,14 @@ function AuthForm({ mode, onSubmit }) {
     const id = formData.id;
 
     if (!id) {
-      showError("아이디를 입력해주세요.", idRef);
+      setFieldErrors((errors) => ({
+        ...errors,
+        id: "아이디를 입력해주세요.",
+      }));
+
+      idRef.current?.focus();
       setIdShakingButton(true);
+
       return;
     }
 
@@ -185,7 +214,10 @@ function AuthForm({ mode, onSubmit }) {
       }
 
       setIdCheck(id);
-      setMessage("");
+      setFieldErrors((errors) => ({
+        ...errors,
+        id: "",
+      }));
       setSuccessMessage("사용 가능한 ID입니다!");
     } catch (error) {
       if (currentIdRef.current !== id) {
@@ -255,6 +287,14 @@ function AuthForm({ mode, onSubmit }) {
                 value={formData.firstName}
                 onChange={handleChange}
               />
+              <ErrorMessage $visible={!!fieldErrors.firstName} $firstName>
+                {fieldErrors.firstName && (
+                  <>
+                    <ErrorIcon />
+                    <span>{fieldErrors.firstName}</span>
+                  </>
+                )}
+              </ErrorMessage>
             </Label>
 
             <Label>
@@ -269,6 +309,14 @@ function AuthForm({ mode, onSubmit }) {
                 value={formData.lastName}
                 onChange={handleChange}
               />
+              <ErrorMessage $visible={!!fieldErrors.lastName}>
+                {fieldErrors.lastName && (
+                  <>
+                    <ErrorIcon />
+                    <span>{fieldErrors.lastName}</span>
+                  </>
+                )}
+              </ErrorMessage>
             </Label>
           </NameGroup>
         )}
@@ -301,6 +349,21 @@ function AuthForm({ mode, onSubmit }) {
               </IdCheckButton>
             )}
           </InputIdGroup>
+          {fieldErrors.id ? (
+            <ErrorMessage $visible>
+              <ErrorIcon />
+              <span>{fieldErrors.id}</span>
+            </ErrorMessage>
+          ) : (
+            <SuccessMessage $visible={!!successMessage}>
+              {successMessage && (
+                <>
+                  <IconCircleCheck size={20} />
+                  <span>{successMessage}</span>
+                </>
+              )}
+            </SuccessMessage>
+          )}
         </Label>
 
         <Label>
@@ -328,6 +391,14 @@ function AuthForm({ mode, onSubmit }) {
               )}
             </PasswordHidenButton>
           </PasswordGroup>
+          <ErrorMessage $visible={!!fieldErrors.password}>
+            {fieldErrors.password && (
+              <>
+                <ErrorIcon />
+                <span>{fieldErrors.password}</span>
+              </>
+            )}
+          </ErrorMessage>
         </Label>
 
         {mode === "signup" && (
@@ -366,6 +437,14 @@ function AuthForm({ mode, onSubmit }) {
                 )}
               </PasswordHidenButton>
             </PasswordGroup>
+            <ErrorMessage $visible={!!fieldErrors.passwordConfirm}>
+              {fieldErrors.passwordConfirm && (
+                <>
+                  <ErrorIcon />
+                  <span>{fieldErrors.passwordConfirm}</span>
+                </>
+              )}
+            </ErrorMessage>
           </Label>
         )}
 
@@ -387,17 +466,34 @@ function AuthForm({ mode, onSubmit }) {
                   }));
                 }}
               />
+              <ErrorMessage $visible={!!fieldErrors.contact}>
+                {fieldErrors.contact && (
+                  <>
+                    <ErrorIcon />
+                    <span>{fieldErrors.contact}</span>
+                  </>
+                )}
+              </ErrorMessage>
             </Label>
 
             <Label>
               Address
               <Input
+                ref={addressRef}
                 name="address"
                 type="text"
                 placeholder="주소"
                 value={formData.address}
                 onChange={handleChange}
               />
+              <ErrorMessage $visible={!!fieldErrors.address}>
+                {fieldErrors.address && (
+                  <>
+                    <ErrorIcon />
+                    <span>{fieldErrors.address}</span>
+                  </>
+                )}
+              </ErrorMessage>
             </Label>
           </>
         )}
@@ -448,16 +544,16 @@ function AuthForm({ mode, onSubmit }) {
               />
               [선택] 마케팅 정보 수신 동의
             </label>
+            <ErrorMessage $visible={!!fieldErrors.agreement}>
+              {fieldErrors.agreement && (
+                <>
+                  <ErrorIcon />
+                  <span>{fieldErrors.agreement}</span>
+                </>
+              )}
+            </ErrorMessage>
           </TermsGroup>
         )}
-
-        {successMessage && !message && (
-          <SuccessMessage>
-            <IconCircleCheck size={20} />
-            <span>{successMessage}</span>
-          </SuccessMessage>
-        )}
-
         {message && (
           <ErrorMessage>
             <ErrorIcon />

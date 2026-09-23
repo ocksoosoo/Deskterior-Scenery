@@ -4,13 +4,21 @@ export const Form = styled.form(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   width: "100%",
-  gap: theme.spacing.xl,
+  gap: theme.spacing.sm,
 }));
 
 export const NameGroup = styled.div(({ theme }) => ({
   display: "flex",
   width: "100%",
   gap: theme.spacing.md,
+
+  "@media (width >= 768px) and (width < 1153px)": {
+    flexDirection: "column",
+  },
+
+  "@media (width < 539px)": {
+    flexDirection: "column",
+  },
 }));
 
 export const AllTerms = styled.div(({ theme }) => ({
@@ -181,7 +189,6 @@ const messageStyle = {
   width: "100%",
   display: "flex",
   alignItems: "center",
-  marginTop: "15px",
   gap: "12px",
   padding: "8px 10px",
   boxSizing: "border-box",
@@ -189,10 +196,13 @@ const messageStyle = {
   fontSize: "clamp(12px, calc(10px + 0.625vw), 14px)",
   color: "#1F211F",
   textAlign: "left",
+  minHeight: "36px",
+  fontWeight: 100,
 };
 
-export const SuccessMessage = styled.div(({ theme }) => ({
+export const SuccessMessage = styled.div(({ theme, $visible }) => ({
   ...messageStyle,
+  visibility: $visible ? "visible" : "hidden",
   color: theme.colors.textMain,
   backgroundColor: "#d9f3df",
   textAlign: "left",
@@ -202,10 +212,12 @@ export const SuccessMessage = styled.div(({ theme }) => ({
   },
 }));
 
-export const ErrorMessage = styled.div(({ theme }) => ({
+export const ErrorMessage = styled.div(({ theme, $visible, $firstName }) => ({
   ...messageStyle,
+  visibility: $visible ? "visible" : "hidden",
   color: theme.colors.textMain,
   backgroundColor: "#f8d1bd",
+
   "@media (width < 409px)": {
     fontSize: "clamp(11px, calc(3.37vw - 1.79px), 12px)",
     padding: "8px",
