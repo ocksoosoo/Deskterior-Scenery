@@ -14,6 +14,7 @@ export const LoginPage = styled.main(({ theme }) => ({
 }));
 
 export const LoginImageWrap = styled.div(({ theme }) => ({
+  boxSizing: "border-box",
   flex: "1 1 50%",
   alignSelf: "stretch",
   minWidth: 0,

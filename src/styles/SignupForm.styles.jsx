@@ -14,6 +14,7 @@ export const SignupPage = styled.main(({ theme }) => ({
 }));
 
 export const SignupImageWrap = styled.div(({ theme }) => ({
+  boxSizing: "border-box",
   flex: "1 1 50%",
   minWidth: 0,
   maxWidth: "520px",
